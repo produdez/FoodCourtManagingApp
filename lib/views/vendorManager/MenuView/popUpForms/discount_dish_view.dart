@@ -1,12 +1,20 @@
-
+import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/services/helper_service.dart';
-import 'package:fcfoodcourt/views/vendorManager/confirmation_view.dart';
 import 'package:flutter/material.dart';
-import '../../models/dish.dart';
+
+import 'confirmation_view.dart';
+
+/*
+A form that shows discount.
+The function createDiscountDishView returns a Future<Dish>
+that Dish only contains discount information
+ */
 
 class DiscountDishForm extends StatefulWidget {
   final Dish dish;
+
   const DiscountDishForm({Key key, this.dish}) : super(key: key);
+
   @override
   _DiscountDishFormState createState() => _DiscountDishFormState();
 }
@@ -16,12 +24,14 @@ class _DiscountDishFormState extends State<DiscountDishForm> {
   double discountedPercentage;
   var priceInputController = TextEditingController();
   var percentageInputController = TextEditingController();
+
   @override
   void initState() {
     discountedPrice = widget.dish.originPrice;
     discountedPercentage = widget.dish.discountPercentage;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,7 +47,9 @@ class _DiscountDishFormState extends State<DiscountDishForm> {
               fontSize: 20,
             ),
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           Text(
             'Discounted Price:',
             style: TextStyle(
@@ -49,26 +61,32 @@ class _DiscountDishFormState extends State<DiscountDishForm> {
             margin: EdgeInsets.all(5),
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 2)
-            ),
+                border: Border.all(color: Colors.black, width: 2)),
             child: TextField(
               controller: priceInputController,
-              onChanged: (String price){
-                if(price != ""){
-                    discountedPrice = double.parse(price);
-                    discountedPercentage = (widget.dish.originPrice - discountedPrice)/widget.dish.originPrice * 100;
-                    percentageInputController.text = HelperService.formatDouble(discountedPercentage)+ "%";
-                  }else{
-                    percentageInputController.text = "";
-                  }
+              onChanged: (String price) {
+                if (price != "") {
+                  discountedPrice = double.parse(price);
+                  discountedPercentage =
+                      (widget.dish.originPrice - discountedPrice) /
+                          widget.dish.originPrice *
+                          100;
+                  percentageInputController.text =
+                      HelperService.formatDouble(discountedPercentage) + "%";
+                } else {
+                  percentageInputController.text = "";
+                }
               },
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: "${HelperService.formatDouble(widget.dish.realPrice)}\$",
+                hintText:
+                    "${HelperService.formatDouble(widget.dish.realPrice)}\$",
               ),
             ),
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           Text(
             'Discounted Percentage:',
             style: TextStyle(
@@ -80,23 +98,24 @@ class _DiscountDishFormState extends State<DiscountDishForm> {
             margin: EdgeInsets.all(5),
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
-                border: Border.all(color: Colors.black, width: 2)
-            ),
+                border: Border.all(color: Colors.black, width: 2)),
             child: TextField(
               controller: percentageInputController,
-              onChanged: (String percentage){
-                if(percentage != "") {
-                    discountedPercentage = double.parse(percentage);
-                    discountedPrice = widget.dish.originPrice - widget.dish.originPrice*discountedPercentage/100;
-                    priceInputController.text = HelperService.formatDouble(discountedPrice);
-                }else{
+              onChanged: (String percentage) {
+                if (percentage != "") {
+                  discountedPercentage = double.parse(percentage);
+                  discountedPrice = widget.dish.originPrice -
+                      widget.dish.originPrice * discountedPercentage / 100;
+                  priceInputController.text =
+                      HelperService.formatDouble(discountedPrice);
+                } else {
                   priceInputController.text = "";
                 }
-
               },
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: "${HelperService.formatDouble(widget.dish.discountPercentage)}%",
+                hintText:
+                    "${HelperService.formatDouble(widget.dish.discountPercentage)}%",
               ),
             ),
           ),
@@ -105,8 +124,7 @@ class _DiscountDishFormState extends State<DiscountDishForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               FlatButton(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 5, vertical: 3),
+                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
@@ -123,8 +141,7 @@ class _DiscountDishFormState extends State<DiscountDishForm> {
                 },
               ),
               FlatButton(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 20, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
@@ -138,27 +155,27 @@ class _DiscountDishFormState extends State<DiscountDishForm> {
                   ),
                 ),
                 onPressed: () {
-                  createConfirmationView(context).then((onValue){
-                    if(onValue == true){
-                      Navigator.of(context).pop(new Dish(null,null,discountPercentage: discountedPercentage, realPrice: discountedPrice));
+                  createConfirmationView(context).then((onValue) {
+                    if (onValue == true) {
+                      Navigator.of(context).pop(new Dish(null, null,
+                          discountPercentage: discountedPercentage,
+                          realPrice: discountedPrice));
                     }
                   });
                 },
               ),
             ],
           ),
-
         ],
       ),
     );
   }
 }
 
-
-Future<Dish> createPopUpDiscountDish(BuildContext context, Dish dish)
-{
-  return showDialog(context: context,
-      builder: (context){
+Future<Dish> createPopUpDiscountDish(BuildContext context, Dish dish) {
+  return showDialog(
+      context: context,
+      builder: (context) {
         return AlertDialog(
           title: Text(
             'Discount Dish Form',
@@ -171,9 +188,9 @@ Future<Dish> createPopUpDiscountDish(BuildContext context, Dish dish)
           content: SizedBox(
               height: 350,
               width: 300,
-              child: DiscountDishForm(dish: dish,)
-          ),
+              child: DiscountDishForm(
+                dish: dish,
+              )),
         );
-      }
-  );
+      });
 }

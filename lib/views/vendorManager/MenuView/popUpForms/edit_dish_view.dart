@@ -1,16 +1,34 @@
-
-import 'package:fcfoodcourt/views/vendorManager/confirmation_view.dart';
+import 'package:fcfoodcourt/models/dish.dart';
 import 'package:flutter/material.dart';
-import '../../models/dish.dart';
 
-class NewDishForm extends StatefulWidget {
+import 'confirmation_view.dart';
+
+/*
+A form that shows edit.
+The function createEditView returns a Future<Dish>
+that Dish only contain edit information (name, origin price)
+ */
+class EditDishForm extends StatefulWidget {
+  final Dish dish;
+
+  const EditDishForm({Key key, this.dish}) : super(key: key);
+
   @override
-  _NewDishFormState createState() => _NewDishFormState();
+  _EditDishFormState createState() => _EditDishFormState();
 }
 
-class _NewDishFormState extends State<NewDishForm> {
+class _EditDishFormState extends State<EditDishForm> {
   String name;
+
   double price;
+
+  @override
+  void initState() {
+    name = widget.dish.name;
+    price = widget.dish.originPrice;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,19 +48,20 @@ class _NewDishFormState extends State<NewDishForm> {
             margin: EdgeInsets.all(5),
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 2)
-            ),
+                border: Border.all(color: Colors.black, width: 2)),
             child: TextField(
-              onChanged: (String name){
+              onChanged: (String name) {
                 this.name = name;
               },
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: "Dish Name ...",
+                hintText: "${widget.dish.name}",
               ),
             ),
           ),
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
           Text(
             'Price:',
             style: TextStyle(
@@ -54,15 +73,14 @@ class _NewDishFormState extends State<NewDishForm> {
             margin: EdgeInsets.all(5),
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 2)
-            ),
+                border: Border.all(color: Colors.black, width: 2)),
             child: TextField(
-              onChanged: (String price){
+              onChanged: (String price) {
                 this.price = double.parse(price);
               },
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: "Price ...",
+                hintText: "${widget.dish.originPrice}",
               ),
             ),
           ),
@@ -71,8 +89,7 @@ class _NewDishFormState extends State<NewDishForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               FlatButton(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 5, vertical: 3),
+                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
@@ -89,8 +106,7 @@ class _NewDishFormState extends State<NewDishForm> {
                 },
               ),
               FlatButton(
-                padding: EdgeInsets.symmetric(
-                    horizontal: 20, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
@@ -104,30 +120,28 @@ class _NewDishFormState extends State<NewDishForm> {
                   ),
                 ),
                 onPressed: () {
-                  createConfirmationView(context).then((onValue){
-                    if(onValue == true){
-                      Navigator.of(context).pop(new Dish(name,price));
+                  createConfirmationView(context).then((onValue) {
+                    if (onValue == true) {
+                      Navigator.of(context).pop(new Dish(name, price));
                     }
                   });
                 },
               ),
             ],
           ),
-
         ],
       ),
     );
   }
 }
 
-
-Future<Dish> createPopUpNewDish(BuildContext context)
-{
-  return showDialog(context: context,
-      builder: (context){
+Future<Dish> createPopUpEditDish(BuildContext context, Dish dish) {
+  return showDialog(
+      context: context,
+      builder: (context) {
         return AlertDialog(
           title: Text(
-            'New Dish Form',
+            'Edit Dish Form',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 30,
@@ -137,9 +151,9 @@ Future<Dish> createPopUpNewDish(BuildContext context)
           content: SizedBox(
               height: 350,
               width: 300,
-              child: NewDishForm()
-          ),
+              child: EditDishForm(
+                dish: dish,
+              )),
         );
-      }
-  );
+      });
 }

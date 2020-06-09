@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "643661125782",
+    "firebase_url": "https://food-court-manager-app.firebaseio.com",
+    "project_id": "food-court-manager-app",
+    "storage_bucket": "food-court-manager-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643661125782:android:ee85fa9e0614b8ca898ab7",
+        "android_client_info": {
+          "package_name": "com.example.foodcourtmanagerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643661125782-u91cokho0sg2qnf0qo0q16m7e6q17o8m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPjHYWzW2eqVYsc254skRds5UoKcl_0kA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643661125782-u91cokho0sg2qnf0qo0q16m7e6q17o8m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
