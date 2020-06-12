@@ -1,4 +1,5 @@
 import 'package:fcfoodcourt/services/view_logic_helper.dart';
+import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getflutter/getflutter.dart';
@@ -10,13 +11,13 @@ This is the dish element in the list view
 it has call back fields so that the parent that contains this can specify
 it's functionality.
  */
-class ListItemView extends StatelessWidget {
+class ItemDishView extends StatelessWidget {
   final Dish dish;
   final VoidCallback onRemoveSelected;
   final VoidCallback onEditSelected;
   final VoidCallback onDiscountSelected;
 
-  const ListItemView(
+  const ItemDishView(
       {Key key,
       this.dish,
       this.onRemoveSelected,
@@ -47,7 +48,7 @@ class ListItemView extends StatelessWidget {
                 onTap: () {
                   Fluttertoast.cancel();
                   Fluttertoast.showToast(
-                    msg: "ID: ${dish.id}",
+                    msg: "ID: ${dish.id}, Image: ${dish.hasImage}",
                   );
                 },
                 child: Container(
@@ -59,10 +60,10 @@ class ListItemView extends StatelessWidget {
                         width: 2,
                       )),
                   child: GFAvatar(
-                    backgroundImage: AssetImage(
-                        //TODO: Find a way to store cloud image and load that also
-                        //TODO: And then implement image choosing for dish profile when newDish or editDish
-                        'assets/${dish.id}.jpg'),
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: showImage(context)
+                    ),
                     shape: GFAvatarShape.square,
                     radius: 25,
                     borderRadius: BorderRadius.circular(10),
@@ -163,6 +164,32 @@ class ListItemView extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+  Widget showImage(BuildContext context){
+    return  FutureBuilder(
+      future: ImageUploadService().getImageFromCloud(context, dish.id),
+      builder: (context, snapshot) {
+        if(dish.hasImage==false || snapshot.connectionState == ConnectionState.waiting){
+          return Container(
+              height: MediaQuery.of(context).size.height /
+                  1.25,
+              width: MediaQuery.of(context).size.width /
+                  1.25,
+              child: Image.asset("assets/bowl.png", fit: BoxFit.fill,));
+        }
+        if (snapshot.connectionState == ConnectionState.done) //image is found
+          return Container(
+            height:
+            MediaQuery.of(context).size.height,
+            width:
+            MediaQuery.of(context).size.width,
+            child: snapshot.data,
+            //TODO: future builder will keep refreshing while scrolling, find a way to keep data offline and use a stream to watch changes instead.
+          );
+        return Container();
+
+      },
     );
   }
 }

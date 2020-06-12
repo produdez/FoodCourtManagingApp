@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:fcfoodcourt/models/dish.dart';
+import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:flutter/material.dart';
+import 'package:getflutter/components/avatar/gf_avatar.dart';
+import 'package:getflutter/shape/gf_avatar_shape.dart';
 
 import 'confirmation_view.dart';
-
+//TODO: find a way to notify view and update when storage is updated
 /*
 A form that shows edit.
 The function createEditView returns a Future<Dish>
@@ -19,16 +24,21 @@ class EditDishForm extends StatefulWidget {
 
 class _EditDishFormState extends State<EditDishForm> {
   String name;
-
   double price;
+  String imageName;
+  ImageUploadService _imageUploadService = ImageUploadService();
+  File _image;
+  bool hasImage;
 
   @override
   void initState() {
     name = widget.dish.name;
     price = widget.dish.originPrice;
+    imageName = widget.dish.id;
+    hasImage = widget.dish.hasImage;
     super.initState();
   }
-
+//TODO: add image picker,... after implementing better way to use image
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,6 +47,38 @@ class _EditDishFormState extends State<EditDishForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              GFAvatar(
+                shape: GFAvatarShape.square,
+                radius: 50,
+                backgroundColor: Colors.white,
+                child: ClipRect(
+                  child: new SizedBox(
+                    width: 100.0,
+                    height: 100.0,
+                    child: showImage(context),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 60.0),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.add_a_photo,
+                    size: 30.0,
+                  ),
+                  onPressed: () async {
+                    File returnImage = await _imageUploadService.getImageFromImagePicker();
+                    setState(() {
+                      _image = returnImage;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
           Text(
             'Name:',
             style: TextStyle(
@@ -122,7 +164,8 @@ class _EditDishFormState extends State<EditDishForm> {
                 onPressed: () {
                   createConfirmationView(context).then((onValue) {
                     if (onValue == true) {
-                      Navigator.of(context).pop(new Dish(name, price));
+                      hasImage = _image !=null? true : false;
+                      Navigator.of(context).pop(new Dish(name, price,imageFile: _image,hasImage: hasImage));
                     }
                   });
                 },
@@ -131,6 +174,40 @@ class _EditDishFormState extends State<EditDishForm> {
           ),
         ],
       ),
+    );
+  }
+  Widget showImage(BuildContext context){
+    return  FutureBuilder(
+      future: ImageUploadService().getImageFromCloud(context, imageName),
+      builder: (context, snapshot) {
+        if(_image != null){
+          return Container(
+              height: MediaQuery.of(context).size.height /
+                  1.25,
+              width: MediaQuery.of(context).size.width /
+                  1.25,
+              child: Image.file(_image, fit: BoxFit.fill,));
+        }
+        if(hasImage==false || snapshot.connectionState == ConnectionState.waiting){
+          return Container(
+              height: MediaQuery.of(context).size.height /
+                  1.25,
+              width: MediaQuery.of(context).size.width /
+                  1.25,
+              child: Image.asset("assets/bowl.png", fit: BoxFit.fill,));
+        }
+        if (snapshot.connectionState == ConnectionState.done) //image is found
+          return Container(
+            height:
+            MediaQuery.of(context).size.height,
+            width:
+            MediaQuery.of(context).size.width,
+            child: snapshot.data,
+            //TODO: future builder will keep refreshing while scrolling, find a way to keep data offline and use a stream to watch changes instead.
+          );
+        return Container();
+
+      },
     );
   }
 }
