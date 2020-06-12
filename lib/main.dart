@@ -1,8 +1,9 @@
-import 'package:fcfoodcourt/views/vendorManager/MenuView/list_item_dish_view.dart';
+//import 'package:fcfoodcourt/views/vendorManager/MenuView/dish_view.dart';
 import 'package:flutter/material.dart';
 
 import 'models/dish.dart';
 import 'views/vendorManager/MenuView/menu_view.dart';
+import 'views/customer/Menu/home.dart';
 
 /*
 This is the root of our app
@@ -22,11 +23,12 @@ void main() => runApp(MaterialApp(
       routes: {
         '/': (context) => Home(),
         '/DishMenuView': (context) => MenuView(),
-        '/ListItemViewTest': (context) => ListItemView(
+        '/CustomerMenuView': (context) => CustomerView(),
+        /*'/ListItemViewTest': (context) => ListItemView(
               dish: new Dish('French Fries', 30),
-            ),
+            ),*/
       },
-      initialRoute: '/DishMenuView',
+      initialRoute: '/CustomerMenuView',
     ));
 
 class Home extends StatelessWidget {

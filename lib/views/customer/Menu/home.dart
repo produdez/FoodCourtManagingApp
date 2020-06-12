@@ -1,22 +1,23 @@
 import 'package:fcfoodcourt/models/dish.dart';
-import 'package:fcfoodcourt/services/dish_db_service.dart';
-import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_dish_view.dart';
+import 'package:fcfoodcourt/models/vendor.dart';
+import 'package:fcfoodcourt/services/vendor_db_service.dart';
+//import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_dish_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'dish_list_view.dart';
+import 'vendor_list_view.dart';
 
 /*
 This is the menu view that holds the frame for the whole menu
 It does holds the add Dish button
  */
-class MenuView extends StatefulWidget {
+class CustomerView extends StatefulWidget {
   @override
   _MenuViewState createState() => _MenuViewState();
 }
 
-class _MenuViewState extends State<MenuView> {
+class _MenuViewState extends State<CustomerView> {
   @override
   void initState() {
     // TODO:random populate database only when needed
@@ -26,14 +27,15 @@ class _MenuViewState extends State<MenuView> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<List<Dish>>.value(
-      value: DishDBService().allVendorDishes,
+    return StreamProvider<List<Vendor>>.value(
+     // value: DishDBService().allVendorDishes,
+      value: null,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Color(0xffff8a84),
           title: Text(
-            "VENDOR MENU",
+            "FODDER",
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
@@ -64,12 +66,8 @@ class _MenuViewState extends State<MenuView> {
                     ),
                   )),
               BottomNavigationBarItem(
-                icon: Icon(Icons.work),
-                title: Text("Staff"),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.report),
-                title: Text("Report"),
+                icon: Icon(Icons.shopping_cart),
+                title: Text("MyCart"),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.person),
@@ -85,21 +83,24 @@ class _MenuViewState extends State<MenuView> {
               height: 10,
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              // try to centre the search box without relying much on it width
               children: <Widget>[
                 SizedBox(
-                  width: 30,
+                  width: 15,
                 ),
                 Container(
                   padding: EdgeInsets.all(5),
                   height: 50,
-                  width: 400,
+                  width: 320,//400
                   decoration: BoxDecoration(
                     border: Border.all(color: Color(0xffff8a84), width: 4),
                   ),
+                  
                   child: TextField(
                     decoration: InputDecoration(
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(0),
+                        contentPadding: EdgeInsets.all(10),
                         hintText: '   Search....'),
                   ),
                 ),
@@ -109,24 +110,8 @@ class _MenuViewState extends State<MenuView> {
             SizedBox(
               height: 10,
             ),
-            Expanded(child: DishListView()),
+            Expanded(child: VendorListView()),
           ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Color(0xffff8a84),
-          onPressed: () {
-            //On newDish chosen, show newDish popUp and process information
-            //The return value is a Dish with name, price (every other fields are defaulted)
-            createPopUpNewDish(context).then((onValue) {
-              if (onValue != null) {
-                DishDBService().addDish(onValue);
-              }
-            }); //This request the pop-up new dish form
-          },
-          child: Icon(
-            Icons.add,
-            size: 50,
-          ),
         ),
       ),
     );
