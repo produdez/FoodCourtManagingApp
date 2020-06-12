@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcfoodcourt/models/dish.dart';
 
@@ -49,7 +51,7 @@ class DishDBService {
     DocumentReference _dishRef = dishDB.document(dish.id);
     return await _dishRef.delete();
   }
-
+  void checkName(String keyWord, DocumentSnapshot documentSnapshot){}
   //a fake data if needed
   void populateDatabaseRandom() {
     DishDBService dbService = new DishDBService();

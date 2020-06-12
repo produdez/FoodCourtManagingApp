@@ -13,29 +13,32 @@ it's functionality.
 class VendorView extends StatelessWidget {
   final Vendor vendor;
 
-  const VendorView(
-      {Key key,
-      this.vendor,})
-      : super(key: key);
+  const VendorView({
+    Key key,
+    this.vendor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
+      height: 130,
+      width: 400,
+      margin: EdgeInsets.fromLTRB(5, 10, 5, 0),
       decoration: BoxDecoration(
         border: Border.all(
-          color: Colors.grey,
+          color: Colors.black45,
           width: 3,
         ),
-        borderRadius: BorderRadius.circular(40),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: FittedBox(
+        alignment: Alignment.centerLeft,
         child: Material(
           color: Colors.white,
           elevation: 0,
           borderRadius: BorderRadius.circular(40),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               InkWell(
                 onTap: () {
@@ -49,7 +52,7 @@ class VendorView extends StatelessWidget {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: Colors.orange,
+                        color: Colors.white,
                         width: 2,
                       )),
                   child: GFAvatar(
@@ -65,26 +68,39 @@ class VendorView extends StatelessWidget {
               ),
               Container(
                   child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(
+                      margin: EdgeInsets.fromLTRB(0, 0, 0, 3),
                       child: Text(
-                    vendor.name,
-                    style: TextStyle(
-                        color: Color(0xffffa834),
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold),
-                  )),
-
+                        vendor.name,
+                        style: TextStyle(
+                            color: Color(0xbb000000),
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold),
+                      )),
+                  Container(
+                      child: Row(children: <Widget>[
+                    Container(
+                        child: Text(
+                      'Phone: ',
+                      style: TextStyle(
+                          fontSize: 13.0,
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w500),
+                    )),
+                    Container(
+                        child: Text(
+                      vendor.phone,
+                      style: TextStyle(
+                          color: Colors.green[500],
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w600),
+                    )),
+                  ]))
                   //The price is displayed dynamically by view logic
-                 // ViewLogic.displayPrice(context, vendor),
-                  SizedBox(
-                    height: 3,
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
+                  // ViewLogic.displayPrice(context, vendor)
                 ],
               )),
             ],

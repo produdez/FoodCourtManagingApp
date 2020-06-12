@@ -1,4 +1,3 @@
-import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/models/vendor.dart';
 import 'package:fcfoodcourt/services/vendor_db_service.dart';
 //import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_dish_view.dart';
@@ -21,15 +20,14 @@ class _MenuViewState extends State<CustomerView> {
   @override
   void initState() {
     // TODO:random populate database only when needed
-    //DishDBService().populateDatabaseRandom();
+    //VendorDBService().populateDatabaseRandom();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamProvider<List<Vendor>>.value(
-     // value: DishDBService().allVendorDishes,
-      value: null,
+      value: VendorDBService().allVendor,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
