@@ -1,4 +1,5 @@
 //import 'package:fcfoodcourt/views/vendorManager/MenuView/dish_view.dart';
+import 'package:fcfoodcourt/views/customer/Menu/dishes_of_vendor.dart';
 import 'package:flutter/material.dart';
 
 import 'models/dish.dart';
@@ -24,6 +25,8 @@ void main() => runApp(MaterialApp(
         '/': (context) => Home(),
         '/DishMenuView': (context) => MenuView(),
         '/CustomerMenuView': (context) => CustomerView(),
+        '/CustomerDishView': (context) => CustomerDishView(),
+        //'/DishofVendor': (context) => 
         /*'/ListItemViewTest': (context) => ListItemView(
               dish: new Dish('French Fries', 30),
             ),*/

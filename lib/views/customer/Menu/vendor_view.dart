@@ -1,4 +1,6 @@
 //import 'package:fcfoodcourt/services/view_logic_helper.dart';
+import 'package:fcfoodcourt/views/customer/Menu/customer_dish_list_view.dart';
+import 'package:fcfoodcourt/views/customer/Menu/dishes_of_vendor.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getflutter/getflutter.dart';
@@ -31,6 +33,15 @@ class VendorView extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(20),
       ),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CustomerDishView()
+              )
+          );
+        },
       child: FittedBox(
         alignment: Alignment.centerLeft,
         child: Material(
@@ -107,6 +118,7 @@ class VendorView extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 }
