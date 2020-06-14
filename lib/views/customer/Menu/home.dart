@@ -33,7 +33,7 @@ class _MenuViewState extends State<CustomerView> {
         appBar: AppBar(
           backgroundColor: Color(0xffff8a84),
           title: Text(
-            "FODDER",
+            "FOOD COURT",
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
