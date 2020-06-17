@@ -1,4 +1,5 @@
 import 'package:fcfoodcourt/views/vendorManager/MenuView/item_dish_view.dart';
+import 'package:fcfoodcourt/views/vendorManager/ReportView/select_type_view.dart';
 import 'package:flutter/material.dart';
 
 import 'models/dish.dart';
@@ -22,11 +23,9 @@ void main() => runApp(MaterialApp(
       routes: {
         '/': (context) => Home(),
         '/DishMenuView': (context) => MenuView(),
-        '/ListItemViewTest': (context) => ItemDishView(
-              dish: new Dish('French Fries', 30),
-            ),
+        '/VendorReportView': (context) => SelectTypeView(),
       },
-      initialRoute: '/DishMenuView',
+      initialRoute: '/VendorReportView',
     ));
 
 class Home extends StatelessWidget {
