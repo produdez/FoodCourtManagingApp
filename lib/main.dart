@@ -12,7 +12,6 @@ import 'views/vendorManager/MenuView/menu_view.dart';
 This is the root of our app
 Routing is used for easy testing and app screen access
 Theme is also defined here
-TODO: Implement sign-in (customer, owner, FC owner)
  */
 
 void main() => runApp(MyApp());

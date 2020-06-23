@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import '../wrapper.dart';
 /*
 After user log-in, this will route them to their correct screen
+You must pass the currentUser down to the child class in order to user them
  */
 class LoggedInUserRouter extends StatelessWidget {
   @override
@@ -27,7 +28,11 @@ class LoggedInUserRouter extends StatelessWidget {
         if(snapshot.connectionState == ConnectionState.waiting){
           return Loading();
         }else{
+          //THIS IS THE USER DATA
+          //TODO: pass this down to below classes to use.
           User currentUser = snapshot.data;
+
+          //TODO: Customer Home UI Here
           if(currentUser.role == "Customer"){
             return Container(
               child: Scaffold(
@@ -43,24 +48,27 @@ class LoggedInUserRouter extends StatelessWidget {
                   ],
                 ),
               ),
-            ); //TODO: Customer Home UI Here
+            );
           }
 
+          //TODO: Vendor Manager Home UI Here
           if(currentUser.role == "Vendor Manager"){
-            return MenuView();
-            //TODO: Vendor Manager Home UI Here
+            return MenuView(userData : currentUser);
+
           }
 
+          //TODO: FC manager Home UI Here
           if(currentUser.role == "Food Court Manager") {
             return Container(
               child: Text("FC Manager UI"),
-            );//TODO: FC manager Home UI Here
+            );
           }
 
+          //TODO: Staff Home UI Here
           if(currentUser.role == "Staff") {
             return Container(
               child: Text("Staff UI"),
-            ); //TODO: Staff Home UI Here
+            );
           }
         }
 
