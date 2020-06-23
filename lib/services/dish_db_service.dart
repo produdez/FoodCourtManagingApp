@@ -2,14 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
 
-//TODO: after implementing login, the vendorID of DishDBService should be set to the user's id before attempting to load and show dish list
-
 class DishDBService {
-  //the dish db only response the correct menu according to the user's id (vendor's id)
-  final String vendorID = "fakeVendorID"; //vendor is not implemented, we're assuming a fake vendor user id
-
   //Collection reference for DishDB
   final CollectionReference dishDB = Firestore.instance.collection("dishDB");
+
+  //the dish db only response the correct menu according to the user's id (vendor's id)
+  //this field is static and set when we first go to home page (menu,... in this case)
+  static String vendorID;
 
   //add dish as a new document to db, id is randomize by Firebase
   Future addDish(Dish dish) async {
@@ -23,6 +22,7 @@ class DishDBService {
       "discountPercentage": dish.discountPercentage,
       "vendorID": vendorID,
       "hasImage" : dish.hasImage,
+      "isOutOfOrder": dish.isOutOfOrder,
     });
   }
 
@@ -33,9 +33,11 @@ class DishDBService {
     return await _dishRef.updateData({
       "name": newDish.name,
       "originPrice": newDish.originPrice,
-      "realPrice": newDish.originPrice,
-      "discountPercentage": 0.0,
+      "realPrice": newDish.originPrice, //reset on edit
+      "discountPercentage": 0.0, //reset on edit
       "hasImage" : dish.hasImage==true?true:newDish.hasImage==true?true:false,
+      "isOutOfOrder" : false, // reset on edit
+      //no update vendor ID
     });
   }
 
@@ -55,6 +57,15 @@ class DishDBService {
     return await _dishRef.delete();
   }
 
+  //set Dish out of order
+  Future setOutOfOrder(Dish dish) async {
+    DocumentReference _dishRef = dishDB.document(dish.id);
+    return await _dishRef.updateData({
+      "isOutOfOrder" : dish.isOutOfOrder, //this data is set in the dish above
+      //no update vendor ID
+    });
+  }
+
   //get DishDB snapshot stream, this stream will auto-update if DB have change and notify any listener
   Stream<List<Dish>> get allVendorDishes {
     return dishDB.snapshots().map(_dishListFromSnapshot);
@@ -72,9 +83,9 @@ class DishDBService {
         realPrice: doc.data['realPrice'] ?? 0.0,
         id: doc.data['id'] ?? '',
         hasImage: doc.data['hasImage'] ?? false,
-        //TODO: will add vendor id later after implementing log-in
-        //dish.vendorID = ...;
+        isOutOfOrder: doc.data ['isOutOfOrder'] ?? false,
       );
     }).toList();
   }
+
 }
