@@ -22,6 +22,7 @@ class DishDBService {
       "discountPercentage": dish.discountPercentage,
       "vendorID": vendorID,
       "hasImage" : dish.hasImage,
+      "isOutOfOrder": dish.isOutOfOrder,
     });
   }
 
@@ -32,9 +33,10 @@ class DishDBService {
     return await _dishRef.updateData({
       "name": newDish.name,
       "originPrice": newDish.originPrice,
-      "realPrice": newDish.originPrice,
-      "discountPercentage": 0.0,
+      "realPrice": newDish.originPrice, //reset on edit
+      "discountPercentage": 0.0, //reset on edit
       "hasImage" : dish.hasImage==true?true:newDish.hasImage==true?true:false,
+      "isOutOfOrder" : false, // reset on edit
       //no update vendor ID
     });
   }
@@ -55,6 +57,15 @@ class DishDBService {
     return await _dishRef.delete();
   }
 
+  //set Dish out of order
+  Future setOutOfOrder(Dish dish) async {
+    DocumentReference _dishRef = dishDB.document(dish.id);
+    return await _dishRef.updateData({
+      "isOutOfOrder" : dish.isOutOfOrder, //this data is set in the dish above
+      //no update vendor ID
+    });
+  }
+
   //get DishDB snapshot stream, this stream will auto-update if DB have change and notify any listener
   Stream<List<Dish>> get allVendorDishes {
     return dishDB.snapshots().map(_dishListFromSnapshot);
@@ -72,7 +83,9 @@ class DishDBService {
         realPrice: doc.data['realPrice'] ?? 0.0,
         id: doc.data['id'] ?? '',
         hasImage: doc.data['hasImage'] ?? false,
+        isOutOfOrder: doc.data ['isOutOfOrder'] ?? false,
       );
     }).toList();
   }
+
 }

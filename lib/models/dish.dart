@@ -12,7 +12,7 @@ class Dish {
   File imageFile;
   //normal constructor
   Dish(this.name, this.originPrice,
-      {this.discountPercentage = 0, this.realPrice, this.id = "", this.imageFile,this.hasImage = false}) {
+      {this.discountPercentage = 0, this.realPrice, this.id = "", this.imageFile,this.hasImage = false, this.isOutOfOrder = false}) {
     if (this.realPrice == null) this.realPrice = this.originPrice;
   }
 
@@ -24,6 +24,7 @@ class Dish {
     this.discountPercentage = dish.discountPercentage;
     this.realPrice = dish.realPrice;
     this.hasImage = dish.hasImage;
+    this.isOutOfOrder = dish.isOutOfOrder;
     //do not copy imageFile
   }
 }
