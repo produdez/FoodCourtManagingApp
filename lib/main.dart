@@ -1,5 +1,9 @@
+import 'package:fcfoodcourt/models/user.dart';
+import 'package:fcfoodcourt/services/authentication_service.dart';
+import 'package:fcfoodcourt/views/authenticate/wrapper.dart';
 import 'package:fcfoodcourt/views/vendorManager/MenuView/item_dish_view.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'models/dish.dart';
 import 'views/vendorManager/MenuView/menu_view.dart';
@@ -11,23 +15,35 @@ Theme is also defined here
 TODO: Implement sign-in (customer, owner, FC owner)
  */
 
-void main() => runApp(MaterialApp(
-      theme: ThemeData(
-          fontFamily: 'QuickSand',
-          buttonTheme: ButtonThemeData(
-            minWidth: 0,
-            height: 0,
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          )),
-      routes: {
-        '/': (context) => Home(),
-        '/DishMenuView': (context) => MenuView(),
-        '/ListItemViewTest': (context) => ItemDishView(
-              dish: new Dish('French Fries', 30),
-            ),
-      },
-      initialRoute: '/DishMenuView',
-    ));
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamProvider<User>.value(
+      value: AuthenticationService().user,
+      child: MaterialApp(
+        theme: ThemeData(
+            fontFamily: 'QuickSand',
+            buttonTheme: ButtonThemeData(
+              minWidth: 0,
+              height: 0,
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            )),
+        routes: {
+          '/': (context) => Home(),
+          '/DishMenuView': (context) => MenuView(),
+          '/login': (context) => Wrapper(),
+          '/ListItemViewTest': (context) => ItemDishView(
+            dish: new Dish('French Fries', 30),
+          ),
+        },
+        initialRoute: '/login',
+      ),
+    );
+  }
+}
+
 
 class Home extends StatelessWidget {
   @override
