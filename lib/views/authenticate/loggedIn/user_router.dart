@@ -5,6 +5,7 @@ import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/services/user_db_service.dart';
 import 'package:fcfoodcourt/shared/loading_view.dart';
+import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/manage_staff_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/MenuView/menu_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -59,9 +60,7 @@ class LoggedInUserRouter extends StatelessWidget {
 
           //TODO: FC manager Home UI Here
           if(currentUser.role == "Food Court Manager") {
-            return Container(
-              child: Text("FC Manager UI"),
-            );
+            return ManageStaffView(userData: currentUser,);
           }
 
           //TODO: Staff Home UI Here
