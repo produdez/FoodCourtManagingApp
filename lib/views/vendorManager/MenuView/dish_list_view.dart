@@ -1,6 +1,7 @@
+
 import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/services/dish_db_service.dart';
-import 'package:fcfoodcourt/views/vendorManager/MenuView/dish_view.dart';
+import 'package:fcfoodcourt/views/vendorManager/MenuView/item_dish_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/confirmation_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/discount_dish_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/edit_dish_view.dart';
@@ -20,10 +21,11 @@ class _DishListViewState extends State<DishListView> {
   @override
   Widget build(BuildContext context) {
     final List<Dish> dishList = Provider.of<List<Dish>>(context);
+
     return ListView.builder(
-      itemCount: dishList.length,
+      itemCount: dishList == null ? 0 : dishList.length,
       itemBuilder: (context, index) {
-        return ListItemView(
+        return ItemDishView(
           dish: dishList[index],
           onRemoveSelected: () {
             //Remove chosen, ask user for confirmation and remove in DB if confirmed

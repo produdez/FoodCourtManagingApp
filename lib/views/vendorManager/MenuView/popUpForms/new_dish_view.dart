@@ -1,7 +1,13 @@
-import 'package:fcfoodcourt/models/dish.dart';
-import 'package:flutter/material.dart';
 
+import 'package:fcfoodcourt/models/dish.dart';
+import 'package:fcfoodcourt/services/image_upload_service.dart';
+import 'package:flutter/material.dart';
+import 'package:getflutter/components/avatar/gf_avatar.dart';
+import 'package:getflutter/getflutter.dart';
+import 'dart:io';
 import 'confirmation_view.dart';
+
+//TODO: Implement format checking when possible
 
 /*
 A form that shows new dish.
@@ -17,7 +23,9 @@ class NewDishForm extends StatefulWidget {
 class _NewDishFormState extends State<NewDishForm> {
   String name;
   double price;
-
+  String imageURL;
+  ImageUploadService _imageUploadService = ImageUploadService();
+  File _image;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,6 +34,40 @@ class _NewDishFormState extends State<NewDishForm> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              GFAvatar(
+                shape: GFAvatarShape.square,
+                radius: 50,
+                backgroundColor: Colors.white,
+                child: ClipRect(
+                  child: new SizedBox(
+                    width: 100.0,
+                    height: 100.0,
+                    child: _image == null?
+                    Image.asset("assets/bowl.png", fit: BoxFit.fill,):
+                    Image.file(_image,fit: BoxFit.fill,),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 60.0),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.add_a_photo,
+                    size: 30.0,
+                  ),
+                  onPressed: () async {
+                    File returnImage = await _imageUploadService.getImageFromImagePicker();
+                    setState(() {
+                      _image = returnImage;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
           Text(
             'Name:',
             style: TextStyle(
@@ -109,9 +151,10 @@ class _NewDishFormState extends State<NewDishForm> {
                   ),
                 ),
                 onPressed: () {
-                  createConfirmationView(context).then((onValue) {
+                  createConfirmationView(context).then((onValue) async {
                     if (onValue == true) {
-                      Navigator.of(context).pop(new Dish(name, price));
+                      bool hasImage = _image!=null? true:false;
+                      Navigator.of(context).pop(new Dish(name, price, imageFile: _image,hasImage:hasImage));
                     }
                   });
                 },
@@ -122,6 +165,7 @@ class _NewDishFormState extends State<NewDishForm> {
       ),
     );
   }
+
 }
 
 Future<Dish> createPopUpNewDish(BuildContext context) {
@@ -141,3 +185,4 @@ Future<Dish> createPopUpNewDish(BuildContext context) {
         );
       });
 }
+

@@ -1,5 +1,8 @@
+
 import 'package:fcfoodcourt/models/dish.dart';
+import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/dish_db_service.dart';
+import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_dish_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +15,8 @@ This is the menu view that holds the frame for the whole menu
 It does holds the add Dish button
  */
 class MenuView extends StatefulWidget {
+  final User userData; // userData passed down by the userRouter
+  const MenuView({Key key, this.userData}) : super(key: key);
   @override
   _MenuViewState createState() => _MenuViewState();
 }
@@ -19,9 +24,9 @@ class MenuView extends StatefulWidget {
 class _MenuViewState extends State<MenuView> {
   @override
   void initState() {
-    // TODO:random populate database only when needed
-    //DishDBService().populateDatabaseRandom();
     super.initState();
+    //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
+    DishDBService.vendorID = widget.userData.id;
   }
 
   @override
@@ -37,6 +42,14 @@ class _MenuViewState extends State<MenuView> {
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
+          actions: <Widget>[
+              FlatButton.icon(
+                icon: Icon(Icons.person),
+                label: Text('logout'),
+              onPressed: () async {
+                await AuthenticationService().signOut();
+              },)
+          ],
         ),
         bottomNavigationBar: Container(
           height: 75,
@@ -132,3 +145,4 @@ class _MenuViewState extends State<MenuView> {
     );
   }
 }
+
