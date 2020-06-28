@@ -1,19 +1,15 @@
 
-import 'package:fcfoodcourt/FCManager/VendorsView/item_vendor_view.dart';
-import 'package:fcfoodcourt/FCManager/VendorsView/popUpForms/edit_vendor_view.dart';
-import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/models/vendor.dart';
-import 'package:fcfoodcourt/services/dish_db_service.dart';
 import 'package:fcfoodcourt/services/vendor_db_service.dart';
-import 'package:fcfoodcourt/views/vendorManager/MenuView/item_dish_view.dart';
+import 'package:fcfoodcourt/views/FCManager/VendorsView/popUpForms/edit_vendor_view.dart';
 import 'package:fcfoodcourt/shared/confirmation_view.dart';
-import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/discount_dish_view.dart';
-import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/edit_dish_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
-/* This is the frame list of dishes. It actively listen to dishDB changes and refresh it's view accordingly
-    It also define the function for each button from the dish elements in the list
+import 'item_vendor_view.dart';
+
+/* This is the frame list of vendors. It actively listen to vendorDB changes and refresh it's view accordingly
+    It also define the function for each button from the vendor elements in the list
  */
 
 class VendorListView extends StatefulWidget {
@@ -41,7 +37,7 @@ class _VendorListViewState extends State<VendorListView> {
           },
           onEditSelected: () {
             //Edit chosen, show edit form and process returned information
-            //The return value is Dish with name and price (no realPrice,...)
+            //The return value is Vendor with name and price (no realPrice,...)
             createPopUpEditVendor(context, vendorList[index]).then((onValue) {
               if (onValue != null) {
                 VendorDBService().editVendor(vendorList[index], onValue);

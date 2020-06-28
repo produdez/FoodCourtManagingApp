@@ -2,24 +2,25 @@ import 'dart:ui';
 
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/manage_staff_view.dart';
-import 'package:fcfoodcourt/views/vendorManager/MenuView/menu_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class VendorManagerNavBar extends StatefulWidget {
+import 'VendorsView/vendor_management_view.dart';
+
+class FoodCourtManagerNavBar extends StatefulWidget {
   final User userData;
-  const VendorManagerNavBar({Key key, this.userData}) : super(key: key);
+  const FoodCourtManagerNavBar({Key key, this.userData}) : super(key: key);
   @override
-  _VendorManagerNavBarState createState() => _VendorManagerNavBarState();
+  _FoodCourtManagerNavBarState createState() => _FoodCourtManagerNavBarState();
 }
 
-class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
+class _FoodCourtManagerNavBarState extends State<FoodCourtManagerNavBar> {
   int currentIndex;
   final List<Widget> children = [];
   @override
   void initState() {
     currentIndex = 0;
-    children.add(MenuView(userData: widget.userData,));
+    children.add(VendorManagementView());
     children.add(ManageStaffView(userData: widget.userData,));
 
     //TODO: Add report route here
@@ -67,7 +68,7 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
             BottomNavigationBarItem(
                 backgroundColor: Color(0xffff8a84),
                 icon: Icon(Icons.restaurant),
-                title: Text("Menu"),
+                title: Text("Vendors"),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.work),

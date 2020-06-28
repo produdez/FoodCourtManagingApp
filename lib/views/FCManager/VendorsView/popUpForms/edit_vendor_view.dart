@@ -1,7 +1,6 @@
 
 import 'dart:io';
 
-import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/models/vendor.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:fcfoodcourt/shared/confirmation_view.dart';
@@ -11,8 +10,8 @@ import 'package:getflutter/shape/gf_avatar_shape.dart';
 //TODO: find a way to notify view and update when storage is updated
 /*
 A form that shows edit.
-The function createEditView returns a Future<Dish>
-that Dish only contain edit information (name, origin price)
+The function createEditView returns a Future<Vendor>
+that Vendor only contain edit information (name, origin price)
  */
 class EditVendorForm extends StatefulWidget {
   final Vendor vendor;
@@ -213,13 +212,13 @@ class _EditVendorFormState extends State<EditVendorForm> {
   }
 }
 
-Future<Dish> createPopUpEditVendor(BuildContext context, Vendor vendor) {
+Future<Vendor> createPopUpEditVendor(BuildContext context, Vendor vendor) {
   return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text(
-            'Edit Dish Form',
+            'Edit Vendor Form',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 30,

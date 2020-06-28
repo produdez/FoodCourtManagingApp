@@ -1,11 +1,8 @@
 
-import 'package:fcfoodcourt/models/dish.dart';
-import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/models/vendor.dart';
-import 'package:fcfoodcourt/services/dish_db_service.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/services/vendor_db_service.dart';
-import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_dish_view.dart';
+import 'package:fcfoodcourt/views/FCManager/VendorsView/popUpForms/new_vendor_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +11,7 @@ import 'vendor_list_view.dart';
 
 /*
 This is the menu view that holds the frame for the whole menu
-It does holds the add Dish button
+It does holds the add Vendor button
  */
 class VendorManagementView extends StatefulWidget {
   @override
@@ -81,13 +78,13 @@ class _VendorManagementViewState extends State<VendorManagementView> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Color(0xffff8a84),
           onPressed: () {
-            //On newDish chosen, show newDish popUp and process information
-            //The return value is a Dish with name, price (every other fields are defaulted)
+            //On newVendor chosen, show newVendor popUp and process information
+            //The return value is a Vendor with name, price (every other fields are defaulted)
             createPopUpNewVendor(context).then((onValue) {
               if (onValue != null) {
                 VendorDBService().addVendor(onValue);
               }
-            }); //This request the pop-up new dish form
+            }); //This request the pop-up new vendor form
           },
           child: Icon(
             Icons.add,

@@ -1,8 +1,8 @@
 
 
 /*
-This is the menu view that holds the frame for the whole menu
-It does holds the add Dish button
+This is the menu view that holds the frame for the whole staff management view
+It does holds the add Staff button
  */
 
 import 'package:fcfoodcourt/models/staff.dart';
@@ -32,7 +32,7 @@ class _ManageStaffViewState extends State<ManageStaffView> {
 
   @override
   Widget build(BuildContext context) {
-    String place = widget.userData.role ==  "Vendor Manager" ? "VENDOR" : "FOOD COURT";
+    String place = widget.userData.role ==  "Vendor Manager" ? "VENDOR" : "FC";
     return StreamProvider<List<Staff>>.value(
       value: StaffDBService().allStaffsOfOwner,
       child: Scaffold(
@@ -96,7 +96,7 @@ class _ManageStaffViewState extends State<ManageStaffView> {
               if (onValue != null) {
                 StaffDBService().addStaff(onValue);
               }
-            }); //This request the pop-up new dish form
+            }); //This request the pop-up new vendor form
           },
           child: Icon(
             Icons.add,

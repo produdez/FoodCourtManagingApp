@@ -1,5 +1,4 @@
 import 'package:fcfoodcourt/models/vendor.dart';
-import 'package:fcfoodcourt/services/view_logic_helper.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,7 +6,7 @@ import 'package:getflutter/getflutter.dart';
 
 
 /*
-This is the dish element in the list view
+This is the vendor element in the list view
 it has call back fields so that the parent that contains this can specify
 it's functionality.
  */
@@ -195,7 +194,7 @@ class ItemVendorView extends StatelessWidget {
                   1.25,
               width: MediaQuery.of(context).size.width /
                   1.25,
-              child: Image.asset("assets/bowl.png", fit: BoxFit.fill,));
+              child: Image.asset("assets/vendor.png", fit: BoxFit.fill,));
         }
         if (snapshot.connectionState == ConnectionState.done) //image is found
           return Container(

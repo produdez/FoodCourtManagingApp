@@ -1,18 +1,18 @@
 
-import 'package:fcfoodcourt/models/dish.dart';
+import 'package:fcfoodcourt/models/vendor.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
+import 'package:fcfoodcourt/shared/confirmation_view.dart';
 import 'package:flutter/material.dart';
 import 'package:getflutter/components/avatar/gf_avatar.dart';
 import 'package:getflutter/getflutter.dart';
 import 'dart:io';
-import '../../../../shared/confirmation_view.dart';
 
 //TODO: Implement format checking when possible
 
 /*
-A form that shows new dish.
-The function createNewDishView returns a Future<Dish>
-that Dish has all the information of a defaulted dish
+A form that shows new vendor.
+The function createNewVendorView returns a Future<Vendor>
+that Vendor has all the information of a defaulted vendor
 (except the id which will be specify when the info is pushed to DB and pulled back)
  */
 class NewVendorForm extends StatefulWidget {
@@ -22,7 +22,7 @@ class NewVendorForm extends StatefulWidget {
 
 class _NewVendorFormState extends State<NewVendorForm> {
   String name;
-  double price;
+  String phone;
   String imageURL;
   ImageUploadService _imageUploadService = ImageUploadService();
   File _image;
@@ -86,7 +86,7 @@ class _NewVendorFormState extends State<NewVendorForm> {
               },
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: "Dish Name ...",
+                hintText: "Vendor Name ...",
               ),
             ),
           ),
@@ -94,7 +94,7 @@ class _NewVendorFormState extends State<NewVendorForm> {
             height: 10,
           ),
           Text(
-            'Price:',
+            'Phone:',
             style: TextStyle(
               color: Colors.black,
               fontSize: 20,
@@ -106,12 +106,12 @@ class _NewVendorFormState extends State<NewVendorForm> {
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
             child: TextField(
-              onChanged: (String price) {
-                this.price = double.parse(price);
+              onChanged: (String phone) {
+                this.phone = phone;
               },
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: "Price ...",
+                hintText: "Phone ...",
               ),
             ),
           ),
@@ -154,7 +154,7 @@ class _NewVendorFormState extends State<NewVendorForm> {
                   createConfirmationView(context).then((onValue) async {
                     if (onValue == true) {
                       bool hasImage = _image!=null? true:false;
-                      Navigator.of(context).pop(new Dish(name, price, imageFile: _image,hasImage:hasImage));
+                      Navigator.of(context).pop(new Vendor(name, phone, imageFile: _image,hasImage:hasImage));
                     }
                   });
                 },
@@ -168,13 +168,13 @@ class _NewVendorFormState extends State<NewVendorForm> {
 
 }
 
-Future<Dish> createPopUpNewVendor(BuildContext context) {
+Future<Vendor> createPopUpNewVendor(BuildContext context) {
   return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text(
-            'New Dish Form',
+            'New Vendor Form',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 30,
