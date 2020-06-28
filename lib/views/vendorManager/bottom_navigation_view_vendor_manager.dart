@@ -1,8 +1,9 @@
 import 'dart:ui';
-
+import 'package:fcfoodcourt/views/vendorManager/ReportView/select_type_view.dart';
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/manage_staff_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/MenuView/menu_view.dart';
+import 'package:fcfoodcourt/views/vendorManager/ReportView/report_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,7 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
     children.add(ManageStaffView(userData: widget.userData,));
 
     //TODO: Add report route here
-    children.add(Text('ReportView'));
+    children.add(SelectTypeView(userData: widget.userData));
 
     //TODO: Add profile route here
     children.add(Text('ProfileView'));
@@ -32,6 +33,8 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false, // address bottom overflow error
+      //resizeToAvoidBottomPadding: false,
       body: children[currentIndex],
       bottomNavigationBar:Container(
         height: 75,
