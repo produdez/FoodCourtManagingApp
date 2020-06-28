@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcfoodcourt/models/dish.dart';
+import 'package:fcfoodcourt/models/order.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
 
 class DishDBService {
@@ -9,7 +10,7 @@ class DishDBService {
 
   //the dish db only response the correct menu according to the user's id (vendor's id)
   //this field is static and set when we first go to home page (menu,... in this case)
-  static String vendorID = 'fakeVendorID';
+  static String vendorID;
 
   //add dish as a new document to db, id is randomize by Firebase
   Future addDish(Dish dish) async {

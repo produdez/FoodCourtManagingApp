@@ -14,10 +14,11 @@ class ViewLogic {
         children: <Widget>[
           Container(
             child: Text(
-              "Price: ${dish.realPrice}\$",
+              "Price: ${dish.realPrice}\ Đ",
               style: TextStyle(
-                color: Colors.black54,
-                fontSize: 8,
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
+                fontSize: 9,
               ),
             ),
           ),
@@ -34,23 +35,25 @@ class ViewLogic {
                 Text(
                   "Price: ",
                   style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 8,
+                    color: Colors.black87,
+                    fontSize: 9,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  "${dish.originPrice}\$",
+                  "${dish.originPrice}\ Đ",
                   style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 8,
+                    color: Colors.black87,
+                    fontSize: 9,
                     decoration: TextDecoration.lineThrough,
                   ),
                 ),
+                SizedBox(height: 1, width: 5,),
                 Text(
-                  " ${dish.realPrice}\$",
+                  " ${dish.realPrice}\ Đ",
                   style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 8,
+                    color: Colors.black87,
+                    fontSize: 9,
                     fontWeight: FontWeight.bold,
                   ),
                 )
@@ -60,7 +63,7 @@ class ViewLogic {
           Container(
               margin: EdgeInsets.only(left: 5),
               child: Text(
-                "DISCOUNT ${HelperService.formatDouble(dish.discountPercentage, decimalToKeep: 0)}%",
+                "- ${HelperService.formatDouble(dish.discountPercentage, decimalToKeep: 0)}%",
                 style: TextStyle(
                   color: Color(0xffff6624),
                   fontSize: 8,
