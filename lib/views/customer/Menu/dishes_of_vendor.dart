@@ -1,7 +1,7 @@
 import 'package:fcfoodcourt/services/dish_db_service.dart';
 import 'package:fcfoodcourt/models/dish.dart';
 
-//import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_dish_view.dart';
+//import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_vendor_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

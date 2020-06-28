@@ -82,8 +82,6 @@ class ItemStaffView extends StatelessWidget {
                                 fontSize: 15.0,
                                 fontWeight: FontWeight.bold),
                           )),
-
-                      //The price is displayed dynamically by view logic
                       Container(
                         child: Row(
                           children: <Widget>[
