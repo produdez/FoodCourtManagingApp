@@ -21,6 +21,7 @@ class StaffDBService {
       "vendorID": ownerID,
       "phone" : staff.phone,
       "position" : staff.position,
+      "hasImage" : staff.hasImage,
     });
   }
 
@@ -32,6 +33,7 @@ class StaffDBService {
       "name": newStaff.name,
       "phone":newStaff.phone,
       "position" : newStaff.position,
+      "hasImage" : staff.hasImage==true?true:newStaff.hasImage==true?true:false,
       //no update vendor ID
     });
   }
