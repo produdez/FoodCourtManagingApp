@@ -2,6 +2,8 @@
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/views/authenticate/wrapper.dart';
+import 'package:fcfoodcourt/views/customer/Menu/customer_dish_view.dart';
+import 'package:fcfoodcourt/views/customer/Menu/home.dart';
 import 'package:fcfoodcourt/views/vendorManager/MenuView/item_dish_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
