@@ -1,3 +1,4 @@
+
 import 'dart:io';
 class Dish {
   String id; // id is from database
@@ -28,3 +29,4 @@ class Dish {
     //do not copy imageFile
   }
 }
+

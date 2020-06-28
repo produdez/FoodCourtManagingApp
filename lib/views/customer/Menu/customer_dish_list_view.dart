@@ -1,10 +1,6 @@
-
 import 'package:fcfoodcourt/models/dish.dart';
-import 'package:fcfoodcourt/services/dish_db_service.dart';
-import 'package:fcfoodcourt/views/vendorManager/MenuView/item_dish_view.dart';
-import 'package:fcfoodcourt/shared/confirmation_view.dart';
-import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/discount_dish_view.dart';
-import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/edit_dish_view.dart';
+//import 'package:fcfoodcourt/views/customer/Menu/vendor_list_view.dart';
+import 'package:fcfoodcourt/views/customer/Menu/customer_dish_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -12,22 +8,21 @@ import 'package:provider/provider.dart';
     It also define the function for each button from the dish elements in the list
  */
 
-class DishListView extends StatefulWidget {
+class CustomerDishListView extends StatefulWidget {
   @override
-  _DishListViewState createState() => _DishListViewState();
+  _CustomerDishListViewState createState() => _CustomerDishListViewState();
 }
 
-class _DishListViewState extends State<DishListView> {
+class _CustomerDishListViewState extends State<CustomerDishListView> {
   @override
   Widget build(BuildContext context) {
     final List<Dish> dishList = Provider.of<List<Dish>>(context);
-
     return ListView.builder(
-      itemCount: dishList == null ? 0 : dishList.length,
+      itemCount: dishList.length,
       itemBuilder: (context, index) {
-        return ItemDishView(
+        return CustomerDishView(
           dish: dishList[index],
-          onRemoveSelected: () {
+          /*onRemoveSelected: () {
             //Remove chosen, ask user for confirmation and remove in DB if confirmed
             createConfirmationView(context).then((onValue) {
               if (onValue == true) {
@@ -52,7 +47,7 @@ class _DishListViewState extends State<DishListView> {
                 DishDBService().discountDish(dishList[index], onValue);
               }
             });
-          },
+          },*/
         );
       },
     );
