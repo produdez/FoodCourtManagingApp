@@ -50,46 +50,6 @@ class _MenuViewState extends State<MenuView> {
               },)
           ],
         ),
-        bottomNavigationBar: Container(
-          height: 75,
-          decoration: BoxDecoration(
-              border: Border(
-            top: BorderSide(width: 4, color: Colors.black),
-          )),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            iconSize: 25,
-            backgroundColor: Color(0xffff8a84),
-            selectedFontSize: 20,
-            unselectedFontSize: 20,
-            currentIndex: 0,
-            selectedIconTheme: IconThemeData(color: Colors.white, size: 25),
-            items: [
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.restaurant),
-                  title: Text(
-                    "Menu",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.work),
-                title: Text("Staff"),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.report),
-                title: Text("Report"),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                title: Text("Profile"),
-              ),
-            ],
-          ),
-        ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[

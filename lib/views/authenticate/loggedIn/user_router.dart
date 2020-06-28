@@ -6,7 +6,7 @@ import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/services/user_db_service.dart';
 import 'package:fcfoodcourt/shared/loading_view.dart';
 import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/manage_staff_view.dart';
-import 'package:fcfoodcourt/views/vendorManager/MenuView/menu_view.dart';
+import 'package:fcfoodcourt/views/vendorManager/bottom_navigation_view_vendor_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -54,7 +54,7 @@ class LoggedInUserRouter extends StatelessWidget {
 
           //TODO: Vendor Manager Home UI Here
           if(currentUser.role == "Vendor Manager"){
-            return MenuView(userData : currentUser);
+            return VendorManagerNavBar(userData: currentUser,);
 
           }
 

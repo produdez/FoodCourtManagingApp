@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcfoodcourt/models/staff.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StaffDBService {
   //Collection reference for StaffDB
@@ -43,6 +44,7 @@ class StaffDBService {
   }
 
   void callStaff(Staff staff){
+    launch("tel://${staff.phone}");
     print('Calling: ${staff.phone}');
   }
 
