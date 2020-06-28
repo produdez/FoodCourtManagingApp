@@ -1,10 +1,11 @@
+
 import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:flutter/material.dart';
 import 'package:getflutter/components/avatar/gf_avatar.dart';
 import 'package:getflutter/getflutter.dart';
 import 'dart:io';
-import 'confirmation_view.dart';
+import '../../../../shared/confirmation_view.dart';
 
 //TODO: Implement format checking when possible
 

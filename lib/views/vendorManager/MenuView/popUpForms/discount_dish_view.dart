@@ -2,7 +2,7 @@ import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/services/helper_service.dart';
 import 'package:flutter/material.dart';
 
-import 'confirmation_view.dart';
+import '../../../../shared/confirmation_view.dart';
 
 /*
 A form that shows discount.

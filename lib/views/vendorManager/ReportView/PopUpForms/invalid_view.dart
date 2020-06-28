@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/select_type_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/choose_date_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +11,7 @@ class InvalidForm extends StatefulWidget{
 }
 
 class _InvalidForm extends State<InvalidForm>{
+  User userData;
   @override 
   Widget build(BuildContext context){
     return Column(

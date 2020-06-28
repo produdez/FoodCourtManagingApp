@@ -1,13 +1,15 @@
-
-
+import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/choose_date_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/choose_month_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/report_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:provider/provider.dart';
 
 class SelectTypeView extends StatefulWidget {
+  final User userData;
+  const SelectTypeView({this.userData});
   @override
   _SelectTypeViewState createState() => _SelectTypeViewState();
 }
@@ -18,6 +20,7 @@ class _SelectTypeViewState extends State<SelectTypeView> {
     return Scaffold(
       //child: Scaffold(
         resizeToAvoidBottomInset: false, // address bottom overflow error
+        //resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Color(0xffff8a84),
@@ -26,14 +29,22 @@ class _SelectTypeViewState extends State<SelectTypeView> {
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
+          actions: <Widget>[
+              FlatButton.icon(
+                icon: Icon(Icons.person),
+                label: Text('logout'),
+              onPressed: () async {
+                await AuthenticationService().signOut();
+              },)
+          ],
         ),
-        bottomNavigationBar: Container(
+        /*bottomNavigationBar: Container(
           height: 75,
           decoration: BoxDecoration(
               border: Border(
             top: BorderSide(width: 4, color: Colors.black),
           )),
-          child: BottomNavigationBar(
+          /*child: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             iconSize: 25,
             backgroundColor: Color(0xffff8a84),
@@ -65,8 +76,8 @@ class _SelectTypeViewState extends State<SelectTypeView> {
                 title: Text("Profile"),
               ),
             ],
-          ),
-        ),
+          ),*/
+        ),*/
         body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         //mainAxisAlignment: MainAxisAlignment.start,
@@ -100,7 +111,7 @@ class _SelectTypeViewState extends State<SelectTypeView> {
             child: SizedBox(
               width: 200,
               height: 100,
-              child: dailyReport("Daily"),
+              child: reportType("Daily"),
             )
           ),
           //SizedBox(height: 50,),
@@ -108,7 +119,7 @@ class _SelectTypeViewState extends State<SelectTypeView> {
             child: SizedBox(
               width: 200,
               height: 100,
-              child: dailyReport("Monthly"),
+              child: reportType("Monthly"),
               ),
           )
           ]
@@ -118,7 +129,7 @@ class _SelectTypeViewState extends State<SelectTypeView> {
     );
     //  ),
   }
-  Positioned dailyReport(String type) {
+  Positioned reportType(String type) {
     return Positioned(
       bottom: 0.0,
       right: 0.0,

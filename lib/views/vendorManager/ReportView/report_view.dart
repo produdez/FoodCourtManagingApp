@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:bidirectional_scroll_view/bidirectional_scroll_view.dart';
+import 'package:fcfoodcourt/models/user.dart';
+import 'package:fcfoodcourt/services/authentication_service.dart';
+//import 'package:bidirectional_scroll_view/bidirectional_scroll_view.dart';
 
 class ReportView extends StatefulWidget{
+  final User userData;
+
   final String date;
-  const ReportView(this.date);
+  const ReportView(this.date, {this.userData});
   @override 
   _ReportViewState createState() => _ReportViewState(this.date);
 }
@@ -20,7 +24,8 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   @override 
   Widget build(BuildContext context){
     return Scaffold(
-      resizeToAvoidBottomInset: false, // address bottom overflow error
+      //resizeToAvoidBottomInset: false, // address bottom overflow error
+      //resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Color(0xffff8a84),
@@ -29,7 +34,14 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
-          
+          actions: <Widget>[
+              FlatButton.icon(
+                icon: Icon(Icons.person),
+                label: Text('logout'),
+              onPressed: () async {
+                await AuthenticationService().signOut();
+              },)
+          ],
           bottom: TabBar(
             unselectedLabelColor: Colors.black,
             labelColor: Colors.white,
@@ -50,7 +62,7 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
             indicatorSize: TabBarIndicatorSize.tab,
           ),
         ),
-        bottomNavigationBar: Container(
+        /*bottomNavigationBar: Container(
           height: 75,
           decoration: BoxDecoration(
               border: Border(
@@ -89,7 +101,7 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
               ),
             ],
           ),
-        ),
+        ),*/
         body: TabBarView(
               children: <Widget>[
                 Column(
@@ -98,7 +110,7 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                     Row(
                     children: [
                       Container(
-                        margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        margin: EdgeInsets.only(top: 20),
                         padding: EdgeInsets.only(top: 20),
                         height: 50,
                         width: 125,

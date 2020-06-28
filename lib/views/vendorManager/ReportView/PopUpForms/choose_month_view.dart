@@ -16,6 +16,7 @@ class _ChooseMonthFormState extends State<ChooseMonthForm>{
   @override 
   Widget build(BuildContext context){
     return Container(
+      //resizeToAvoidBottomInset: false,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
