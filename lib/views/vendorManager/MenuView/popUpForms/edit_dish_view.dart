@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:getflutter/components/avatar/gf_avatar.dart';
 import 'package:getflutter/shape/gf_avatar_shape.dart';
 
-import 'confirmation_view.dart';
+import '../../../../shared/confirmation_view.dart';
 //TODO: find a way to notify view and update when storage is updated
 /*
 A form that shows edit.

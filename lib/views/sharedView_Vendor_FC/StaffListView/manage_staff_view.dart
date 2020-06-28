@@ -1,51 +1,53 @@
 
-import 'package:fcfoodcourt/models/dish.dart';
-import 'package:fcfoodcourt/models/user.dart';
-import 'package:fcfoodcourt/services/dish_db_service.dart';
-import 'package:fcfoodcourt/services/authentication_service.dart';
-import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_dish_view.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import 'dish_list_view.dart';
 
 /*
 This is the menu view that holds the frame for the whole menu
 It does holds the add Dish button
  */
-class MenuView extends StatefulWidget {
+
+import 'package:fcfoodcourt/models/staff.dart';
+import 'package:fcfoodcourt/models/user.dart';
+import 'package:fcfoodcourt/services/authentication_service.dart';
+import 'package:fcfoodcourt/services/staff_db_service.dart';
+import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/popUpForms/new_staff_view.dart';
+import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/staff_list_view.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class ManageStaffView extends StatefulWidget {
   final User userData; // userData passed down by the userRouter
-  const MenuView({Key key, this.userData}) : super(key: key);
+  const ManageStaffView({Key key, this.userData}) : super(key: key);
   @override
-  _MenuViewState createState() => _MenuViewState();
+  _ManageStaffViewState createState() => _ManageStaffViewState();
 }
 
-class _MenuViewState extends State<MenuView> {
+class _ManageStaffViewState extends State<ManageStaffView> {
   @override
   void initState() {
     super.initState();
-    //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
-    DishDBService.vendorID = widget.userData.id;
+    //set owner id
+    StaffDBService.ownerID = widget.userData.id;
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<List<Dish>>.value(
-      value: DishDBService().allVendorDishes,
+    String place = widget.userData.role ==  "Vendor Manager" ? "VENDOR" : "FOOD COURT";
+    return StreamProvider<List<Staff>>.value(
+      value: StaffDBService().allStaffsOfOwner,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Color(0xffff8a84),
           title: Text(
-            "VENDOR MENU",
+            "$place STAFF LIST",
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
           actions: <Widget>[
-              FlatButton.icon(
-                icon: Icon(Icons.person),
-                label: Text('logout'),
+            FlatButton.icon(
+              icon: Icon(Icons.person),
+              label: Text('logout'),
               onPressed: () async {
                 await AuthenticationService().signOut();
               },)
@@ -82,7 +84,7 @@ class _MenuViewState extends State<MenuView> {
             SizedBox(
               height: 10,
             ),
-            Expanded(child: DishListView()),
+            Expanded(child: StaffListView()),
           ],
         ),
         floatingActionButton: FloatingActionButton(
@@ -90,9 +92,9 @@ class _MenuViewState extends State<MenuView> {
           onPressed: () {
             //On newDish chosen, show newDish popUp and process information
             //The return value is a Dish with name, price (every other fields are defaulted)
-            createPopUpNewDish(context).then((onValue) {
+            createPopUpNewStaff(context).then((onValue) {
               if (onValue != null) {
-                DishDBService().addDish(onValue);
+                StaffDBService().addStaff(onValue);
               }
             }); //This request the pop-up new dish form
           },
@@ -105,4 +107,3 @@ class _MenuViewState extends State<MenuView> {
     );
   }
 }
-
