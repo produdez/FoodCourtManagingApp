@@ -5,6 +5,7 @@ import 'package:fcfoodcourt/views/authenticate/wrapper.dart';
 import 'package:fcfoodcourt/views/customer/Menu/customer_dish_view.dart';
 import 'package:fcfoodcourt/views/customer/Menu/home.dart';
 import 'package:fcfoodcourt/views/vendorManager/MenuView/item_dish_view.dart';
+import 'package:fcfoodcourt/views/vendorManager/ReportView/select_type_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+//>>>>>>> origin/master
 
 class Home extends StatelessWidget {
   @override
