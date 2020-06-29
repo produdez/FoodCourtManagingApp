@@ -14,14 +14,13 @@ class ReportView extends StatefulWidget{
 
 class _ReportViewState extends State<ReportView> with SingleTickerProviderStateMixin{
   TabController _tabController;
-  //String initialIndex;
   String date;
-  int reportType;
+  String reportType;
   _ReportViewState(this.date);
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(initialIndex: reportType, vsync: this, length: 2);
+    _tabController = TabController(vsync: this, length: 1);
   }
   @override 
   Widget build(BuildContext context){
@@ -48,11 +47,11 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
             unselectedLabelColor: Colors.black,
             labelColor: Colors.white,
             tabs: <Widget>[
-              Tab(child: Text(
+              /*Tab(child: Text(
                   'Daily',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 )
-              ),
+              ),*/
               Tab(child: Text(
                   'Monthly',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
@@ -72,95 +71,10 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                     Row(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(top: 20),
-                        padding: EdgeInsets.only(top: 20),
-                        height: 50,
-                        width: 125,
-                        child: Text(
-                          date,
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold
-                            ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ]
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                      columns: const <DataColumn>[
-                        DataColumn(
-                          label: Text(
-                            'Orders',
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                            )
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Quantity',
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                          )
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Price',
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                          )
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Revenue',
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                          )
-                        )
-                      ],
-                      rows: const <DataRow>[
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Pho')),
-                            DataCell(Text('4')),
-                            DataCell(Text('30k')),
-                            DataCell(Text('120k')),
-                          ]
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Hu Tieu')),
-                            DataCell(Text('4')),
-                            DataCell(Text('25k')),
-                            DataCell(Text('100k')),
-                          ]
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Bun Bo Hue')),
-                            DataCell(Text('4')),
-                            DataCell(Text('20k')),
-                            DataCell(Text('80k')),
-                          ]
-                        ),
-                        
-                      ],
-                    )
-                    )
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                    children: [
-                      Container(
                         margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
                         padding: EdgeInsets.only(top: 20),
                         height: 50,
                         width: 125,
-                        /*decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black54, width: 4),
-                        ),*/
                         child: Text(
                           date,
                           style: TextStyle(
@@ -181,25 +95,25 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                       columns: const <DataColumn>[
                         DataColumn(
                           label: Text(
-                            'Orders',
+                            'Vendor',
                             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                             )
                         ),
                         DataColumn(
                           label: Text(
-                            'Quantity',
+                            'Sale',
                             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                           )
                         ),
                         DataColumn(
                           label: Text(
-                            'Price',
+                            'Rent',
                             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                           )
                         ),
                         DataColumn(
                           label: Text(
-                            'Revenue',
+                            'Total Payment',
                             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                           )
                         )
@@ -207,34 +121,34 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                       rows: const <DataRow>[
                         DataRow(
                           cells: <DataCell>[
-                            DataCell(Text('Pho')),
-                            DataCell(Text('4')),
-                            DataCell(Text('30k')),
-                            DataCell(Text('120k')),
+                            DataCell(Text('Vendor1')),
+                            DataCell(Text('80.000.000 VND')),
+                            DataCell(Text('7.000.000 VND')),
+                            DataCell(Text('11.000.000 VND')),
                           ]
                         ),
                         DataRow(
                           cells: <DataCell>[
-                            DataCell(Text('Hu Tieu')),
-                            DataCell(Text('4')),
-                            DataCell(Text('25k')),
-                            DataCell(Text('100k')),
+                            DataCell(Text('Vendor2')),
+                            DataCell(Text('73.000.000 VND')),
+                            DataCell(Text('7.000.000 VND')),
+                            DataCell(Text('10.650.000 VND')),
                           ]
                         ),
                         DataRow(
                           cells: <DataCell>[
-                            DataCell(Text('Bun Bo Hue')),
-                            DataCell(Text('4')),
-                            DataCell(Text('20k')),
-                            DataCell(Text('80k')),
+                            DataCell(Text('Vendor3')),
+                            DataCell(Text('150.000.000 VND')),
+                            DataCell(Text('7.000.000 VND')),
+                            DataCell(Text('14.500.000 VND')),
                           ]
                         ),
                         DataRow(
                           cells: <DataCell>[
-                            DataCell(Text('Bun Bo Hue')),
-                            DataCell(Text('4')),
-                            DataCell(Text('20k')),
-                            DataCell(Text('80k')),
+                            DataCell(Text('Vendor4')),
+                            DataCell(Text('120.000.000 VND')),
+                            DataCell(Text('7.000.000 VND')),
+                            DataCell(Text('13.000.000 VND')),
                           ]
                         ),
                         
@@ -251,11 +165,6 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
           //)
       );
   }
-/*int checkReportType(String  date)
-{
-  if(date.length > 7)
 
-
-} */
 }
 
