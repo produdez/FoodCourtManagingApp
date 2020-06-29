@@ -1,7 +1,11 @@
+
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/views/authenticate/wrapper.dart';
+import 'package:fcfoodcourt/views/customer/Menu/customer_dish_view.dart';
+import 'package:fcfoodcourt/views/customer/Menu/home.dart';
 import 'package:fcfoodcourt/views/vendorManager/MenuView/item_dish_view.dart';
+import 'package:fcfoodcourt/views/vendorManager/ReportView/select_type_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -36,6 +40,8 @@ class MyApp extends StatelessWidget {
           '/ListItemViewTest': (context) => ItemDishView(
             dish: new Dish('French Fries', 30),
           ),
+          '/CustomerMenuView': (context) => CustomerView(),
+          '/CustomerDishView': (context) => CustomerDishView(),
         },
         initialRoute: '/login',
       ),
@@ -43,6 +49,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+//>>>>>>> origin/master
 
 class Home extends StatelessWidget {
   @override
@@ -50,3 +57,4 @@ class Home extends StatelessWidget {
     return Container();
   }
 }
+

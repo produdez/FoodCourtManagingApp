@@ -1,3 +1,4 @@
+
 import 'dart:io';
 class Dish {
   String id; // id is from database
@@ -5,14 +6,14 @@ class Dish {
   double originPrice; //the original price before discount (not price) used in calculation
   double discountPercentage; //discount
   double realPrice;//real price due to discount
-  bool isOutOfOrder; //TODO: add to db
+  bool isOutOfOrder;
 
 
   bool hasImage;
   File imageFile;
   //normal constructor
   Dish(this.name, this.originPrice,
-      {this.discountPercentage = 0, this.realPrice, this.id = "", this.imageFile,this.hasImage = false, this.isOutOfOrder = false}) {
+      {this.discountPercentage = 0, this.realPrice, this.id = "",this.imageFile,this.hasImage = false, this.isOutOfOrder = false}) {
     if (this.realPrice == null) this.realPrice = this.originPrice;
   }
 
@@ -28,3 +29,4 @@ class Dish {
     //do not copy imageFile
   }
 }
+
