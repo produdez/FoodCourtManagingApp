@@ -1,9 +1,9 @@
 import 'dart:ui';
+import 'package:fcfoodcourt/shared/profile_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/select_type_view.dart';
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/manage_staff_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/MenuView/menu_view.dart';
-import 'package:fcfoodcourt/views/vendorManager/ReportView/report_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -26,8 +26,7 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
     //TODO: Add report route here
     children.add(SelectTypeView(userData: widget.userData));
 
-    //TODO: Add profile route here
-    children.add(Text('ProfileView'));
+    children.add(ProfileView(userData: widget.userData,));
     super.initState();
   }
   @override
