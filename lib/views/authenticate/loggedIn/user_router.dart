@@ -3,6 +3,7 @@ import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/services/user_db_service.dart';
 import 'package:fcfoodcourt/shared/loading_view.dart';
 import 'package:fcfoodcourt/views/FCManager/bottom_navigation_view_fc_manager.dart';
+import 'package:fcfoodcourt/views/staff/staff_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/bottom_navigation_view_vendor_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -67,8 +68,8 @@ class LoggedInUserRouter extends StatelessWidget {
 
           //TODO: Staff Home UI Here
           if (currentUser.role == "Staff") {
-            return Container(
-              child: Text("Staff UI"),
+            return StaffView(
+              userData: currentUser,
             );
           }
         }
