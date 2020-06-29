@@ -2,17 +2,19 @@ import 'dart:ffi';
 import 'package:fcfoodcourt/models/dish.dart';
 
 class OrderDetail{
-  Dish dish;
+  final String dishID;
   int quant;
+
+  OrderDetail(this.dishID, this.quant);
 }
 
 class Order{
   final String id;
-  final String customerID;
-  String vendorID;
+  //final String customerID;
+  //String vendorID;
   double totalPrice;
   List<OrderDetail> detail;
-  Order(this.customerID, this.vendorID,
+  Order(
       {this.totalPrice = 0, this.id = ''}) {
   }
 

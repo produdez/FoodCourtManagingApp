@@ -1,24 +1,29 @@
+import 'package:fcfoodcourt/services/view_logic_helper.dart';
+import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getflutter/getflutter.dart';
-
-//import 'package:fcfoodcourt/services/dish_db_service.dart';
-import '../../../models/dish.dart';
-import 'package:fcfoodcourt/services/image_upload_service.dart';
-import 'package:fcfoodcourt/services/view_logic_helper.dart';
 import 'package:fcfoodcourt/services/cart_service.dart';
+import '../../../models/dish.dart';
+
 /*
-This is the vendor element in the list view
+This is the dish element in the list view
 it has call back fields so that the parent that contains this can specify
 it's functionality.
  */
-class CustomerDishView extends StatelessWidget {
+class ItemDishView extends StatelessWidget {
   final Dish dish;
+  final VoidCallback onRemoveSelected;
+  final VoidCallback onEditSelected;
+  final VoidCallback onDiscountSelected;
 
-  const CustomerDishView({
-    Key key,
-    this.dish,
-  }) : super(key: key);
+  const ItemDishView(
+      {Key key,
+      this.dish,
+      this.onRemoveSelected,
+      this.onEditSelected,
+      this.onDiscountSelected})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -90,13 +95,13 @@ class CustomerDishView extends StatelessWidget {
                       ),
                       color: Color(0xfff85f6a),
                       child: Text(
-                        'Add',
+                        'Remove',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 10,
                         ),
                       ),
-                      onPressed: () => CartService().addDish(dish),///
+                      onPressed: () => CartService().removeDish(dish),///
                     ),
                   ],
                 ),
@@ -108,29 +113,29 @@ class CustomerDishView extends StatelessWidget {
       ),
     );
   }
-
-  Widget showImage(BuildContext context) {
-    return FutureBuilder(
+  Widget showImage(BuildContext context){
+    return  FutureBuilder(
       future: ImageUploadService().getImageFromCloud(context, dish.id),
       builder: (context, snapshot) {
-        if (dish.hasImage == false ||
-            snapshot.connectionState == ConnectionState.waiting) {
+        if(dish.hasImage==false || snapshot.connectionState == ConnectionState.waiting){
           return Container(
-              height: MediaQuery.of(context).size.height / 1.25,
-              width: MediaQuery.of(context).size.width / 1.25,
-              child: Image.asset(
-                "assets/bowl.png",
-                fit: BoxFit.fill,
-              ));
+              height: MediaQuery.of(context).size.height /
+                  1.25,
+              width: MediaQuery.of(context).size.width /
+                  1.25,
+              child: Image.asset("assets/bowl.png", fit: BoxFit.fill,));
         }
         if (snapshot.connectionState == ConnectionState.done) //image is found
           return Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
+            height:
+            MediaQuery.of(context).size.height,
+            width:
+            MediaQuery.of(context).size.width,
             child: snapshot.data,
             //TODO: future builder will keep refreshing while scrolling, find a way to keep data offline and use a stream to watch changes instead.
           );
         return Container();
+
       },
     );
   }
