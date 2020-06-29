@@ -1,7 +1,7 @@
 import 'package:fcfoodcourt/services/dish_db_service.dart';
 import 'package:fcfoodcourt/models/dish.dart';
 
-//import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_dish_view.dart';
+//import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_vendor_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -91,11 +91,11 @@ class _MenuViewState extends State<CustomerDishView> {
                 Container(
                   padding: EdgeInsets.all(5),
                   height: 50,
-                  width: 320,//400
+                  width: 320, //400
                   decoration: BoxDecoration(
                     border: Border.all(color: Color(0xffff8a84), width: 4),
                   ),
-                  
+
                   child: TextField(
                     decoration: InputDecoration(
                         border: InputBorder.none,

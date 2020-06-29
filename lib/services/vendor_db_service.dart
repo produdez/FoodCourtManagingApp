@@ -1,18 +1,46 @@
-  import 'package:cloud_firestore/cloud_firestore.dart';
-  import 'package:fcfoodcourt/models/vendor.dart';
-  
-class VendorDBService{
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcfoodcourt/models/vendor.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-  final CollectionReference vendorDB = Firestore.instance.collection("vendorDB");
+import 'image_upload_service.dart';
 
-  //TODO: just to test, delete later when the Vendor Management finished
+class VendorDBService {
+  final CollectionReference vendorDB =
+      Firestore.instance.collection("vendorDB");
+
   Future addVendor(Vendor vendor) async {
     DocumentReference _vendorRef = vendorDB.document();
+    ImageUploadService().uploadPic(vendor.imageFile, _vendorRef.documentID);
     return await _vendorRef.setData({
       "id": _vendorRef.documentID,
       "name": vendor.name,
       "phone": vendor.phone,
+      "hasImage": vendor.hasImage,
     });
+  }
+
+  Future editVendor(Vendor vendor, Vendor newVendor) async {
+    DocumentReference _staffRef = vendorDB.document(vendor.id);
+    ImageUploadService().uploadPic(vendor.imageFile, _staffRef.documentID);
+    return await _staffRef.updateData({
+      "name": newVendor.name,
+      "phone": newVendor.phone,
+      "hasImage": vendor.hasImage == true
+          ? true
+          : newVendor.hasImage == true ? true : false,
+      //no update vendor ID
+    });
+  }
+
+  Future removeVendor(Vendor vendor) async {
+    DocumentReference _staffRef = vendorDB.document(vendor.id);
+    ImageUploadService().removeImageFromStorage(vendor.id);
+    return await _staffRef.delete();
+  }
+
+  void callVendor(Vendor vendor) {
+    launch("tel://${vendor.phone}");
+    print('Calling: ${vendor.phone}');
   }
 
   void populateDatabaseRandom() {
@@ -34,14 +62,12 @@ class VendorDBService{
 
   //Mapping a database snapshot into a vendorList
   List<Vendor> _vendorListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents
-        .map((doc) {
+    return snapshot.documents.map((doc) {
       return Vendor(
         doc.data['name'] ?? '',
         doc.data['phone'] ?? '',
         id: doc.data['id'] ?? '',
-        //TODO: will add vendor id later after implementing log-in
-        //Vendor.vendorID = ...;
+        hasImage: doc.data['hasImage'] ?? false,
       );
     }).toList();
   }

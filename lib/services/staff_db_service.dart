@@ -14,24 +14,28 @@ class StaffDBService {
   //add staff as a new document to db, id is randomize by Firebase
   Future addStaff(Staff staff) async {
     DocumentReference _staffRef = staffDB.document();
-    ImageUploadService().uploadPic(staff.imageFile,_staffRef.documentID);
+    ImageUploadService().uploadPic(staff.imageFile, _staffRef.documentID);
     return await _staffRef.setData({
       "name": staff.name,
       "id": _staffRef.documentID,
       "vendorID": ownerID,
-      "phone" : staff.phone,
-      "position" : staff.position,
+      "phone": staff.phone,
+      "position": staff.position,
+      "hasImage": staff.hasImage,
     });
   }
 
   //update staff, changing name, original price and reset it's discount state
   Future editStaff(Staff staff, Staff newStaff) async {
     DocumentReference _staffRef = staffDB.document(staff.id);
-    ImageUploadService().uploadPic(staff.imageFile,_staffRef.documentID);
+    ImageUploadService().uploadPic(staff.imageFile, _staffRef.documentID);
     return await _staffRef.updateData({
       "name": newStaff.name,
-      "phone":newStaff.phone,
-      "position" : newStaff.position,
+      "phone": newStaff.phone,
+      "position": newStaff.position,
+      "hasImage": staff.hasImage == true
+          ? true
+          : newStaff.hasImage == true ? true : false,
       //no update vendor ID
     });
   }
@@ -43,11 +47,10 @@ class StaffDBService {
     return await _staffRef.delete();
   }
 
-  void callStaff(Staff staff){
+  void callStaff(Staff staff) {
     launch("tel://${staff.phone}");
     print('Calling: ${staff.phone}');
   }
-
 
   //get StaffDB snapshot stream, this stream will auto-update if DB have change and notify any listener
   Stream<List<Staff>> get allStaffsOfOwner {
@@ -58,7 +61,7 @@ class StaffDBService {
   List<Staff> _staffListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents
         .where((DocumentSnapshot documentSnapshot) =>
-    documentSnapshot.data['vendorID'] == ownerID)
+            documentSnapshot.data['vendorID'] == ownerID)
         .map((doc) {
       return Staff(
         doc.data['name'] ?? '',
@@ -69,5 +72,4 @@ class StaffDBService {
       );
     }).toList();
   }
-
 }

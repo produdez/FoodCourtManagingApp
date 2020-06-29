@@ -1,55 +1,44 @@
-/*
-This is the menu view that holds the frame for the whole staff management view
-It does holds the add Staff button
- */
 
-import 'package:fcfoodcourt/models/staff.dart';
-import 'package:fcfoodcourt/models/user.dart';
+import 'package:fcfoodcourt/models/vendor.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
-import 'package:fcfoodcourt/services/staff_db_service.dart';
-import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/popUpForms/new_staff_view.dart';
-import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/staff_list_view.dart';
+import 'package:fcfoodcourt/services/vendor_db_service.dart';
+import 'package:fcfoodcourt/views/FCManager/VendorsView/popUpForms/new_vendor_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class ManageStaffView extends StatefulWidget {
-  final User userData; // userData passed down by the userRouter
-  const ManageStaffView({Key key, this.userData}) : super(key: key);
+import 'vendor_list_view.dart';
+
+/*
+This is the menu view that holds the frame for the whole menu
+It does holds the add Vendor button
+ */
+class VendorManagementView extends StatefulWidget {
   @override
-  _ManageStaffViewState createState() => _ManageStaffViewState();
+  _VendorManagementViewState createState() => _VendorManagementViewState();
 }
 
-class _ManageStaffViewState extends State<ManageStaffView> {
-  @override
-  void initState() {
-    super.initState();
-    //set owner id
-    StaffDBService.ownerID = widget.userData.id;
-  }
-
+class _VendorManagementViewState extends State<VendorManagementView> {
   @override
   Widget build(BuildContext context) {
-    String place = widget.userData.role == "Vendor Manager" ? "VENDOR" : "FC";
-    return StreamProvider<List<Staff>>.value(
-      value: StaffDBService().allStaffsOfOwner,
+    return StreamProvider<List<Vendor>>.value(
+      value: VendorDBService().allVendor,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Color(0xffff8a84),
           title: Text(
-            "$place STAFF LIST",
+            "FC VENDORS",
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
           actions: <Widget>[
-            FlatButton.icon(
-              icon: Icon(Icons.person),
-              label: Text('logout'),
+              FlatButton.icon(
+                icon: Icon(Icons.person),
+                label: Text('logout'),
               onPressed: () async {
                 await AuthenticationService().signOut();
-              },
-            )
+              },)
           ],
         ),
         body: Column(
@@ -83,17 +72,17 @@ class _ManageStaffViewState extends State<ManageStaffView> {
             SizedBox(
               height: 10,
             ),
-            Expanded(child: StaffListView()),
+            Expanded(child: VendorListView()),
           ],
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Color(0xffff8a84),
           onPressed: () {
-            //On newDish chosen, show newDish popUp and process information
-            //The return value is a Dish with name, price (every other fields are defaulted)
-            createPopUpNewStaff(context).then((onValue) {
+            //On newVendor chosen, show newVendor popUp and process information
+            //The return value is a Vendor with name, price (every other fields are defaulted)
+            createPopUpNewVendor(context).then((onValue) {
               if (onValue != null) {
-                StaffDBService().addStaff(onValue);
+                VendorDBService().addVendor(onValue);
               }
             }); //This request the pop-up new vendor form
           },
@@ -106,3 +95,4 @@ class _ManageStaffViewState extends State<ManageStaffView> {
     );
   }
 }
+

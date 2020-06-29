@@ -1,23 +1,24 @@
-import 'package:fcfoodcourt/models/staff.dart';
+import 'package:fcfoodcourt/models/vendor.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getflutter/getflutter.dart';
 
+
 /*
-This is the dish element in the list view
+This is the vendor element in the list view
 it has call back fields so that the parent that contains this can specify
 it's functionality.
  */
-class ItemStaffView extends StatelessWidget {
-  final Staff staff;
+class ItemVendorView extends StatelessWidget {
+  final Vendor vendor;
   final VoidCallback onRemoveSelected;
   final VoidCallback onEditSelected;
   final VoidCallback onCallSelected;
 
-  const ItemStaffView(
+  const ItemVendorView(
       {Key key,
-      this.staff,
+      this.vendor,
       this.onRemoveSelected,
       this.onEditSelected,
       this.onCallSelected})
@@ -45,7 +46,9 @@ class ItemStaffView extends StatelessWidget {
               InkWell(
                 onTap: () {
                   Fluttertoast.cancel();
-                  Fluttertoast.showToast(msg: "ID: ${staff.id}");
+                  Fluttertoast.showToast(
+                    msg: "ID: ${vendor.id}, Image: ${vendor.hasImage}",
+                  );
                 },
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
@@ -58,7 +61,8 @@ class ItemStaffView extends StatelessWidget {
                   child: GFAvatar(
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: showImage(context)),
+                        child: showImage(context)
+                    ),
                     shape: GFAvatarShape.square,
                     radius: 25,
                     borderRadius: BorderRadius.circular(10),
@@ -72,32 +76,14 @@ class ItemStaffView extends StatelessWidget {
                 children: <Widget>[
                   Container(
                       child: Text(
-                    staff.name,
+                    vendor.name,
                     style: TextStyle(
                         color: Color(0xffffa834),
                         fontSize: 15.0,
                         fontWeight: FontWeight.bold),
                   )),
-                  Container(
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          "Position: ",
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 8,
-                          ),
-                        ),
-                        Text(
-                          "${staff.position}",
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 8,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+
+                  //The price is displayed dynamically by view logic
                   Container(
                     child: Row(
                       children: <Widget>[
@@ -109,7 +95,7 @@ class ItemStaffView extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "${staff.phone}",
+                          "${vendor.phone}",
                           style: TextStyle(
                             color: Colors.black54,
                             fontSize: 8,
@@ -166,7 +152,7 @@ class ItemStaffView extends StatelessWidget {
                       ),
                       FlatButton(
                         padding:
-                            EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                        EdgeInsets.symmetric(horizontal: 5, vertical: 3),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5),
                         ),
@@ -198,29 +184,29 @@ class ItemStaffView extends StatelessWidget {
       ),
     );
   }
-
-  Widget showImage(BuildContext context) {
-    return FutureBuilder(
-      future: ImageUploadService().getImageFromCloud(context, staff.id),
+  Widget showImage(BuildContext context){
+    return  FutureBuilder(
+      future: ImageUploadService().getImageFromCloud(context, vendor.id),
       builder: (context, snapshot) {
-        if (staff.hasImage == false ||
-            snapshot.connectionState == ConnectionState.waiting) {
+        if(vendor.hasImage==false || snapshot.connectionState == ConnectionState.waiting){
           return Container(
-              height: MediaQuery.of(context).size.height / 1.25,
-              width: MediaQuery.of(context).size.width / 1.25,
-              child: Image.asset(
-                "assets/staff.png",
-                fit: BoxFit.fill,
-              ));
+              height: MediaQuery.of(context).size.height /
+                  1.25,
+              width: MediaQuery.of(context).size.width /
+                  1.25,
+              child: Image.asset("assets/vendor.png", fit: BoxFit.fill,));
         }
         if (snapshot.connectionState == ConnectionState.done) //image is found
           return Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
+            height:
+            MediaQuery.of(context).size.height,
+            width:
+            MediaQuery.of(context).size.width,
             child: snapshot.data,
             //TODO: future builder will keep refreshing while scrolling, find a way to keep data offline and use a stream to watch changes instead.
           );
         return Container();
+
       },
     );
   }
