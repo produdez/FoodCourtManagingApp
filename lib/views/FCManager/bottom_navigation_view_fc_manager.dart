@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:fcfoodcourt/models/user.dart';
+import 'package:fcfoodcourt/shared/profile_view.dart';
 import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/manage_staff_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +27,7 @@ class _FoodCourtManagerNavBarState extends State<FoodCourtManagerNavBar> {
     //TODO: Add report route here
     children.add(Text('ReportView'));
 
-    //TODO: Add profile route here
-    children.add(Text('ProfileView'));
+    children.add(ProfileView(userData: widget.userData,));
     super.initState();
   }
   @override
