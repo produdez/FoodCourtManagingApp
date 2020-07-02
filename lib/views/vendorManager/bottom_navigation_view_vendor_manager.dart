@@ -54,17 +54,19 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
           unselectedFontSize: 20,
           currentIndex: currentIndex,
           selectedLabelStyle: TextStyle(
-            color: Colors.black,
+            //color: Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 20
           ),
-          showSelectedLabels: true,
+          //showSelectedLabels: true,
           showUnselectedLabels: true,
-          selectedItemColor: Colors.black,
+         // selectedItemColor: Colors.black,
+         unselectedItemColor: Colors.black,
           unselectedLabelStyle: TextStyle(
-            color: Colors.amber,
+            color: Colors.black,
           ),
-          selectedIconTheme: IconThemeData(color: Colors.white, size: 25),
+          unselectedIconTheme: IconThemeData(color: Colors.black, size: 25),
+          //selectedIconTheme: IconThemeData(color: Colors.white, size: 25),
           items: [
             BottomNavigationBarItem(
                 backgroundColor: Color(0xffff8a84),
@@ -72,14 +74,17 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
                 title: Text("Menu"),
             ),
             BottomNavigationBarItem(
+              backgroundColor: Color(0xffff8a84),
               icon: Icon(Icons.work),
               title: Text("Staff"),
             ),
             BottomNavigationBarItem(
+              backgroundColor: Color(0xffff8a84),
               icon: Icon(Icons.report),
               title: Text("Report"),
             ),
             BottomNavigationBarItem(
+              backgroundColor: Color(0xffff8a84),
               icon: Icon(Icons.person),
               title: Text("Profile"),
             ),

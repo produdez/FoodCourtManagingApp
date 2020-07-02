@@ -1,17 +1,19 @@
 import 'dart:io';
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/select_type_view.dart';
-import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/choose_date_view.dart';
+//import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/choose_date_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class InvalidForm extends StatefulWidget{
+  final User userData;
+  const InvalidForm({this.userData});
   @override 
   _InvalidForm createState() => _InvalidForm();
 }
 
 class _InvalidForm extends State<InvalidForm>{
-  User userData;
+  //User userData;
   @override 
   Widget build(BuildContext context){
     return Column(
@@ -36,7 +38,7 @@ class _InvalidForm extends State<InvalidForm>{
                 onPressed: () {
                   Navigator.push(
                     context, 
-                    MaterialPageRoute(builder: (context) => SelectTypeView())
+                    MaterialPageRoute(builder: (context) => SelectTypeView(userData: widget.userData))
                   );
                 }
               ),

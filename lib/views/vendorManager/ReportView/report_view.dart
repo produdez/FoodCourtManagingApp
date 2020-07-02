@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
+import 'package:fcfoodcourt/models/DailyVendorReport.dart';
 //import 'package:bidirectional_scroll_view/bidirectional_scroll_view.dart';
 
 class ReportView extends StatefulWidget{
   final User userData;
-
   final String date;
   const ReportView(this.date, {this.userData});
   @override 
@@ -14,20 +14,153 @@ class ReportView extends StatefulWidget{
 
 class _ReportViewState extends State<ReportView> with SingleTickerProviderStateMixin{
   TabController _tabController;
-  //String initialIndex;
+  static String previousDate = "Please choose the date!!";
+  static String previousMonth = "Please choose the month!!";
+  static List<Order> previousOrders;
+  static List<DailyVendorReport> previousReport;
   String date;
   int reportType;
   _ReportViewState(this.date);
+  //DataTable for monthly report
+  Widget monthlyTable() {
+    if(reportType == 1)
+      previousReport = monthlyReport;
+    return DataTable(
+      columns: <DataColumn>[
+        DataColumn(
+          label: Text(
+          'Date',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          )
+        ),
+        DataColumn(
+          label: Text(
+          'Sale',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          )
+        )
+      ],
+      rows: previousReport
+        .map(
+          (report) => DataRow(cells: [
+            DataCell(
+              Text(report.date),
+            ),
+            DataCell(
+              Text(report.sale),
+            ),
+          ])
+        ).toList()
+    );
+  }
+  //DataTable for daily report
+  Widget dailyTable() { 
+    if(reportType == 0)
+      previousOrders = orders;
+    return DataTable(
+      columns: <DataColumn>[
+        DataColumn(
+          label: Text(
+          'Orders',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          )
+        ),
+        DataColumn(
+          label: Text(
+          'Quantity',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          )
+        ),
+        DataColumn(
+          label: Text(
+          'Price',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          )
+        ),
+        DataColumn(
+          label: Text(
+          'Revenue',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          )
+        ),
+      ],
+      rows: previousOrders
+        .map(
+          (order) => DataRow(cells: [
+            DataCell(
+              Text(order.name),
+            ),
+            DataCell(
+              Text(order.quantity),
+            ),
+            DataCell(
+              Text(order.price),
+            ),
+            DataCell(
+              Text(order.revenue),
+            )
+          ])
+        ).toList()
+    );
+  }
+  Widget checkNewDate() {
+    if(reportType == 0)
+    {
+      previousDate = date;
+      return Text(
+        date,
+        style: TextStyle(
+          color: Colors.black87,
+          fontSize: 20,
+          fontWeight: FontWeight.bold
+        ),
+        textAlign: TextAlign.center,
+      );
+    }
+    return Text(
+        previousDate,
+        style: TextStyle(
+          color: Colors.black87,
+          fontSize: 20,
+          fontWeight: FontWeight.bold
+        ),
+        textAlign: TextAlign.center,
+      );
+  }
+  Widget checkNewMonth() {
+    if(reportType == 1)
+    {
+      previousMonth = date;
+      return Text(
+        date,
+        style: TextStyle(
+          color: Colors.black87,
+          fontSize: 20,
+          fontWeight: FontWeight.bold
+        ),
+        textAlign: TextAlign.center,
+      );
+    }
+    return Text(
+        previousMonth,
+        style: TextStyle(
+          color: Colors.black87,
+          fontSize: 20,
+          fontWeight: FontWeight.bold
+        ),
+        textAlign: TextAlign.center,
+      );
+  }
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(initialIndex: reportType, vsync: this, length: 2);
+    _tabController = TabController(initialIndex: reportType = checkReportType(this.date), vsync: this, length: 2);
   }
   @override 
   Widget build(BuildContext context){
     return Scaffold(
-      //resizeToAvoidBottomInset: false, // address bottom overflow error
-      //resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false, // address bottom overflow error
+      resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Color(0xffff8a84),
@@ -63,8 +196,10 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
             indicatorColor: Colors.white,
             indicatorSize: TabBarIndicatorSize.tab,
           ),
+          //automaticallyImplyLeading: false,
         ),
         body: TabBarView(
+              physics: const ScrollPhysics(),
               children: <Widget>[
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -75,81 +210,22 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                         margin: EdgeInsets.only(top: 20),
                         padding: EdgeInsets.only(top: 20),
                         height: 50,
-                        width: 125,
-                        child: Text(
-                          date,
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold
-                            ),
-                          textAlign: TextAlign.center,
-                        ),
+                        child: checkNewDate(),
+                        width: previousDate == "Please choose the date!!" ? 300 : 125,                        
                       ),
                     ]
                     ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                      columns: const <DataColumn>[
-                        DataColumn(
-                          label: Text(
-                            'Orders',
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                            )
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Quantity',
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                          )
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Price',
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                          )
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Revenue',
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                          )
-                        )
-                      ],
-                      rows: const <DataRow>[
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Pho')),
-                            DataCell(Text('4')),
-                            DataCell(Text('30k')),
-                            DataCell(Text('120k')),
-                          ]
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Hu Tieu')),
-                            DataCell(Text('4')),
-                            DataCell(Text('25k')),
-                            DataCell(Text('100k')),
-                          ]
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Bun Bo Hue')),
-                            DataCell(Text('4')),
-                            DataCell(Text('20k')),
-                            DataCell(Text('80k')),
-                          ]
-                        ),
-                        
-                      ],
-                    )
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: SingleChildScrollView(scrollDirection: Axis.vertical, child: previousDate == "Please choose the date!!" ? null : dailyTable(),)
+                      )
                     )
                   ],
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Row(
                     children: [
@@ -157,105 +233,56 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                         margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
                         padding: EdgeInsets.only(top: 20),
                         height: 50,
-                        width: 125,
-                        /*decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black54, width: 4),
-                        ),*/
-                        child: Text(
-                          date,
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold
-                            ),
-                          textAlign: TextAlign.center,
-                        ),
+                        child: checkNewMonth(),
+                        width: previousMonth == "Please choose the month!!" ? 300 : 125,                        
                       ),
                     ]
                     ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      /*child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,*/
-                      child: DataTable(
-                      columns: const <DataColumn>[
-                        DataColumn(
-                          label: Text(
-                            'Orders',
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                            )
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Quantity',
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                          )
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Price',
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                          )
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Revenue',
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                          )
-                        )
-                      ],
-                      rows: const <DataRow>[
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Pho')),
-                            DataCell(Text('4')),
-                            DataCell(Text('30k')),
-                            DataCell(Text('120k')),
-                          ]
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Hu Tieu')),
-                            DataCell(Text('4')),
-                            DataCell(Text('25k')),
-                            DataCell(Text('100k')),
-                          ]
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Bun Bo Hue')),
-                            DataCell(Text('4')),
-                            DataCell(Text('20k')),
-                            DataCell(Text('80k')),
-                          ]
-                        ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Bun Bo Hue')),
-                            DataCell(Text('4')),
-                            DataCell(Text('20k')),
-                            DataCell(Text('80k')),
-                          ]
-                        ),
-                        
-                      ],
-                    )
-                      //)
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: SingleChildScrollView(scrollDirection: Axis.vertical, child: previousMonth == "Please choose the month!!" ? null : monthlyTable())
+                      )
                     )
                   ],
                 ),
               ],
               controller: _tabController,
-            )
-          //],
-          //)
+            ),
       );
   }
-/*int checkReportType(String  date)
+int checkReportType(String  date)
 {
-  if(date.length > 7)
-
-
-} */
+  reportType = 0;
+  if(date.length < 9)
+    reportType = 1;
+  return reportType;
 }
+}
+
+var orders = <Order> [
+  Order("Pho", "40.000 VND", "4", "160.000 VND"),
+  Order("Hu Tieu", "40.000 VND", "4", "160.000 VND"),
+  Order("Bun Bo Hue", "40.000 VND", "4", "160.000 VND"),
+  Order("Mi Quang", "40.000 VND", "4", "160.000 VND"),
+  Order("Pho", "40.000 VND", "4", "160.000 VND"),
+  Order("Hu Tieu", "40.000 VND", "4", "160.000 VND"),
+  Order("Bun Bo Hue", "40.000 VND", "4", "160.000 VND"),
+  Order("Mi Quang", "40.000 VND", "4", "160.000 VND"),
+  Order("Pho", "40.000 VND", "4", "160.000 VND"),
+  Order("Hu Tieu", "40.000 VND", "4", "160.000 VND"),
+  Order("Bun Bo Hue", "40.000 VND", "4", "160.000 VND"),
+  Order("Mi Quang", "40.000 VND", "4", "160.000 VND"),
+  Order("Pho", "40.000 VND", "4", "160.000 VND"),
+  Order("Hu Tieu", "40.000 VND", "4", "160.000 VND"),
+  Order("Bun Bo Hue", "40.000 VND", "4", "160.000 VND"),
+  Order("Mi Quang", "40.000 VND", "4", "160.000 VND"),
+];
+
+var monthlyReport = <DailyVendorReport>[
+  DailyVendorReport("1/1/2020", "8.000.000 VND"),
+  DailyVendorReport("2/1/2020", "8.000.000 VND"),
+  DailyVendorReport("3/1/2020", "8.000.000 VND"),
+  DailyVendorReport("4/1/2020", "8.000.000 VND"),
+];
 
