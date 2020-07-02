@@ -1,7 +1,11 @@
+import 'dart:typed_data';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
+import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/choose_month_view.dart';
 import 'package:fcfoodcourt/models/DailyVendorReport.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
 //import 'package:bidirectional_scroll_view/bidirectional_scroll_view.dart';
 
 class ReportView extends StatefulWidget{
@@ -20,6 +24,8 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   static List<DailyVendorReport> previousReport;
   String date;
   int reportType;
+  String formattedDate;
+  String formattedMonth;
   _ReportViewState(this.date);
   //DataTable for monthly report
   Widget monthlyTable() {
@@ -106,50 +112,111 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   Widget checkNewDate() {
     if(reportType == 0)
     {
-      previousDate = date;
+      previousDate = ' $date';
       return Text(
-        date,
+        ' $date',
         style: TextStyle(
           color: Colors.black87,
           fontSize: 20,
           fontWeight: FontWeight.bold
         ),
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.start,
       );
     }
     return Text(
         previousDate,
         style: TextStyle(
           color: Colors.black87,
-          fontSize: 20,
+          fontSize:  previousDate == "Please choose the date!!" ? 30 : 20,
           fontWeight: FontWeight.bold
         ),
-        textAlign: TextAlign.center,
+        textAlign:  previousDate == "Please choose the date!!" ? TextAlign.center : TextAlign.start,
       );
   }
   Widget checkNewMonth() {
     if(reportType == 1)
     {
-      previousMonth = date;
+      previousMonth = ' $date';
       return Text(
-        date,
+        ' $date',
         style: TextStyle(
           color: Colors.black87,
           fontSize: 20,
           fontWeight: FontWeight.bold
         ),
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.start,
       );
     }
     return Text(
         previousMonth,
         style: TextStyle(
           color: Colors.black87,
-          fontSize: 20,
+          fontSize: previousMonth == "Please choose the month!!" ? 30 : 20,
           fontWeight: FontWeight.bold
         ),
-        textAlign: TextAlign.center,
+        textAlign: previousMonth == "Please choose the month!!" ? TextAlign.center : TextAlign.start,
       );
+  }
+  Widget changeTime(String type){
+    return Positioned(
+      bottom: 0.0,
+      right: 0.0,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 0),
+        child: RaisedButton(
+          color: Color(0xffff8a84),
+          child: new Text(
+            type, 
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              ),
+            textAlign: TextAlign.center,
+          ),
+          onPressed: () {
+            if(type == 'Choose Date')
+            {
+              showDatePicker(
+                context: context, 
+                initialDate: DateTime.now(), 
+                firstDate: DateTime(2020), 
+                lastDate: DateTime(2030))
+              .then((onValue){
+                if(onValue != null){
+                  formattedDate = DateFormat('dd/MM/yyyy').format(onValue);
+                  Navigator.pushReplacement(
+                    context, 
+                    MaterialPageRoute(builder: (context) => ReportView(formattedDate))
+                  );
+                }
+              }
+              );
+            }
+            if(type == 'Choose Month')
+            {
+              showMonthPicker(
+                context: context, 
+                initialDate: DateTime.now(), 
+                firstDate: DateTime(2020), 
+                lastDate: DateTime(2030))
+              .then((onValue){
+                if(onValue != null){
+                  formattedMonth = DateFormat('MM/yyyy').format(onValue);
+                  Navigator.pushReplacement(
+                    context, 
+                    MaterialPageRoute(builder: (context) => ReportView(formattedMonth))
+                  );
+                }
+              } 
+              );
+            }
+          },
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0))
+            ),
+          ),
+        );
   }
   @override
   void initState() {
@@ -169,14 +236,6 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
-          actions: <Widget>[
-              FlatButton.icon(
-                icon: Icon(Icons.person),
-                label: Text('logout'),
-              onPressed: () async {
-                await AuthenticationService().signOut();
-              },)
-          ],
           bottom: TabBar(
             unselectedLabelColor: Colors.black,
             labelColor: Colors.white,
@@ -199,21 +258,50 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
           //automaticallyImplyLeading: false,
         ),
         body: TabBarView(
-              physics: const ScrollPhysics(),
+              //physics: const ScrollPhysics(),
               children: <Widget>[
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
+                  //mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     Row(
                     children: [
+                      // date or message
+                      Container(
+                        margin: EdgeInsets.only(top: previousDate == "Please choose the date!!" && reportType != 0 ? 150 : 20),
+                        padding: EdgeInsets.only(top: 20),
+                        height: 50,
+                        //alignment: previousDate == "Please choose the date!!" ? Alignment.center : Alignment.centerLeft,
+                        child: checkNewDate(),
+                        width: previousDate == "Please choose the date!!" ? 400 : 130,                        
+                      ),
+                      // If there is already a searched daily report
                       Container(
                         margin: EdgeInsets.only(top: 20),
                         padding: EdgeInsets.only(top: 20),
                         height: 50,
-                        child: checkNewDate(),
-                        width: previousDate == "Please choose the date!!" ? 300 : 125,                        
-                      ),
+                        width: previousDate == "Please choose the date!!" ? 0 : 270,
+                        alignment: Alignment.centerRight,
+                        child: previousDate == "Please choose the date!!" ? null : changeTime("Choose Date")
+                      )
                     ]
+                    ),
+                    // if there is not any searched daily report
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: previousDate != "Please choose the date!!" ? 0 : 20),
+                          padding: EdgeInsets.only(top: previousDate != "Please choose the date!!" ? 0 : 20),
+                          height: previousDate != "Please choose the date!!" ? 0 : 75,
+                          width: previousDate != "Please choose the date!!" ? 0 : 200,
+                          alignment: Alignment.center,
+                          child: previousDate != "Please choose the date!!" ? null : SizedBox(
+                            width: 200,
+                            height: 100,
+                            child: changeTime("Choose Date")
+                          )  
+                        )
+                      ],
                     ),
                     Expanded(
                       child: SingleChildScrollView(
@@ -223,20 +311,49 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                     )
                   ],
                 ),
+                // MONTHLY REPORT
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
-                        margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        margin: EdgeInsets.only(top: previousMonth == "Please choose the month!!" && reportType != 1 ? 150 : 20),
                         padding: EdgeInsets.only(top: 20),
                         height: 50,
+                        alignment: previousMonth == "Please choose the month!!" ? Alignment.center : Alignment.centerLeft,
                         child: checkNewMonth(),
-                        width: previousMonth == "Please choose the month!!" ? 300 : 125,                        
+                        width: previousMonth == "Please choose the month!!" ? 400 : 125,                        
                       ),
+                      // If there is already a searched monthly report
+                      Container(
+                        margin: EdgeInsets.only(top: 20),
+                        padding: EdgeInsets.only(top: 20),
+                        height: 50,
+                        width: previousMonth == "Please choose the month!!" ? 0 : 275,
+                        alignment: Alignment.centerRight,
+                        child: previousMonth == "Please choose the month!!" ? null : changeTime("Choose Month")
+                      )
                     ]
+                    ),
+                    // if there is not any searched monthly report
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: previousMonth != "Please choose the month!!" ? 0 : 20),
+                          padding: EdgeInsets.only(top: previousMonth != "Please choose the month!!" ? 0 : 10),
+                          height: previousMonth != "Please choose the month!!" ? 0 : 75,
+                          width: previousMonth != "Please choose the month!!" ? 0 : 200,
+                          child: previousMonth != "Please choose the month!!" ? null : SizedBox(
+                            width: 200,
+                            height: 100,
+                            child: changeTime("Choose Month")
+                          ),
+                          alignment: Alignment.center,
+                        )
+                      ],
                     ),
                     Expanded(
                       child: SingleChildScrollView(
@@ -258,6 +375,7 @@ int checkReportType(String  date)
     reportType = 1;
   return reportType;
 }
+
 }
 
 var orders = <Order> [

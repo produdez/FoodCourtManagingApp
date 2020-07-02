@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:fcfoodcourt/shared/profile_view.dart';
+import 'package:fcfoodcourt/views/FCManager/ReportView/report_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/select_type_view.dart';
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/manage_staff_view.dart';
@@ -25,7 +26,7 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
 
     //TODO: Add report route here
     children.add(SelectTypeView(userData: widget.userData));
-
+    
     children.add(ProfileView(userData: widget.userData,));
     super.initState();
   }
