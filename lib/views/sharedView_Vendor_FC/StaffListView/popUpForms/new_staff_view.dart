@@ -196,16 +196,20 @@ Future<Staff> createPopUpNewStaff(BuildContext context) {
   return showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text(
-            'New Staff Form',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 30,
-              color: Color(0xffff6624),
+        return Center(
+          child: SingleChildScrollView(
+            child: AlertDialog(
+              title: Text(
+                'New Staff Form',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                  color: Color(0xffff6624),
+                ),
+              ),
+              content: SizedBox(height: 480, width: 300, child: NewStaffForm()),
             ),
           ),
-          content: SizedBox(height: 600, width: 300, child: NewStaffForm()),
         );
       });
 }

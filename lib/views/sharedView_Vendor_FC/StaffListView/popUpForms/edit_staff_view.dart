@@ -243,21 +243,25 @@ Future<Staff> createPopUpEditStaff(BuildContext context, Staff staff) {
   return showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text(
-            'Edit Staff Form',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 30,
-              color: Color(0xffff6624),
+        return Center(
+          child: SingleChildScrollView(
+            child: AlertDialog(
+              title: Text(
+                'Edit Staff Form',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                  color: Color(0xffff6624),
+                ),
+              ),
+              content: SizedBox(
+                  height: 500,
+                  width: 300,
+                  child: EditStaffForm(
+                    staff: staff,
+                  )),
             ),
           ),
-          content: SizedBox(
-              height: 500,
-              width: 300,
-              child: EditStaffForm(
-                staff: staff,
-              )),
         );
       });
 }

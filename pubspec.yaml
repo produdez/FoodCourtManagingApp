@@ -33,6 +33,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   getflutter: ^1.0.4
   bidirectional_scroll_view: ^0.1.1
+  regexed_validator: ^1.0.4
 dev_dependencies:
   flutter_test:
     sdk: flutter

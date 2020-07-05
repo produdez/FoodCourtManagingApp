@@ -34,6 +34,7 @@ class _MenuViewState extends State<MenuView> {
     return StreamProvider<List<Dish>>.value(
       value: DishDBService().allVendorDishes,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Color(0xffff8a84),

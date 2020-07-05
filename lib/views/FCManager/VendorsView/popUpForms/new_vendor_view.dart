@@ -172,16 +172,20 @@ Future<Vendor> createPopUpNewVendor(BuildContext context) {
   return showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text(
-            'New Vendor Form',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 30,
-              color: Color(0xffff6624),
+        return Center(
+          child: SingleChildScrollView(
+            child: AlertDialog(
+              title: Text(
+                'New Vendor Form',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                  color: Color(0xffff6624),
+                ),
+              ),
+              content: SizedBox(height: 380, width: 300, child: NewVendorForm()),
             ),
           ),
-          content: SizedBox(height: 350, width: 300, child: NewVendorForm()),
         );
       });
 }
