@@ -1,9 +1,9 @@
-import 'dart:typed_data';
+
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:fcfoodcourt/models/user.dart';
-import 'package:fcfoodcourt/services/authentication_service.dart';
-import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/choose_month_view.dart';
+import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/invalid_view.dart';
+import 'package:fcfoodcourt/services/VendorReportDBService/vendor_report_db_service.dart';
 import 'package:fcfoodcourt/models/DailyVendorReport.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 //import 'package:bidirectional_scroll_view/bidirectional_scroll_view.dart';
@@ -11,9 +11,11 @@ import 'package:month_picker_dialog/month_picker_dialog.dart';
 class ReportView extends StatefulWidget{
   final User userData;
   final String date;
-  const ReportView(this.date, {this.userData});
+  final List<Order> orders;
+  final List<DailyVendorReport> dailyVendorReport;
+  const ReportView(this.date, this.orders, this.dailyVendorReport, {this.userData});
   @override 
-  _ReportViewState createState() => _ReportViewState(this.date);
+  _ReportViewState createState() => _ReportViewState(this.date, this.orders, this.dailyVendorReport);
 }
 
 class _ReportViewState extends State<ReportView> with SingleTickerProviderStateMixin{
@@ -22,15 +24,31 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   static String previousMonth = "Please choose the month!!";
   static List<Order> previousOrders;
   static List<DailyVendorReport> previousReport;
+  static int stupidBug = 0;
   String date;
   int reportType;
   String formattedDate;
   String formattedMonth;
-  _ReportViewState(this.date);
+  String formatId;
+  List<Order> orders;
+  List<DailyVendorReport> dailyVendorReport;
+  //var orderss;
+  _ReportViewState(this.date, this.orders, this.dailyVendorReport);
+  @override
+  void initState() {
+    super.initState();
+    reportType = checkReportType(date);
+    _tabController = TabController(initialIndex: reportType, vsync: this, length: 2);
+    if(reportType == 0)
+      previousOrders = orders;
+    else
+      previousReport = dailyVendorReport;
+
+  }
   //DataTable for monthly report
   Widget monthlyTable() {
-    if(reportType == 1)
-      previousReport = monthlyReport;
+    /*if(reportType == 1)
+      previousReport = dailyVendorReport;*/
     return DataTable(
       columns: <DataColumn>[
         DataColumn(
@@ -60,9 +78,9 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
     );
   }
   //DataTable for daily report
-  Widget dailyTable() { 
-    if(reportType == 0)
-      previousOrders = orders;
+  Widget dailyTable(){ 
+    /*if(reportType == 0)
+      previousOrders = orders;*/
     return DataTable(
       columns: <DataColumn>[
         DataColumn(
@@ -105,7 +123,7 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
             DataCell(
               Text(order.revenue),
             )
-          ])
+          ])        
         ).toList()
     );
   }
@@ -182,13 +200,22 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                 initialDate: DateTime.now(), 
                 firstDate: DateTime(2020), 
                 lastDate: DateTime(2030))
-              .then((onValue){
+              .then((onValue) {
                 if(onValue != null){
                   formattedDate = DateFormat('dd/MM/yyyy').format(onValue);
-                  Navigator.pushReplacement(
-                    context, 
-                    MaterialPageRoute(builder: (context) => ReportView(formattedDate))
-                  );
+                  formatId = DateFormat('ddMMyyyy').format(onValue);
+                  VendorReportDBService().checkAvailableDailyReport(formatId, 'vendor1').then((onValue) {
+                    if(onValue != null)
+                    {
+                      Navigator.pushReplacement(
+                        context, 
+                        MaterialPageRoute(builder: (context) => ReportView(formattedDate, onValue, null))                    
+                      );
+                    }
+                    else {
+                      createPopUpInvalidMessage(context);
+                    }
+                  });
                 }
               }
               );
@@ -203,10 +230,19 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
               .then((onValue){
                 if(onValue != null){
                   formattedMonth = DateFormat('MM/yyyy').format(onValue);
-                  Navigator.pushReplacement(
-                    context, 
-                    MaterialPageRoute(builder: (context) => ReportView(formattedMonth))
-                  );
+                  formatId = DateFormat('MMyyyy').format(onValue);
+                  VendorReportDBService().checkAvailableMonthlyReport(formatId, 'vendor1').then((onValue) async{
+                    if(onValue != null)
+                    {
+                      Navigator.push(
+                        context, 
+                        MaterialPageRoute(builder: (context) => ReportView(formattedMonth, null, onValue))                    
+                      );
+                    }
+                    else {
+                      createPopUpInvalidMessage(context);
+                    }
+                  });
                 }
               } 
               );
@@ -217,11 +253,6 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
             ),
           ),
         );
-  }
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(initialIndex: reportType = checkReportType(this.date), vsync: this, length: 2);
   }
   @override 
   Widget build(BuildContext context){
@@ -262,7 +293,7 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
               children: <Widget>[
                 Column(
                   //mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: [               
                     Row(
                     children: [
                       // date or message
@@ -368,6 +399,57 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
             ),
       );
   }
+  /*Widget dailyTable(){ 
+    if(reportType == 0){
+      previousOrders = this.orders;
+      print("Here");
+    }
+    return DataTable(
+      columns: <DataColumn>[
+        DataColumn(
+          label: Text(
+          'Orders',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          )
+        ),
+        DataColumn(
+          label: Text(
+          'Quantity',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          )
+        ),
+        DataColumn(
+          label: Text(
+          'Price',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          )
+        ),
+        DataColumn(
+          label: Text(
+          'Revenue',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          )
+        ),
+      ],
+      rows: previousOrders
+        .map(
+          (order) => DataRow(cells: [
+            DataCell(
+              Text(order.name),
+            ),
+            DataCell(
+              Text(order.quantity),
+            ),
+            DataCell(
+              Text(order.price),
+            ),
+            DataCell(
+              Text(order.revenue),
+            )
+          ])        
+        ).toList()
+    );
+  }*/
 int checkReportType(String  date)
 {
   reportType = 0;
@@ -378,8 +460,8 @@ int checkReportType(String  date)
 
 }
 
-var orders = <Order> [
-  Order("Pho", "40.000 VND", "4", "160.000 VND"),
+var orderss = <Order> [
+  /*Order("Pho", "40.000 VND", "4", "160.000 VND"),
   Order("Hu Tieu", "40.000 VND", "4", "160.000 VND"),
   Order("Bun Bo Hue", "40.000 VND", "4", "160.000 VND"),
   Order("Mi Quang", "40.000 VND", "4", "160.000 VND"),
@@ -394,13 +476,12 @@ var orders = <Order> [
   Order("Pho", "40.000 VND", "4", "160.000 VND"),
   Order("Hu Tieu", "40.000 VND", "4", "160.000 VND"),
   Order("Bun Bo Hue", "40.000 VND", "4", "160.000 VND"),
-  Order("Mi Quang", "40.000 VND", "4", "160.000 VND"),
+  Order("Mi Quang", "40.000 VND", "4", "160.000 VND"),*/
 ];
-
 var monthlyReport = <DailyVendorReport>[
-  DailyVendorReport("1/1/2020", "8.000.000 VND"),
-  DailyVendorReport("2/1/2020", "8.000.000 VND"),
+  DailyVendorReport(),
+  /*DailyVendorReport("2/1/2020", "8.000.000 VND"),
   DailyVendorReport("3/1/2020", "8.000.000 VND"),
-  DailyVendorReport("4/1/2020", "8.000.000 VND"),
+  DailyVendorReport("4/1/2020", "8.000.000 VND"),*/
 ];
 

@@ -10,14 +10,14 @@ class User {
       : id = data['id'],
         name = data['fullName'],
         email = data['email'],
-        role = data['userRole'];
+        role = data['role'];
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'fullName': name,
       'email': email,
-      'userRole': role,
+      'role': role,
     };
   }
 }

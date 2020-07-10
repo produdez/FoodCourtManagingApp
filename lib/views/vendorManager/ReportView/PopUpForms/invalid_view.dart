@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:fcfoodcourt/models/user.dart';
+import 'package:fcfoodcourt/views/FCManager/ReportView/select_type_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/select_type_view.dart';
 //import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/choose_date_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,9 +21,9 @@ class _InvalidForm extends State<InvalidForm>{
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-              FlatButton(
+              /*FlatButton(
                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
@@ -41,7 +42,7 @@ class _InvalidForm extends State<InvalidForm>{
                     MaterialPageRoute(builder: (context) => SelectTypeView(userData: widget.userData))
                   );
                 }
-              ),
+              ),*/
               FlatButton(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 shape: RoundedRectangleBorder(
@@ -57,7 +58,7 @@ class _InvalidForm extends State<InvalidForm>{
                   ),
                 ),
                 onPressed: () {
-                      Navigator.of(context).pop(null); 
+                      Navigator.of(context).pop(null);  
                     }
               ),
             ],
@@ -72,11 +73,11 @@ Future createPopUpInvalidMessage(BuildContext context) {
       builder: (context) {
         return AlertDialog(
           title: Text(
-            'Invalid time\nPlease choose again',
+            'Unavailable Report!!\n\nPlease choose again',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 30,
+              fontSize: 27,
               color: Color(0xffff6624),
             ),
           ),

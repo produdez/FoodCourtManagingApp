@@ -1,6 +1,3 @@
-
-
-
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/services/user_db_service.dart';
@@ -17,14 +14,14 @@ After user log-in, this will route them to their correct screen
 You must pass the currentUser down to the child class in order to user them
  */
 class LoggedInUserRouter extends StatelessWidget {
-  @override
+  @override 
   Widget build(BuildContext context) {
     final userIdOnly = Provider.of<User>(context);
     if(userIdOnly== null) return Wrapper();
 
     return FutureBuilder(
       future: UserDBService(userIdOnly.id).getUserData(),
-      builder: (context, snapshot){
+      builder: (context, snapshot) {
         print("Status: ${snapshot.connectionState.toString()}");
         if(snapshot.connectionState == ConnectionState.waiting){
           return Loading();
@@ -32,14 +29,13 @@ class LoggedInUserRouter extends StatelessWidget {
           //THIS IS THE USER DATA
           //TODO: pass this down to below classes to use.
           User currentUser = snapshot.data;
-
           //TODO: Customer Home UI Here
           if(currentUser.role == "Customer"){
             return Container(
               child: Scaffold(
                 body: Text("Customer UI"),
                 appBar: AppBar(
-                  actions: <Widget>[
+                  actions: <Widget>[                                                                                                                                           
                     FlatButton.icon(
                       icon: Icon(Icons.person),
                       label: Text('logout'),
@@ -55,7 +51,6 @@ class LoggedInUserRouter extends StatelessWidget {
           //TODO: Vendor Manager Home UI Here
           if(currentUser.role == "Vendor Manager"){
             return VendorManagerNavBar(userData: currentUser,);
-
           }
 
           //TODO: FC manager Home UI Here

@@ -1,8 +1,10 @@
 import 'package:fcfoodcourt/models/user.dart';
-import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/choose_date_view.dart';
 import 'package:intl/intl.dart';
-import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/choose_month_view.dart';
+import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/invalid_view.dart';
+import 'package:fcfoodcourt/services/VendorReportDBService/vendor_report_db_service.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/report_view.dart';
+import 'package:fcfoodcourt/models/DailyVendorReport.dart';
+import 'package:fcfoodcourt/shared/loading_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
@@ -16,9 +18,9 @@ class SelectTypeView extends StatefulWidget {
 }
 
 class _SelectTypeViewState extends State<SelectTypeView> {
-  DateTime _dateTime;
   String formattedDate;
   String formattedMonth;
+  String formatId;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,13 +119,22 @@ class _SelectTypeViewState extends State<SelectTypeView> {
                 initialDate: DateTime.now(), 
                 firstDate: DateTime(2020), 
                 lastDate: DateTime(2030))
-              .then((onValue){
+              .then((onValue) {
                 if(onValue != null){
                   formattedDate = DateFormat('dd/MM/yyyy').format(onValue);
-                  Navigator.push(
-                    context, 
-                    MaterialPageRoute(builder: (context) => ReportView(formattedDate))
-                  );
+                  formatId = DateFormat('ddMMyyyy').format(onValue);
+                  VendorReportDBService().checkAvailableDailyReport(formatId, 'vendor1').then((onValue) async{
+                    if(onValue != null)
+                    {
+                      Navigator.push(
+                        context, 
+                        MaterialPageRoute(builder: (context) => ReportView(formattedDate, onValue, null))                    
+                      );
+                    }
+                    else {
+                      createPopUpInvalidMessage(context);
+                    }
+                  });
                 }
               }
               );
@@ -138,10 +149,19 @@ class _SelectTypeViewState extends State<SelectTypeView> {
               .then((onValue){
                 if(onValue != null){
                   formattedMonth = DateFormat('MM/yyyy').format(onValue);
-                  Navigator.push(
-                    context, 
-                    MaterialPageRoute(builder: (context) => ReportView(formattedMonth))
-                  );
+                  formatId = DateFormat('MMyyyy').format(onValue);
+                  VendorReportDBService().checkAvailableMonthlyReport(formatId, 'vendor1').then((onValue) async{
+                    if(onValue != null)
+                    {
+                      Navigator.push(
+                        context, 
+                        MaterialPageRoute(builder: (context) => ReportView(formattedMonth, null, onValue))                    
+                      );
+                    }
+                    else {
+                      createPopUpInvalidMessage(context);
+                    }
+                  });
                 }
               } 
               );
