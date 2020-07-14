@@ -10,7 +10,7 @@ class VendorDBService{
 
   Future addVendor(Vendor vendor) async {
     DocumentReference _vendorRef = vendorDB.document();
-    ImageUploadService().uploadPic(vendor.imageFile,_vendorRef.documentID);
+    ImageUploadService().uploadPic(vendor.imageFile,_vendorRef);
     return await _vendorRef.setData({
       "id": _vendorRef.documentID,
       "name": vendor.name,
@@ -20,7 +20,7 @@ class VendorDBService{
   }
   Future editVendor(Vendor vendor, Vendor newVendor) async {
     DocumentReference _staffRef = vendorDB.document(vendor.id);
-    ImageUploadService().uploadPic(vendor.imageFile,_staffRef.documentID);
+    ImageUploadService().uploadPic(vendor.imageFile,_staffRef);
     return await _staffRef.updateData({
       "name": newVendor.name,
       "phone":newVendor.phone,
