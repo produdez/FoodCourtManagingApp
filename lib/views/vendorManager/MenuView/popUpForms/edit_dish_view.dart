@@ -3,12 +3,12 @@ import 'dart:io';
 
 import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
+import 'package:fcfoodcourt/services/input_field_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:getflutter/components/avatar/gf_avatar.dart';
 import 'package:getflutter/shape/gf_avatar_shape.dart';
 
 import '../../../../shared/confirmation_view.dart';
-//TODO: format checker
 /*
 A form that shows edit.
 The function createEditView returns a Future<Dish>
@@ -25,23 +25,26 @@ class EditDishForm extends StatefulWidget {
 
 class _EditDishFormState extends State<EditDishForm> {
   String name;
-  double price;
+  String price;
   String imageName;
   ImageUploadService _imageUploadService = ImageUploadService();
   File _image;
   bool hasImage;
-
+  final _formKey = GlobalKey<FormState>();
+  static final TextEditingController _initTextController = TextEditingController();
   @override
   void initState() {
     name = widget.dish.name;
-    price = widget.dish.originPrice;
+    price = widget.dish.originPrice.toString();
     imageName = widget.dish.id;
     hasImage = widget.dish.hasImage;
+    _initTextController.text="";
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Form(
+      key: _formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -116,9 +119,11 @@ class _EditDishFormState extends State<EditDishForm> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
-            child: TextField(
+            child: TextFormField(
+              controller: _initTextController,
+              validator: InputFieldValidator.priceValidator,
               onChanged: (String price) {
-                this.price = double.parse(price);
+                this.price = price;
               },
               decoration: InputDecoration(
                 border: InputBorder.none,
@@ -162,12 +167,14 @@ class _EditDishFormState extends State<EditDishForm> {
                   ),
                 ),
                 onPressed: () {
-                  createConfirmationView(context).then((onValue) {
-                    if (onValue == true) {
-                      hasImage = _image !=null? true : false;
-                      Navigator.of(context).pop(new Dish(name, price,imageFile: _image,hasImage: hasImage));
-                    }
-                  });
+                  if(_formKey.currentState.validate()){
+                    createConfirmationView(context).then((onValue) {
+                        if (onValue == true) {
+                          hasImage = _image !=null? true : false;
+                          Navigator.of(context).pop(new Dish(name, double.parse(price),imageFile: _image,hasImage: hasImage));
+                        }
+                    });
+                  }
                 },
               ),
             ],
@@ -217,7 +224,7 @@ Future<Dish> createPopUpEditDish(BuildContext context, Dish dish) {
                 ),
               ),
               content: SizedBox(
-                  height: 380,
+                  height: 390,
                   width: 300,
                   child: EditDishForm(
                     dish: dish,

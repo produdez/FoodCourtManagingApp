@@ -1,6 +1,8 @@
 import 'package:fcfoodcourt/services/authentication_service.dart';
+import 'package:fcfoodcourt/services/input_field_validator.dart';
 import 'package:fcfoodcourt/shared/loading_view.dart';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 
 class RegisterView extends StatefulWidget {
@@ -61,7 +63,7 @@ class _RegisterViewState extends State<RegisterView> {
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.black, width: 2)),
                   child: TextFormField(
-                    validator: (val) => val.isEmpty ? 'Enter an email' : null,
+                    validator: InputFieldValidator.emailValidator,
                     onChanged: (val) {
                       setState(() => email = val);
                     },
@@ -86,7 +88,7 @@ class _RegisterViewState extends State<RegisterView> {
                       border: Border.all(color: Colors.black, width: 2)),
                   child: TextFormField(
                     obscureText: true,
-                    validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
+                    validator: InputFieldValidator.passwordValidator,
                     onChanged: (val) {
                       setState(() => password = val);
                     },
@@ -110,7 +112,7 @@ class _RegisterViewState extends State<RegisterView> {
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.black, width: 2)),
                   child: TextFormField(
-                    validator: (val) => val.isEmpty ? 'What\'s your name?' : null,
+                    validator: RequiredValidator(errorText: 'Phone is required'),
                     onChanged: (val) {
                       setState(() => name = val);
                     },

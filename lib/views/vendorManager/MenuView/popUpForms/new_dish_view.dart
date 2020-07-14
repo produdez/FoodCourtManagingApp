@@ -1,13 +1,13 @@
 
 import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
+import 'package:fcfoodcourt/services/input_field_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:getflutter/components/avatar/gf_avatar.dart';
 import 'package:getflutter/getflutter.dart';
 import 'dart:io';
 import '../../../../shared/confirmation_view.dart';
-
-//TODO: Implement format checking when possible
 
 /*
 A form that shows new dish.
@@ -22,13 +22,15 @@ class NewDishForm extends StatefulWidget {
 
 class _NewDishFormState extends State<NewDishForm> {
   String name;
-  double price;
+  String price;
   String imageURL;
   ImageUploadService _imageUploadService = ImageUploadService();
   File _image;
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Form(
+      key: _formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -80,7 +82,8 @@ class _NewDishFormState extends State<NewDishForm> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
-            child: TextField(
+            child: TextFormField(
+              validator: RequiredValidator(errorText: 'Name is required'),
               onChanged: (String name) {
                 this.name = name;
               },
@@ -105,9 +108,13 @@ class _NewDishFormState extends State<NewDishForm> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
-            child: TextField(
+            child: TextFormField(
+              validator: MultiValidator([
+                RequiredValidator(errorText: 'Price is required'),
+                InputFieldValidator.priceValidator,
+              ]),
               onChanged: (String price) {
-                this.price = double.parse(price);
+                this.price = price;
               },
               decoration: InputDecoration(
                 border: InputBorder.none,
@@ -151,12 +158,15 @@ class _NewDishFormState extends State<NewDishForm> {
                   ),
                 ),
                 onPressed: () {
-                  createConfirmationView(context).then((onValue) async {
-                    if (onValue == true) {
-                      bool hasImage = _image!=null? true:false;
-                      Navigator.of(context).pop(new Dish(name, price, imageFile: _image,hasImage:hasImage));
-                    }
-                  });
+                  if(_formKey.currentState.validate()){
+                    createConfirmationView(context).then((onValue) async {
+                      if (onValue == true) {
+                        bool hasImage = _image!=null? true:false;
+                        Navigator.of(context).pop(new Dish(name, double.parse(price), imageFile: _image,hasImage:hasImage));
+                      }
+                    });
+                  }
+
                 },
               ),
             ],
@@ -183,7 +193,7 @@ Future<Dish> createPopUpNewDish(BuildContext context) {
                   color: Color(0xffff6624),
                 ),
               ),
-              content: SizedBox(height: 380, width: 300, child: NewDishForm()),
+              content: SizedBox(height: 420, width: 300, child: NewDishForm()),
             ),
           ),
         );

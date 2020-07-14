@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:fcfoodcourt/models/vendor.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
+import 'package:fcfoodcourt/services/input_field_validator.dart';
 import 'package:fcfoodcourt/shared/confirmation_view.dart';
 import 'package:flutter/material.dart';
 import 'package:getflutter/components/avatar/gf_avatar.dart';
@@ -29,7 +30,7 @@ class _EditVendorFormState extends State<EditVendorForm> {
   ImageUploadService _imageUploadService = ImageUploadService();
   File _image;
   bool hasImage;
-
+  final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     name = widget.vendor.name;
@@ -41,7 +42,8 @@ class _EditVendorFormState extends State<EditVendorForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Form(
+      key: _formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -91,7 +93,7 @@ class _EditVendorFormState extends State<EditVendorForm> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
-            child: TextField(
+            child: TextFormField(
               onChanged: (String name) {
                 this.name = name;
               },
@@ -116,7 +118,8 @@ class _EditVendorFormState extends State<EditVendorForm> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
-            child: TextField(
+            child: TextFormField(
+              validator: InputFieldValidator.phoneValidator,
               onChanged: (String phone) {
                 this.phone = phone;
               },
@@ -162,12 +165,14 @@ class _EditVendorFormState extends State<EditVendorForm> {
                   ),
                 ),
                 onPressed: () {
-                  createConfirmationView(context).then((onValue) {
+                  if(_formKey.currentState.validate()){
+                    createConfirmationView(context).then((onValue) {
                     if (onValue == true) {
                       hasImage = _image !=null? true : false;
                       Navigator.of(context).pop(new Vendor(name, phone,imageFile: _image,hasImage: hasImage));
                     }
                   });
+                  }
                 },
               ),
             ],
@@ -217,7 +222,7 @@ Future<Vendor> createPopUpEditVendor(BuildContext context, Vendor vendor) {
                 ),
               ),
               content: SizedBox(
-                  height: 380,
+                  height: 400,
                   width: 300,
                   child: EditVendorForm(
                     vendor: vendor,

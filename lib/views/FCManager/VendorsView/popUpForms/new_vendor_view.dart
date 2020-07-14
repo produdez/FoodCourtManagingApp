@@ -1,13 +1,15 @@
 
 import 'package:fcfoodcourt/models/vendor.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
+import 'package:fcfoodcourt/services/input_field_validator.dart';
 import 'package:fcfoodcourt/shared/confirmation_view.dart';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:getflutter/components/avatar/gf_avatar.dart';
 import 'package:getflutter/getflutter.dart';
 import 'dart:io';
 
-//TODO: Implement format checking when possible
+//TODO: will add email and password here, remember to rescale
 
 /*
 A form that shows new vendor.
@@ -26,9 +28,11 @@ class _NewVendorFormState extends State<NewVendorForm> {
   String imageURL;
   ImageUploadService _imageUploadService = ImageUploadService();
   File _image;
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Form(
+      key: _formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -80,7 +84,8 @@ class _NewVendorFormState extends State<NewVendorForm> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
-            child: TextField(
+            child: TextFormField(
+              validator: RequiredValidator(errorText: 'Name is required'),
               onChanged: (String name) {
                 this.name = name;
               },
@@ -105,7 +110,11 @@ class _NewVendorFormState extends State<NewVendorForm> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
-            child: TextField(
+            child: TextFormField(
+              validator: MultiValidator([
+                RequiredValidator(errorText: 'Phone is required'),
+                InputFieldValidator.phoneValidator,
+              ]),
               onChanged: (String phone) {
                 this.phone = phone;
               },
@@ -151,12 +160,14 @@ class _NewVendorFormState extends State<NewVendorForm> {
                   ),
                 ),
                 onPressed: () {
-                  createConfirmationView(context).then((onValue) async {
+                  if(_formKey.currentState.validate()){
+                    createConfirmationView(context).then((onValue) async {
                     if (onValue == true) {
-                      bool hasImage = _image!=null? true:false;
-                      Navigator.of(context).pop(new Vendor(name, phone, imageFile: _image,hasImage:hasImage));
-                    }
-                  });
+                        bool hasImage = _image!=null? true:false;
+                        Navigator.of(context).pop(new Vendor(name, phone, imageFile: _image,hasImage:hasImage));
+                      }
+                    });
+                  }
                 },
               ),
             ],
@@ -183,7 +194,7 @@ Future<Vendor> createPopUpNewVendor(BuildContext context) {
                   color: Color(0xffff6624),
                 ),
               ),
-              content: SizedBox(height: 380, width: 300, child: NewVendorForm()),
+              content: SizedBox(height: 500, width: 300, child: NewVendorForm()),
             ),
           ),
         );

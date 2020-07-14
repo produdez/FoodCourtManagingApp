@@ -1,5 +1,6 @@
 import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/services/helper_service.dart';
+import 'package:fcfoodcourt/services/input_field_validator.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../shared/confirmation_view.dart';
@@ -9,7 +10,6 @@ A form that shows discount.
 The function createDiscountDishView returns a Future<Dish>
 that Dish only contains discount information
  */
-//TODO: format checker
 class DiscountDishForm extends StatefulWidget {
   final Dish dish;
 
@@ -24,6 +24,7 @@ class _DiscountDishFormState extends State<DiscountDishForm> {
   double discountedPercentage;
   var priceInputController = TextEditingController();
   var percentageInputController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -34,7 +35,8 @@ class _DiscountDishFormState extends State<DiscountDishForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Form(
+      key: _formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -62,7 +64,8 @@ class _DiscountDishFormState extends State<DiscountDishForm> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
-            child: TextField(
+            child: TextFormField(
+              validator: InputFieldValidator.priceValidator,
               controller: priceInputController,
               onChanged: (String price) {
                 if (price != "") {
@@ -99,7 +102,8 @@ class _DiscountDishFormState extends State<DiscountDishForm> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
-            child: TextField(
+            child: TextFormField(
+              validator: InputFieldValidator.percentageValidator,
               controller: percentageInputController,
               onChanged: (String percentage) {
                 if (percentage != "") {
@@ -155,13 +159,15 @@ class _DiscountDishFormState extends State<DiscountDishForm> {
                   ),
                 ),
                 onPressed: () {
-                  createConfirmationView(context).then((onValue) {
-                    if (onValue == true) {
-                      Navigator.of(context).pop(new Dish(null, null,
-                          discountPercentage: discountedPercentage,
-                          realPrice: discountedPrice));
+                    if(_formKey.currentState.validate()){
+                      createConfirmationView(context).then((onValue) {
+                          if (onValue == true) {
+                            Navigator.of(context).pop(new Dish(null, null,
+                                discountPercentage: discountedPercentage,
+                                realPrice: discountedPrice));
+                          }
+                      });
                     }
-                  });
                 },
               ),
             ],
@@ -188,7 +194,7 @@ Future<Dish> createPopUpDiscountDish(BuildContext context, Dish dish) {
                 ),
               ),
               content: SizedBox(
-                  height: 300,
+                  height: 350,
                   width: 300,
                   child: DiscountDishForm(
                     dish: dish,

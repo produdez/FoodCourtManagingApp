@@ -7,6 +7,7 @@ import 'dart:io';
 
 import 'package:fcfoodcourt/models/staff.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
+import 'package:fcfoodcourt/services/input_field_validator.dart';
 import 'package:fcfoodcourt/shared/confirmation_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class _EditStaffFormState extends State<EditStaffForm> {
   ImageUploadService _imageUploadService = ImageUploadService();
   File _image;
   bool hasImage;
-
+  final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     name = widget.staff.name;
@@ -44,7 +45,8 @@ class _EditStaffFormState extends State<EditStaffForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Form(
+      key: _formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -119,7 +121,8 @@ class _EditStaffFormState extends State<EditStaffForm> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
-            child: TextField(
+            child: TextFormField(
+              validator: InputFieldValidator.phoneValidator,
               onChanged: (String phone) {
                 this.phone = phone;
               },
@@ -188,12 +191,14 @@ class _EditStaffFormState extends State<EditStaffForm> {
                   ),
                 ),
                 onPressed: () {
-                  createConfirmationView(context).then((onValue) {
-                    if (onValue == true) {
-                      hasImage = _image !=null? true : false;
-                      Navigator.of(context).pop(new Staff(name, imageFile: _image,hasImage: hasImage,phone: phone, position: position));
-                    }
-                  });
+                  if(_formKey.currentState.validate()){
+                    createConfirmationView(context).then((onValue) {
+                      if (onValue == true) {
+                        hasImage = _image !=null? true : false;
+                        Navigator.of(context).pop(new Staff(name, imageFile: _image,hasImage: hasImage,phone: phone, position: position));
+                      }
+                    });
+                  }
                 },
               ),
             ],
