@@ -167,6 +167,7 @@ class ItemDishView extends StatelessWidget {
       ),
     );
   }
+
   Widget showImage(BuildContext context){
     if(dish.hasImage==false){
       return Container(

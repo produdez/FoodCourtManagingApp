@@ -30,15 +30,14 @@ class DishDBService {
   //update dish, changing name, original price and reset it's discount state
   Future editDish(Dish dish, Dish newDish) async {
     DocumentReference _dishRef = dishDB.document(dish.id);
-    String imageURL = await ImageUploadService().uploadPic(newDish.imageFile,_dishRef);
+    ImageUploadService().uploadPic(newDish.imageFile,_dishRef);
     return await _dishRef.updateData({
       "name": newDish.name,
       "originPrice": newDish.originPrice,
       "realPrice": newDish.originPrice, //reset on edit
       "discountPercentage": 0.0, //reset on edit
-      "hasImage" : imageURL==null? dish.hasImage : newDish.hasImage,
+      "hasImage" : newDish.hasImage ? newDish.hasImage:dish.hasImage,
       "isOutOfOrder" : false, // reset on edit
-      "imageURL" : imageURL==null? dish.imageURL : imageURL,
       //no update vendor ID
     });
   }

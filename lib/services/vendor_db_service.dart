@@ -20,11 +20,11 @@ class VendorDBService{
   }
   Future editVendor(Vendor vendor, Vendor newVendor) async {
     DocumentReference _staffRef = vendorDB.document(vendor.id);
-    ImageUploadService().uploadPic(vendor.imageFile,_staffRef);
+    ImageUploadService().uploadPic(newVendor.imageFile,_staffRef);
     return await _staffRef.updateData({
       "name": newVendor.name,
       "phone":newVendor.phone,
-      "hasImage" : vendor.hasImage==true?true:newVendor.hasImage==true?true:false,
+      "hasImage" : newVendor.hasImage ? newVendor.hasImage : vendor.hasImage,
       //no update vendor ID
     });
   }
@@ -66,6 +66,7 @@ class VendorDBService{
         doc.data['phone'] ?? '',
         id: doc.data['id'] ?? '',
         hasImage: doc.data['hasImage'] ?? false,
+        imageURL: doc.data['imageURL'] ?? null,
       );
     }).toList();
   }
