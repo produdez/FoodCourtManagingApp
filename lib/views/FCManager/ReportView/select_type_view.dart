@@ -1,11 +1,13 @@
 import 'package:fcfoodcourt/models/user.dart';
-import 'package:fcfoodcourt/views/FCManager/ReportView/PopUpForms/choose_date_view.dart';
-import 'package:fcfoodcourt/views/FCManager/ReportView/PopUpForms/choose_month_view.dart';
+import 'package:fcfoodcourt/services/FoodCourtReportDBService/food_court_report_db_service.dart';
+import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/invalid_view.dart';
 import 'package:fcfoodcourt/views/FCManager/ReportView/report_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
-import 'package:provider/provider.dart';
+import 'package:fcfoodcourt/shared/dialog_loading_view.dart';
+import 'package:intl/intl.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
 
 class SelectTypeView extends StatefulWidget {
   final User userData;
@@ -15,6 +17,22 @@ class SelectTypeView extends StatefulWidget {
 }
 
 class _SelectTypeViewState extends State<SelectTypeView> {
+  String formattedMonth;
+  String formatId;
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  @override
+  void initState() {
+    super.initState();
+    //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
+    FoodCourtReportDBService.foodCourtId = widget.userData.id;
+    if(FoodCourtReportDBService.currentMonth == null)
+      FoodCourtReportDBService.currentMonth = DateFormat('MMyyyy').format(DateTime.now());
+    else{
+      if(FoodCourtReportDBService.currentMonth != DateFormat('MMyyyy').format(DateTime.now()))
+        FoodCourtReportDBService().createMonthlyReport(DateFormat('MMyyyy').format(DateTime.now()));
+      FoodCourtReportDBService.currentMonth = DateFormat('MMyyyy').format(DateTime.now());
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,28 +116,30 @@ class _SelectTypeViewState extends State<SelectTypeView> {
               ),
           ),
           onPressed: () {
-            /*if(type == 'Daily')
-            {
-              print(type);
-              createPopUpChooseDate(context).then((onValue){
-                if(onValue != null){
-                  Navigator.push(
-                    context, 
-                    MaterialPageRoute(builder: (context) => ReportView(onValue))
-                  );
-                }
-              }
-              );
-            }*/
             if(type == 'Monthly')
             {
-              print(type);
-              createPopUpChooseMonth(context).then((onValue){
+              showMonthPicker(
+                context: context, 
+                initialDate: DateTime.now(),
+                firstDate: DateTime(2020),
+                lastDate: DateTime(2030))
+              .then((onValue){              
                 if(onValue != null){
-                  Navigator.push(
-                    context, 
-                    MaterialPageRoute(builder: (context) => ReportView(onValue))
-                  );
+                  formattedMonth = DateFormat('MM/yyyy').format(onValue);
+                  formatId = DateFormat('MMyyyy').format(onValue);
+                  Dialogs.showLoadingDialog(context, _keyLoader);
+                  FoodCourtReportDBService().checkAvailableMonthlyReport(formatId).then((onValue){
+                    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                    if(onValue != null)
+                    {
+                      Navigator.push(
+                      context, 
+                      MaterialPageRoute(builder: (context) => ReportView(formattedMonth, onValue))
+                      );
+                    }
+                    else
+                      createPopUpInvalidMessage(context);
+                  });                  
                 }
               }
               );

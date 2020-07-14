@@ -1,48 +1,33 @@
 //import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fcfoodcourt/models/DailyVendorReport.dart';
-import 'package:fcfoodcourt/shared/loading_view.dart';
-import 'package:fcfoodcourt/views/vendorManager/ReportView/report_view.dart';
+import 'package:fcfoodcourt/models/vendor_report.dart';
+import 'package:intl/intl.dart';
 
 class VendorReportDBService{
-  /*final CollectionReference vendorReportDB = Firestore.instance.collection("vendorReportDB");
-  DailyVendorReport _dailyVendorReportFromSnapshot(DocumentSnapshot snapshot){
-    return DailyVendorReport(
-      id: snapshot.data['id'],
-      vendorId: snapshot.data['vendorId'],
-      sale: snapshot.data['sale'],
-      date: snapshot.data['date'],
-    );
-  }
-  Future<DailyVendorReport> checkAvailable(String time, int reportType) async {
-    //DocumentReference _vendorReportRef = vendorReportDB.document(time)
-    DailyVendorReport report;
-    await vendorReportDB.document(time).get().then((onValue){
-      report = _dailyVendorReportFromSnapshot(onValue);
-    });
-    return report;
-  }*/
+  static String vendorId;
   static List<Order> orderList = [];
   static List<DailyVendorReport> dailyReportList = [];
-  static int orderNum = 0;
-  //final CollectionReference orderDB = Firestore.instance.collection("vendorReportDB");
-  Future<List<Order>> checkAvailableDailyReport(String time, String vendorId) async {
+  static List<Month> currentMonth = [];
+  static DateTime _dateTime = DateTime.now();
+  String formattedDate = DateFormat('ddMMyyyy').format(_dateTime);
+  CollectionReference vendorReportDB = Firestore.instance.collection("vendorReportDB");
+  Future<List<Order>> checkAvailableDailyReport(String time) async {
     List<Order> dailyReport;
-    await _orderListFromSnapshot(time, vendorId).then((onValue){
+    await _orderListFromSnapshot(time).then((onValue){
       if(onValue != null)
       dailyReport = onValue;
     }).catchError((onError){return null;});
     return dailyReport;
   }
-  Future<List<Order>> _orderListFromSnapshot(String time, String vendorId) async{
+  Future<List<Order>> _orderListFromSnapshot(String time) async{
     List<Order> dailyReport;
     int i;
-    await Firestore.instance.collection("vendorReportDB").getDocuments().then((snapshot) async{
+    await vendorReportDB.getDocuments().then((snapshot) async{
       for(i = 0; i < snapshot.documents.length; i++){
-        if(snapshot.documents[i].documentID == time && snapshot.documents[i].data['vendorId'] == vendorId)
+        if(snapshot.documents[i].documentID == '$vendorId$time')
         {
-          await Firestore.instance.collection("vendorReportDB").document(snapshot.documents[i].documentID.toString())
+          await vendorReportDB.document(snapshot.documents[i].documentID.toString())
           .collection("Orders").getDocuments().then(_createListofOrders);
           dailyReport = orderList;
           break;
@@ -57,23 +42,23 @@ class VendorReportDBService{
     for(DocumentSnapshot doc in docs)
       orderList.add(Order.fromFireBase(doc));
   }
-
-  Future<List<DailyVendorReport>> checkAvailableMonthlyReport(String time,String vendorId) async{
+  //check and return an available monthly report
+  Future<List<DailyVendorReport>> checkAvailableMonthlyReport(String time) async{
     List<DailyVendorReport> monthlyReport;
-    await _dailyReportListFromSnapshot(time, vendorId).then((onValue){
+    await _dailyReportListFromSnapshot(time).then((onValue){
       if(onValue != null)
-      monthlyReport = onValue;
+        monthlyReport = onValue;
     }).catchError((onError){return null;});
     return monthlyReport;
   }
 
-  Future<List<DailyVendorReport>> _dailyReportListFromSnapshot(String time, String vendorId) async{
+  Future<List<DailyVendorReport>> _dailyReportListFromSnapshot(String time) async{
     List<DailyVendorReport> monthlyReport;
-    await Firestore.instance.collection("vendorReportDB").getDocuments().then((snapshot) async{
+    await vendorReportDB.getDocuments().then((snapshot) async{
       for(int i = 0; i < snapshot.documents.length; i++){
         if(snapshot.documents[i].documentID == '$vendorId$time')
         {
-          await Firestore.instance.collection("vendorReportDB").document(snapshot.documents[i].documentID.toString())
+          await vendorReportDB.document(snapshot.documents[i].documentID.toString())
           .collection("Daily Reports").getDocuments().then(_createListofDailyReports);
           monthlyReport = dailyReportList;
           break;
@@ -88,5 +73,116 @@ class VendorReportDBService{
     dailyReportList.clear();
     for(DocumentSnapshot doc in docs)
       dailyReportList.add(DailyVendorReport.fromFireBase(doc));
+  }  
+
+  //Update Daily Vendor Report with new list of orders                                                                             
+  Future updateDailyReport(List<Order> newOrders) async{
+    int found = 0;
+    //DateTime date = DateTime.now();
+    //String formattedDate = DateFormat('ddMMyyyy').format(_dateTime);
+    String reportId = "$vendorId$formattedDate";
+    // update the total sale
+    await vendorReportDB.document(reportId).get().then((documentSnapshot){
+      vendorReportDB.document(reportId).updateData({
+        "sale": double.tryParse(documentSnapshot.data['sale']) + calculateTotalSale(newOrders)
+      });
+    });
+    // update the Orders
+    return await vendorReportDB.document(reportId).collection("Orders").getDocuments().then((querySnapshot){
+      var docs = querySnapshot.documents;
+      for(int i = 0; i < newOrders.length; i++){
+        for(DocumentSnapshot doc in docs){
+          // If the order already exists in the firebase => update the revenue and quantity
+          if(newOrders[i].name == doc.documentID){
+            vendorReportDB.document(reportId).collection("Orders").document(doc.documentID).get().then((_ordersSnapshot){
+              double updatedRevenue = double.tryParse(_ordersSnapshot.data['revenue']) + newOrders[i].revenue;
+              vendorReportDB.document(reportId).collection("Orders").document(doc.documentID).updateData({
+                //"name": newOrders[i].name,
+                //"price": "${newOrders[i].price}",
+                "quantity": _ordersSnapshot.data['quantity'] + newOrders[i].quantity,
+                "revenue": "$updatedRevenue"
+              });
+            });
+            found = 1;
+            break;
+          }
+          found = 0;                                                                                                   
+        }
+        // If the order does not exist in the fire base => create new one
+        if(found == 0){
+          vendorReportDB.document(reportId).collection("Orders").document(newOrders[i].name).setData({
+            "name": newOrders[i].name,
+            "price": "${newOrders[i].price}",
+            "quantity": newOrders[i].quantity,
+            "revenue": "${newOrders[i].revenue}",
+          });
+        }
+      }
+    });
+  }
+
+  //Create new Daily Vendor Report
+  Future createDailyReport(List<Order> newOrders) async{
+    //DateTime date = DateTime.now();
+    double sale = calculateTotalSale(newOrders);
+    //String formattedDate = DateFormat('ddMMyyyy').format(date);
+    await vendorReportDB.document("$vendorId$formattedDate").setData({
+      "id": "$vendorId$formattedDate",
+      "vendorId": vendorId,
+      "date": DateFormat('dd/MM/yyyy').format(_dateTime),
+      "sale": "$sale"
+    });
+    for(int i = 0; i < newOrders.length; i++){
+      await vendorReportDB.document("$vendorId$formattedDate").collection("Orders").document(newOrders[i].name).setData({
+        "name": newOrders[i].name,
+        "price": "${newOrders[i].price}",
+        "quantity": newOrders[i].quantity,
+        "revenue": "${newOrders[i].revenue}",
+      });
+    }
+  }
+
+  // create monthly report
+  Future createMonthlyReport(String month) async{
+    double sale = 0;
+    await vendorReportDB.document("$vendorId$month").setData({
+      "month": "${month.substring(0, 2)}/${month.substring(2)}",
+      "sale": "0.0",
+      "id": "$vendorId$month",
+      "vendorId": "$vendorId"
+    });
+    await vendorReportDB.getDocuments().then((querySnapshot) async{
+      var docs = querySnapshot.documents;
+      for(DocumentSnapshot doc in docs)
+      {
+        if(doc.data["vendorId"] == vendorId
+        && doc.documentID != "$vendorId$month"
+        && doc.documentID.substring(doc.documentID.length - 6) == month)
+        {
+          sale += double.tryParse(doc.data['sale']);
+          await vendorReportDB.document("$vendorId$month").collection("Daily Reports")
+          .document(doc.documentID.substring(doc.documentID.length - 8)).setData({
+            "date": "${doc.data['date']}",
+            "sale": doc.data['sale']
+          });
+        }
+      }
+    });
+    await vendorReportDB.document("$vendorId$month").updateData({
+      "sale": "$sale"
+    });
+  }
+  //calculate the total sale
+  double calculateTotalSale(List<Order> orders) {
+    double totalSale = 0;
+    for(int i = 0; i < orders.length; i++)
+      totalSale += (orders[i].revenue);
+    return totalSale;
+  }
+  double calculateTotalReturn(List<DailyVendorReport> dailyReports){
+    double totalReturn = 0;
+    for(int i = 0; i < dailyReports.length; i++)
+      totalReturn += dailyReports[i].sale;
+    return totalReturn;
   }
 }

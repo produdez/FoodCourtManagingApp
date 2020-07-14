@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/invalid_view.dart';
 import 'package:fcfoodcourt/services/VendorReportDBService/vendor_report_db_service.dart';
-import 'package:fcfoodcourt/models/DailyVendorReport.dart';
+import 'package:fcfoodcourt/models/vendor_report.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
+import 'package:fcfoodcourt/shared/dialog_loading_view.dart';
 //import 'package:bidirectional_scroll_view/bidirectional_scroll_view.dart';
 
 class ReportView extends StatefulWidget{
@@ -20,13 +21,17 @@ class ReportView extends StatefulWidget{
 
 class _ReportViewState extends State<ReportView> with SingleTickerProviderStateMixin{
   TabController _tabController;
+  static String currentVendorId;
   static String previousDate = "Please choose the date!!";
   static String previousMonth = "Please choose the month!!";
   static List<Order> previousOrders;
   static List<DailyVendorReport> previousReport;
-  static int stupidBug = 0;
-  String date;
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  static double totalSale;
+  static double totalReturn;
   int reportType;
+  int toggleReportType = 0;
+  String date;
   String formattedDate;
   String formattedMonth;
   String formatId;
@@ -37,18 +42,81 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
+    if(currentVendorId == null)
+      currentVendorId = VendorReportDBService.vendorId;
+    else{
+      if(currentVendorId != VendorReportDBService.vendorId)
+        {
+          previousDate = "Please choose the date!!";
+          previousMonth = "Please choose the month!!";
+          currentVendorId = VendorReportDBService.vendorId;
+        }
+    }
     reportType = checkReportType(date);
     _tabController = TabController(initialIndex: reportType, vsync: this, length: 2);
-    if(reportType == 0)
+    if(reportType == 0){
       previousOrders = orders;
-    else
+      totalSale = VendorReportDBService().calculateTotalSale(previousOrders);
+    }
+    else{
       previousReport = dailyVendorReport;
-
+      totalReturn = VendorReportDBService().calculateTotalReturn(previousReport);
+    }
+  }
+  Widget printTotalSale(String totalSale, String type){
+    return Container(                      
+            color: Colors.black,
+            height: 75,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(top: 18),
+                  height: 75,
+                  width: 230,
+                  //color: Colors.yellow,
+                  decoration: BoxDecoration(
+                    color: Colors.yellow,
+                    border: Border(
+                      top: BorderSide(color: Colors.black, width: 4)
+                    )
+                  ),
+                  child: Text(
+                    type,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Container(
+                  height: 75,
+                  width: 176.4,
+                  padding: EdgeInsets.only(top: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    border: Border(
+                      top: BorderSide(color: Colors.black, width: 4)
+                    )
+                  ),
+                  child: Text(
+                    "$totalSale\$",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ],
+        )
+  );
   }
   //DataTable for monthly report
   Widget monthlyTable() {
-    /*if(reportType == 1)
-      previousReport = dailyVendorReport;*/
     return DataTable(
       columns: <DataColumn>[
         DataColumn(
@@ -71,7 +139,7 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
               Text(report.date),
             ),
             DataCell(
-              Text(report.sale),
+              Text("${report.sale} VND"),
             ),
           ])
         ).toList()
@@ -79,8 +147,6 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   }
   //DataTable for daily report
   Widget dailyTable(){ 
-    /*if(reportType == 0)
-      previousOrders = orders;*/
     return DataTable(
       columns: <DataColumn>[
         DataColumn(
@@ -115,18 +181,19 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
               Text(order.name),
             ),
             DataCell(
-              Text(order.quantity),
+              Text("${order.quantity}"),
             ),
             DataCell(
-              Text(order.price),
+              Text("${order.price} VND"),
             ),
             DataCell(
-              Text(order.revenue),
+              Text("${order.revenue} VND"),
             )
           ])        
         ).toList()
     );
   }
+  // check if choose new date or not
   Widget checkNewDate() {
     if(reportType == 0)
     {
@@ -151,6 +218,7 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
         textAlign:  previousDate == "Please choose the date!!" ? TextAlign.center : TextAlign.start,
       );
   }
+  // check if choose new month or not
   Widget checkNewMonth() {
     if(reportType == 1)
     {
@@ -175,6 +243,7 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
         textAlign: previousMonth == "Please choose the month!!" ? TextAlign.center : TextAlign.start,
       );
   }
+  // Change date or month button
   Widget changeTime(String type){
     return Positioned(
       bottom: 0.0,
@@ -204,7 +273,9 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                 if(onValue != null){
                   formattedDate = DateFormat('dd/MM/yyyy').format(onValue);
                   formatId = DateFormat('ddMMyyyy').format(onValue);
-                  VendorReportDBService().checkAvailableDailyReport(formatId, 'vendor1').then((onValue) {
+                  Dialogs.showLoadingDialog(context, _keyLoader);
+                  VendorReportDBService().checkAvailableDailyReport(formatId).then((onValue) {
+                    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                     if(onValue != null)
                     {
                       Navigator.pushReplacement(
@@ -231,10 +302,12 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                 if(onValue != null){
                   formattedMonth = DateFormat('MM/yyyy').format(onValue);
                   formatId = DateFormat('MMyyyy').format(onValue);
-                  VendorReportDBService().checkAvailableMonthlyReport(formatId, 'vendor1').then((onValue) async{
+                  Dialogs.showLoadingDialog(context, _keyLoader);
+                  VendorReportDBService().checkAvailableMonthlyReport(formatId).then((onValue){
+                    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                     if(onValue != null)
                     {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context, 
                         MaterialPageRoute(builder: (context) => ReportView(formattedMonth, null, onValue))                    
                       );
@@ -285,14 +358,22 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
             controller: _tabController,
             indicatorColor: Colors.white,
             indicatorSize: TabBarIndicatorSize.tab,
+            onTap: (int type) {
+              type++;
+              if(type == 1)
+                totalSale = VendorReportDBService().calculateTotalSale(previousOrders);
+              else
+                totalReturn = VendorReportDBService().calculateTotalReturn(previousReport);
+            },
           ),
           //automaticallyImplyLeading: false,
         ),
         body: TabBarView(
               //physics: const ScrollPhysics(),
               children: <Widget>[
+                //DAILY REPORT
                 Column(
-                  //mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [               
                     Row(
                     children: [
@@ -339,6 +420,10 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                         scrollDirection: Axis.horizontal,
                         child: SingleChildScrollView(scrollDirection: Axis.vertical, child: previousDate == "Please choose the date!!" ? null : dailyTable(),)
                       )
+                    ),
+                    // Print total sale
+                    Container(
+                      child: previousDate == "Please choose the date!!" ? null : printTotalSale("$totalSale", "Total Daily Sale")
                     )
                   ],
                 ),
@@ -391,6 +476,10 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                         scrollDirection: Axis.horizontal,
                         child: SingleChildScrollView(scrollDirection: Axis.vertical, child: previousMonth == "Please choose the month!!" ? null : monthlyTable())
                       )
+                    ),
+                    //Print total return
+                    Container(
+                      child: previousMonth == "Please choose the month!!" ? null : printTotalSale("$totalReturn", "Total Monthly Sale")
                     )
                   ],
                 ),
@@ -399,57 +488,6 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
             ),
       );
   }
-  /*Widget dailyTable(){ 
-    if(reportType == 0){
-      previousOrders = this.orders;
-      print("Here");
-    }
-    return DataTable(
-      columns: <DataColumn>[
-        DataColumn(
-          label: Text(
-          'Orders',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          )
-        ),
-        DataColumn(
-          label: Text(
-          'Quantity',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          )
-        ),
-        DataColumn(
-          label: Text(
-          'Price',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          )
-        ),
-        DataColumn(
-          label: Text(
-          'Revenue',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          )
-        ),
-      ],
-      rows: previousOrders
-        .map(
-          (order) => DataRow(cells: [
-            DataCell(
-              Text(order.name),
-            ),
-            DataCell(
-              Text(order.quantity),
-            ),
-            DataCell(
-              Text(order.price),
-            ),
-            DataCell(
-              Text(order.revenue),
-            )
-          ])        
-        ).toList()
-    );
-  }*/
 int checkReportType(String  date)
 {
   reportType = 0;
@@ -457,31 +495,24 @@ int checkReportType(String  date)
     reportType = 1;
   return reportType;
 }
-
 }
 
-var orderss = <Order> [
-  /*Order("Pho", "40.000 VND", "4", "160.000 VND"),
-  Order("Hu Tieu", "40.000 VND", "4", "160.000 VND"),
-  Order("Bun Bo Hue", "40.000 VND", "4", "160.000 VND"),
-  Order("Mi Quang", "40.000 VND", "4", "160.000 VND"),
-  Order("Pho", "40.000 VND", "4", "160.000 VND"),
-  Order("Hu Tieu", "40.000 VND", "4", "160.000 VND"),
-  Order("Bun Bo Hue", "40.000 VND", "4", "160.000 VND"),
-  Order("Mi Quang", "40.000 VND", "4", "160.000 VND"),
-  Order("Pho", "40.000 VND", "4", "160.000 VND"),
-  Order("Hu Tieu", "40.000 VND", "4", "160.000 VND"),
-  Order("Bun Bo Hue", "40.000 VND", "4", "160.000 VND"),
-  Order("Mi Quang", "40.000 VND", "4", "160.000 VND"),
-  Order("Pho", "40.000 VND", "4", "160.000 VND"),
-  Order("Hu Tieu", "40.000 VND", "4", "160.000 VND"),
-  Order("Bun Bo Hue", "40.000 VND", "4", "160.000 VND"),
-  Order("Mi Quang", "40.000 VND", "4", "160.000 VND"),*/
-];
-var monthlyReport = <DailyVendorReport>[
-  DailyVendorReport(),
-  /*DailyVendorReport("2/1/2020", "8.000.000 VND"),
-  DailyVendorReport("3/1/2020", "8.000.000 VND"),
-  DailyVendorReport("4/1/2020", "8.000.000 VND"),*/
-];
+var orderss = <Order>[Order(name: "pho", price: 400 , quantity: 4, revenue: 1600000 ),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),]; 
 

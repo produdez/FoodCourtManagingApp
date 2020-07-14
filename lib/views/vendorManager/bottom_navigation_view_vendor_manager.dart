@@ -62,7 +62,7 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
           //showSelectedLabels: true,
           showUnselectedLabels: true,
          // selectedItemColor: Colors.black,
-         unselectedItemColor: Colors.black,
+          unselectedItemColor: Colors.black,
           unselectedLabelStyle: TextStyle(
             color: Colors.black,
           ),

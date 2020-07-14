@@ -1,10 +1,12 @@
+import 'dart:async';
+
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:intl/intl.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/invalid_view.dart';
 import 'package:fcfoodcourt/services/VendorReportDBService/vendor_report_db_service.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/report_view.dart';
-import 'package:fcfoodcourt/models/DailyVendorReport.dart';
-import 'package:fcfoodcourt/shared/loading_view.dart';
+import 'package:fcfoodcourt/models/vendor_report.dart';
+import 'package:fcfoodcourt/shared/dialog_loading_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
@@ -21,6 +23,32 @@ class _SelectTypeViewState extends State<SelectTypeView> {
   String formattedDate;
   String formattedMonth;
   String formatId;
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+ @override
+  void initState() {
+    super.initState();
+    //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
+    VendorReportDBService.vendorId = widget.userData.id;
+    // Check if it turns to new month => create monthly report of the latest month (each vendor may has different "latest month")
+    int found = 0;
+    if(VendorReportDBService.currentMonth == null)
+      VendorReportDBService.currentMonth.add(Month(VendorReportDBService.vendorId, DateFormat('MMyyyy').format(DateTime.now())));
+    else
+    {
+      for(int i = 0; i < VendorReportDBService.currentMonth.length; i++){        
+        if(VendorReportDBService.currentMonth[i].vendorId == VendorReportDBService.vendorId){
+          found = 1;
+          if(VendorReportDBService.currentMonth[i].month != DateFormat('MMyyyy').format(DateTime.now()))
+            VendorReportDBService().createMonthlyReport(VendorReportDBService.currentMonth[i].month);
+          VendorReportDBService.currentMonth[i].month = DateFormat('MMyyyy').format(DateTime.now());
+          break;
+        }
+      }
+      if(found == 0){
+        VendorReportDBService.currentMonth.add(Month(VendorReportDBService.vendorId, DateFormat('MMyyyy').format(DateTime.now())));
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,7 +115,56 @@ class _SelectTypeViewState extends State<SelectTypeView> {
               height: 100,
               child: reportType("Monthly"),
               ),
-          )
+          ),
+          /*Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+          FloatingActionButton(
+          heroTag: "FAB1",
+          backgroundColor: Color(0xffff8a84),
+          onPressed: () {
+                //print(VendorReportDBService.vendorId.toString());
+                VendorReportDBService().createDailyReport(<Order>[Order(name: "pho", price: 400 , quantity: 4, revenue: 1600000 ),
+                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200 )
+                ]);
+
+            }, //This request the pop-up new dish form
+          child: Icon(
+            Icons.add,
+            size: 50,
+          ),
+          ),
+          FloatingActionButton(
+          heroTag: "FAB2",
+          backgroundColor: Color(0xffff8a84),
+          onPressed: () {
+            //On newDish chosen, show newDish popUp and process information
+            //The return value is a Dish with name, price (every other fields are defaulted)
+                VendorReportDBService().updateDailyReport(<Order>[Order(name: "pho", price: 400 , quantity: 1, revenue: 400 ),
+                Order(name: "Hu tieu", price: 40, quantity: 2, revenue: 80 ), Order(name: "Bun Rieu", price: 40, quantity: 2, revenue: 80 )
+                ]);
+
+            }, //This request the pop-up new dish form
+          child: Icon(
+            Icons.add,
+            size: 50,
+          ),
+          ),
+          FloatingActionButton(
+          heroTag: "FAB3",
+          backgroundColor: Color(0xffff8a84),
+          onPressed: () {
+            //On newDish chosen, show newDish popUp and process information
+            //The return value is a Dish with name, price (every other fields are defaulted)
+                VendorReportDBService().createMonthlyReport("072020");
+
+            }, //This request the pop-up new dish form
+          child: Icon(
+            Icons.add,
+            size: 50,
+          ),
+          ),
+          ],)*/
           ]
         ),
         ],
@@ -123,7 +200,9 @@ class _SelectTypeViewState extends State<SelectTypeView> {
                 if(onValue != null){
                   formattedDate = DateFormat('dd/MM/yyyy').format(onValue);
                   formatId = DateFormat('ddMMyyyy').format(onValue);
-                  VendorReportDBService().checkAvailableDailyReport(formatId, 'vendor1').then((onValue) async{
+                  Dialogs.showLoadingDialog(context, _keyLoader);
+                  VendorReportDBService().checkAvailableDailyReport(formatId).then((onValue){
+                    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                     if(onValue != null)
                     {
                       Navigator.push(
@@ -150,7 +229,9 @@ class _SelectTypeViewState extends State<SelectTypeView> {
                 if(onValue != null){
                   formattedMonth = DateFormat('MM/yyyy').format(onValue);
                   formatId = DateFormat('MMyyyy').format(onValue);
-                  VendorReportDBService().checkAvailableMonthlyReport(formatId, 'vendor1').then((onValue) async{
+                  Dialogs.showLoadingDialog(context, _keyLoader);
+                  VendorReportDBService().checkAvailableMonthlyReport(formatId).then((onValue){
+                    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                     if(onValue != null)
                     {
                       Navigator.push(
