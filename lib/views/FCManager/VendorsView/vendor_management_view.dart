@@ -2,7 +2,7 @@
 import 'package:fcfoodcourt/models/vendor.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/services/vendor_db_service.dart';
-import 'package:fcfoodcourt/views/FCManager/VendorsView/popUpForms/new_vendor_view.dart';
+import 'package:fcfoodcourt/views/FCManager/VendorsView/vendor_management_view_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -77,15 +77,7 @@ class _VendorManagementViewState extends State<VendorManagementView> {
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Color(0xffff8a84),
-          onPressed: () {
-            //On newVendor chosen, show newVendor popUp and process information
-            //The return value is a Vendor with name, price (every other fields are defaulted)
-            createPopUpNewVendor(context).then((onValue) {
-              if (onValue != null) {
-                VendorDBService().addVendor(onValue);
-              }
-            }); //This request the pop-up new vendor form
-          },
+          onPressed: () =>VendorManagementViewController.addVendor(context),
           child: Icon(
             Icons.add,
             size: 50,
