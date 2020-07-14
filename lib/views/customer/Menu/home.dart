@@ -19,8 +19,6 @@ class CustomerView extends StatefulWidget {
 class _MenuViewState extends State<CustomerView> {
   @override
   void initState() {
-    // TODO:random populate database only when needed
-    //VendorDBService().populateDatabaseRandom();
     super.initState();
   }
 

@@ -7,7 +7,7 @@ import 'package:fcfoodcourt/shared/confirmation_view.dart';
 import 'package:flutter/material.dart';
 import 'package:getflutter/components/avatar/gf_avatar.dart';
 import 'package:getflutter/shape/gf_avatar_shape.dart';
-//TODO: find a way to notify view and update when storage is updated
+
 /*
 A form that shows edit.
 The function createEditView returns a Future<Vendor>
@@ -38,7 +38,7 @@ class _EditVendorFormState extends State<EditVendorForm> {
     hasImage = widget.vendor.hasImage;
     super.initState();
   }
-//TODO: add image picker,... after implementing better way to use image
+
   @override
   Widget build(BuildContext context) {
     return Container(

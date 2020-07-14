@@ -45,7 +45,6 @@ class ImageUploadService {
 
   Future<Widget> getImageFromCloud(BuildContext context, String imageName) async { // Get the image widget from it's name on the cloud
     //currently, the image is an URL, which is slow and get reset when scrolling (not very good)
-    //TODO: maybe find a way to get a file from the storage so that the dish can keep that data offline and not refresh (stream?)
     Image m;
     await loadImage(imageName).then((downloadUrl) async {
       m = Image.network(

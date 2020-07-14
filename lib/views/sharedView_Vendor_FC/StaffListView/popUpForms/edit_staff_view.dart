@@ -1,4 +1,3 @@
-//TODO: find a way to notify view and update when storage is updated
 /*
 A form that shows edit.
 The function createEditView returns a Future<Dish>
@@ -42,7 +41,7 @@ class _EditStaffFormState extends State<EditStaffForm> {
     hasImage = widget.staff.hasImage;
     super.initState();
   }
-//TODO: add image picker,... after implementing better way to use image
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -230,7 +229,6 @@ class _EditStaffFormState extends State<EditStaffForm> {
             width:
             MediaQuery.of(context).size.width,
             child: snapshot.data,
-            //TODO: future builder will keep refreshing while scrolling, find a way to keep data offline and use a stream to watch changes instead.
           );
         return Container();
 

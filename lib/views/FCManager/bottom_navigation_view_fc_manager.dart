@@ -25,7 +25,6 @@ class _FoodCourtManagerNavBarState extends State<FoodCourtManagerNavBar> {
     children.add(VendorManagementView());
     children.add(ManageStaffView(userData: widget.userData,));
 
-    //TODO: Add report route here
     children.add(SelectTypeView(userData: widget.userData));
 
     children.add(ProfileView(userData: widget.userData,));
