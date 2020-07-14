@@ -23,7 +23,6 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
     children.add(MenuView(userData: widget.userData,));
     children.add(ManageStaffView(userData: widget.userData,));
 
-    //TODO: Add report route here
     children.add(SelectTypeView(userData: widget.userData));
 
     children.add(ProfileView(userData: widget.userData,));

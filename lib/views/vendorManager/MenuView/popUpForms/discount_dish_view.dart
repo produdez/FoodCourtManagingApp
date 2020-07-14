@@ -9,7 +9,7 @@ A form that shows discount.
 The function createDiscountDishView returns a Future<Dish>
 that Dish only contains discount information
  */
-
+//TODO: format checker
 class DiscountDishForm extends StatefulWidget {
   final Dish dish;
 

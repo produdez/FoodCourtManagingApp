@@ -8,7 +8,7 @@ import 'package:getflutter/components/avatar/gf_avatar.dart';
 import 'package:getflutter/shape/gf_avatar_shape.dart';
 
 import '../../../../shared/confirmation_view.dart';
-//TODO: find a way to notify view and update when storage is updated
+//TODO: format checker
 /*
 A form that shows edit.
 The function createEditView returns a Future<Dish>
@@ -39,7 +39,6 @@ class _EditDishFormState extends State<EditDishForm> {
     hasImage = widget.dish.hasImage;
     super.initState();
   }
-//TODO: add image picker,... after implementing better way to use image
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -178,38 +177,27 @@ class _EditDishFormState extends State<EditDishForm> {
     );
   }
   Widget showImage(BuildContext context){
-    return  FutureBuilder(
-      future: ImageUploadService().getImageFromCloud(context, imageName),
-      builder: (context, snapshot) {
-        if(_image != null){
-          return Container(
-              height: MediaQuery.of(context).size.height /
-                  1.25,
-              width: MediaQuery.of(context).size.width /
-                  1.25,
-              child: Image.file(_image, fit: BoxFit.fill,));
-        }
-        if(hasImage==false || snapshot.connectionState == ConnectionState.waiting){
-          return Container(
-              height: MediaQuery.of(context).size.height /
-                  1.25,
-              width: MediaQuery.of(context).size.width /
-                  1.25,
-              child: Image.asset("assets/bowl.png", fit: BoxFit.fill,));
-        }
-        if (snapshot.connectionState == ConnectionState.done) //image is found
-          return Container(
-            height:
-            MediaQuery.of(context).size.height,
-            width:
-            MediaQuery.of(context).size.width,
-            child: snapshot.data,
-            //TODO: future builder will keep refreshing while scrolling, find a way to keep data offline and use a stream to watch changes instead.
-          );
-        return Container();
-
-      },
-    );
+    if(widget.dish.hasImage==false){
+      return Container(
+          height: MediaQuery.of(context).size.height /
+              1.25,
+          width: MediaQuery.of(context).size.width /
+              1.25,
+          child: Image.asset("assets/bowl.png", fit: BoxFit.fill,));
+    }else if(widget.dish.imageURL==null){
+      return CircularProgressIndicator();
+    }else{
+      return Container(
+        height:
+        MediaQuery.of(context).size.height,
+        width:
+        MediaQuery.of(context).size.width,
+        child: Image.network(
+          widget.dish.imageURL,
+          fit: BoxFit.fill,
+        ),
+      );
+    }
   }
 }
 
