@@ -1,5 +1,4 @@
 import 'package:fcfoodcourt/models/vendor.dart';
-import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getflutter/getflutter.dart';
@@ -44,10 +43,12 @@ class ItemVendorView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               InkWell(
+                //TODO: remove after debug
                 onTap: () {
+                  print(vendor.toString());
                   Fluttertoast.cancel();
                   Fluttertoast.showToast(
-                    msg: "ID: ${vendor.id}, Image: ${vendor.hasImage}",
+                    msg: vendor.toString(),
                   );
                 },
                 child: Container(
@@ -185,29 +186,26 @@ class ItemVendorView extends StatelessWidget {
     );
   }
   Widget showImage(BuildContext context){
-    return  FutureBuilder(
-      future: ImageUploadService().getImageFromCloud(context, vendor.id),
-      builder: (context, snapshot) {
-        if(vendor.hasImage==false || snapshot.connectionState == ConnectionState.waiting){
-          return Container(
-              height: MediaQuery.of(context).size.height /
-                  1.25,
-              width: MediaQuery.of(context).size.width /
-                  1.25,
-              child: Image.asset("assets/vendor.png", fit: BoxFit.fill,));
-        }
-        if (snapshot.connectionState == ConnectionState.done) //image is found
-          return Container(
-            height:
-            MediaQuery.of(context).size.height,
-            width:
-            MediaQuery.of(context).size.width,
-            child: snapshot.data,
-            //TODO: future builder will keep refreshing while scrolling, find a way to keep data offline and use a stream to watch changes instead.
-          );
-        return Container();
-
-      },
-    );
+    if(vendor.hasImage==false){
+      return Container(
+          height: MediaQuery.of(context).size.height /
+              1.25,
+          width: MediaQuery.of(context).size.width /
+              1.25,
+          child: Image.asset("assets/bowl.png", fit: BoxFit.fill,));
+    }else if(vendor.imageURL==null){
+      return CircularProgressIndicator();
+    }else{
+      return Container(
+        height:
+        MediaQuery.of(context).size.height,
+        width:
+        MediaQuery.of(context).size.width,
+        child: Image.network(
+          vendor.imageURL,
+          fit: BoxFit.fill,
+        ),
+      );
+    }
   }
 }

@@ -1,10 +1,27 @@
+import 'dart:io';
+
 class User {
   final String id;
   final String name;
   final String email;
   final String role;
 
-  User({this.id, this.name, this.email, this.role});
+  String imageURL;
+
+  bool hasImage;
+  File imageFile;
+
+  User({this.id, this.name, this.email, this.role,this.hasImage=false,this.imageURL,this.imageFile});
+
+  User.clone({User user, this.id, this.name, this.email, this.role}) {
+    this.hasImage = user.hasImage;
+    this.imageURL = user.imageURL;
+  }
+
+  @override
+  String toString() {
+    return 'User{id: $id, name: $name, email: $email, role: $role, imageURL: $imageURL, hasImage: $hasImage, imageFile: $imageFile}';
+  }
 
   User.fromData(Map<String, dynamic> data)
       : id = data['id'],

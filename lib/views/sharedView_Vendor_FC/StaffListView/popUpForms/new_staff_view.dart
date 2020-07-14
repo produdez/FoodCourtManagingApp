@@ -1,5 +1,3 @@
-//TODO: Implement format checking when possible
-
 /*
 A form that shows new staff.
 The function createNewDishView returns a Future<Staff>
@@ -10,11 +8,15 @@ import 'dart:io';
 
 import 'package:fcfoodcourt/models/staff.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
+import 'package:fcfoodcourt/services/input_field_validator.dart';
 import 'package:fcfoodcourt/shared/confirmation_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:getflutter/components/avatar/gf_avatar.dart';
 import 'package:getflutter/shape/gf_avatar_shape.dart';
+
+//TODO: will rescale when add email, password.
 
 class NewStaffForm extends StatefulWidget {
   @override
@@ -28,9 +30,11 @@ class _NewStaffFormState extends State<NewStaffForm> {
   String imageURL;
   ImageUploadService _imageUploadService = ImageUploadService();
   File _image;
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Form(
+      key: _formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -82,7 +86,8 @@ class _NewStaffFormState extends State<NewStaffForm> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
-            child: TextField(
+            child: TextFormField(
+              validator: RequiredValidator(errorText: 'Name is required'),
               onChanged: (String name) {
                 this.name = name;
               },
@@ -107,7 +112,11 @@ class _NewStaffFormState extends State<NewStaffForm> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
-            child: TextField(
+            child: TextFormField(
+              validator: MultiValidator([
+                RequiredValidator(errorText: 'Phone is required'),
+                InputFieldValidator.phoneValidator,
+              ]),
               onChanged: (String phone) {
                 this.phone = phone;
               },
@@ -129,7 +138,8 @@ class _NewStaffFormState extends State<NewStaffForm> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
-            child: TextField(
+            child: TextFormField(
+              validator: RequiredValidator(errorText: 'Position is required'),
               onChanged: (String position) {
                 this.position = position;
               },
@@ -175,12 +185,14 @@ class _NewStaffFormState extends State<NewStaffForm> {
                   ),
                 ),
                 onPressed: () {
-                  createConfirmationView(context).then((onValue) async {
-                    if (onValue == true) {
-                      bool hasImage = _image!=null? true:false;
-                      Navigator.of(context).pop(new Staff(name, imageFile: _image,hasImage:hasImage,phone: phone , position: position));
-                    }
-                  });
+                  if(_formKey.currentState.validate()){
+                    createConfirmationView(context).then((onValue) async {
+                      if (onValue == true) {
+                        bool hasImage = _image!=null? true:false;
+                        Navigator.of(context).pop(new Staff(name, imageFile: _image,hasImage:hasImage,phone: phone , position: position));
+                      }
+                    });
+                  }
                 },
               ),
             ],
@@ -196,16 +208,20 @@ Future<Staff> createPopUpNewStaff(BuildContext context) {
   return showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text(
-            'New Staff Form',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 30,
-              color: Color(0xffff6624),
+        return Center(
+          child: SingleChildScrollView(
+            child: AlertDialog(
+              title: Text(
+                'New Staff Form',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                  color: Color(0xffff6624),
+                ),
+              ),
+              content: SizedBox(height: 480, width: 300, child: NewStaffForm()),
             ),
           ),
-          content: SizedBox(height: 600, width: 300, child: NewStaffForm()),
         );
       });
 }

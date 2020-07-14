@@ -14,7 +14,7 @@ class StaffDBService {
   //add staff as a new document to db, id is randomize by Firebase
   Future addStaff(Staff staff) async {
     DocumentReference _staffRef = staffDB.document();
-    ImageUploadService().uploadPic(staff.imageFile,_staffRef.documentID);
+    ImageUploadService().uploadPic(staff.imageFile,_staffRef);
     return await _staffRef.setData({
       "name": staff.name,
       "id": _staffRef.documentID,
@@ -28,12 +28,12 @@ class StaffDBService {
   //update staff, changing name, original price and reset it's discount state
   Future editStaff(Staff staff, Staff newStaff) async {
     DocumentReference _staffRef = staffDB.document(staff.id);
-    ImageUploadService().uploadPic(staff.imageFile,_staffRef.documentID);
+    ImageUploadService().uploadPic(newStaff.imageFile,_staffRef);
     return await _staffRef.updateData({
       "name": newStaff.name,
       "phone":newStaff.phone,
       "position" : newStaff.position,
-      "hasImage" : staff.hasImage==true?true:newStaff.hasImage==true?true:false,
+      "hasImage" : newStaff.hasImage? newStaff.hasImage : staff.hasImage,
       //no update vendor ID
     });
   }
@@ -68,6 +68,7 @@ class StaffDBService {
         phone: doc.data['phone'] ?? '',
         position: doc.data['position'] ?? '',
         hasImage: doc.data['hasImage'] ?? false,
+        imageURL: doc.data['imageURL'] ?? null,
       );
     }).toList();
   }

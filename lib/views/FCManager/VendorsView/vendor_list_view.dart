@@ -1,8 +1,6 @@
 
 import 'package:fcfoodcourt/models/vendor.dart';
-import 'package:fcfoodcourt/services/vendor_db_service.dart';
-import 'package:fcfoodcourt/views/FCManager/VendorsView/popUpForms/edit_vendor_view.dart';
-import 'package:fcfoodcourt/shared/confirmation_view.dart';
+import 'package:fcfoodcourt/views/FCManager/VendorsView/vendor_management_view_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -27,26 +25,9 @@ class _VendorListViewState extends State<VendorListView> {
       itemBuilder: (context, index) {
         return ItemVendorView(
           vendor: vendorList[index],
-          onRemoveSelected: () {
-            //Remove chosen, ask user for confirmation and remove in DB if confirmed
-            createConfirmationView(context).then((onValue) {
-              if (onValue == true) {
-                VendorDBService().removeVendor(vendorList[index]);
-              }
-            });
-          },
-          onEditSelected: () {
-            //Edit chosen, show edit form and process returned information
-            //The return value is Vendor with name and price (no realPrice,...)
-            createPopUpEditVendor(context, vendorList[index]).then((onValue) {
-              if (onValue != null) {
-                VendorDBService().editVendor(vendorList[index], onValue);
-              }
-            });
-          },
-          onCallSelected: () {
-            VendorDBService().callVendor(vendorList[index]);
-          },
+          onRemoveSelected: () => VendorManagementViewController.removeVendor(context, vendorList[index]),
+          onEditSelected: () => VendorManagementViewController.editVendor(context, vendorList[index]),
+          onCallSelected: () => VendorManagementViewController.callVendor(context, vendorList[index]),
         );
       },
     );

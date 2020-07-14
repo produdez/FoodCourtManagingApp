@@ -3,7 +3,7 @@ import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/dish_db_service.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
-import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_dish_view.dart';
+import 'package:fcfoodcourt/views/vendorManager/MenuView/menu_view_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +34,7 @@ class _MenuViewState extends State<MenuView> {
     return StreamProvider<List<Dish>>.value(
       value: DishDBService().allVendorDishes,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Color(0xffff8a84),
@@ -87,15 +88,7 @@ class _MenuViewState extends State<MenuView> {
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Color(0xffff8a84),
-          onPressed: () {
-            //On newDish chosen, show newDish popUp and process information
-            //The return value is a Dish with name, price (every other fields are defaulted)
-            createPopUpNewDish(context).then((onValue) {
-              if (onValue != null) {
-                DishDBService().addDish(onValue);
-              }
-            }); //This request the pop-up new dish form
-          },
+          onPressed: () => onNewDishSelected(),
           child: Icon(
             Icons.add,
             size: 50,
@@ -103,6 +96,11 @@ class _MenuViewState extends State<MenuView> {
         ),
       ),
     );
+  }
+
+
+  void onNewDishSelected(){
+    MenuViewController.addDish(context);
   }
 }
 
