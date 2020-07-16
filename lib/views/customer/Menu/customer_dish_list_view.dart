@@ -20,7 +20,7 @@ class _CustomerDishListViewState extends State<CustomerDishListView> {
     return ListView.builder(
       itemCount: dishList.length,
       itemBuilder: (context, index) {
-        return CustomerDishView(
+        return ItemDishView(
           dish: dishList[index],
           /*onRemoveSelected: () {
             //Remove chosen, ask user for confirmation and remove in DB if confirmed

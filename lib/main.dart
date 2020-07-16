@@ -1,4 +1,3 @@
-
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/views/authenticate/wrapper.dart';
@@ -9,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/dish.dart';
 import 'views/vendorManager/MenuView/menu_view.dart';
+//import 'package:bloc/bloc.dart';
+//import 'package:flutter_bloc/flutter_bloc.dart';
 
 /*
 This is the root of our app
@@ -36,10 +37,10 @@ class MyApp extends StatelessWidget {
           '/DishMenuView': (context) => MenuView(),
           '/login': (context) => Wrapper(),
           '/ListItemViewTest': (context) => ItemDishView(
-            dish: new Dish('French Fries', 30),
-          ),
+                dish: new Dish('French Fries', 30),
+              ),
           '/CustomerMenuView': (context) => CustomerView(),
-          '/CustomerDishView': (context) => CustomerDishView(),
+          //'/CustomerDishView': (context) => CustomerDishView(),
         },
         initialRoute: '/login',
       ),
@@ -47,11 +48,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container();
   }
 }
-

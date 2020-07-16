@@ -6,33 +6,29 @@ import 'package:fcfoodcourt/views/customer/MyCart/cart_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:fcfoodcourt/services/search_service.dart';
 import 'customer_dish_list_view.dart';
 
-/*
-This is the menu view that holds the frame for the whole menu
-It does holds the add Dish button
- */
-class CustomerDishView extends StatefulWidget {
-  final String vendorId;
-  const CustomerDishView(this.vendorId);
+class SearchView extends StatefulWidget {
+  final String keyword;
+  const SearchView(this.keyword);
   @override
-  _MenuViewState createState() => _MenuViewState(vendorId);
+  _SearchViewState createState() => _SearchViewState(keyword);
 }
 
-class _MenuViewState extends State<CustomerDishView> {
-  String vendorId;
-  _MenuViewState(this.vendorId);
+class _SearchViewState extends State<SearchView> {
+  String keyword;
+  _SearchViewState(this.keyword);
   @override
   void initState() {
-    DishDBService.vendorID = vendorId;
+    SearchService.keyword = keyword;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamProvider<List<Dish>>.value(
-      value: DishDBService().allVendorDishes,
+      value: SearchService().searchByName,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
