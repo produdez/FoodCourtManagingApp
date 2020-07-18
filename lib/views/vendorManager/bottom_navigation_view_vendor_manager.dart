@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:fcfoodcourt/shared/profile_view.dart';
+import 'package:fcfoodcourt/views/profileViews/profile_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/select_type_view.dart';
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/manage_staff_view.dart';

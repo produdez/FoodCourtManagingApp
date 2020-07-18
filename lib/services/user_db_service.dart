@@ -16,12 +16,19 @@ class UserDBService {
   // collection reference
   final CollectionReference userDB = Firestore.instance.collection('users');
 
-  Future<void> updateUserData({String name, String email, String role}) async {
+  Future<void> setUserData({String name, String email, String role, String password}) async {
     return await userDB.document(this.id).setData({
       'id': this.id,
       'name': name,
       'email': email,
       'role': role,
+      'password': password,
+    });
+  }
+
+  Future<void> changePassword({String newPassword}) async {
+    return await userDB.document(this.id).updateData({
+      'password': newPassword,
     });
   }
 
@@ -32,6 +39,7 @@ class UserDBService {
         name: snapshot.data['name'] ?? null,
         email: snapshot.data['email'] ?? null,
         role: snapshot.data['role'] ?? null,
+      password: snapshot.data['password'] ?? null,
     );
   }
 

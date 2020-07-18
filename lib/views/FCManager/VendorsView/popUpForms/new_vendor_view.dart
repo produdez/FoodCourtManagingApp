@@ -50,7 +50,7 @@ class _NewVendorFormState extends State<NewVendorForm> {
                     width: 100.0,
                     height: 100.0,
                     child: _image == null?
-                    Image.asset("assets/bowl.png", fit: BoxFit.fill,):
+                    Image.asset("assets/vendor.png", fit: BoxFit.fill,):
                     Image.file(_image,fit: BoxFit.fill,),
                   ),
                 ),

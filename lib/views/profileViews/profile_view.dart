@@ -5,6 +5,7 @@ It does holds the add Dish button
  */
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
+import 'package:fcfoodcourt/views/profileViews/change_password_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 class ProfileView extends StatefulWidget {
@@ -100,7 +101,30 @@ class _MenuViewState extends State<ProfileView> {
                       fontSize: 20.0,
                     ),
                   ),
+                  FlatButton(
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    color: Color(0xfff85f6a),
+                    child: Text(
+                      'Change Password',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () {
+                      createPopUpChangePassword(context,widget.userData).then((onValue) {
+                        if (onValue != null) {
+                          AuthenticationService().changePassword(onValue);
+                        }
+                      });
+                    },
+                  ),
                   Spacer(),
+
                 ],
               ),
             ),

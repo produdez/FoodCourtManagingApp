@@ -192,7 +192,7 @@ class ItemVendorView extends StatelessWidget {
               1.25,
           width: MediaQuery.of(context).size.width /
               1.25,
-          child: Image.asset("assets/bowl.png", fit: BoxFit.fill,));
+          child: Image.asset("assets/vendor.png", fit: BoxFit.fill,));
     }else if(vendor.imageURL==null){
       return CircularProgressIndicator();
     }else{
