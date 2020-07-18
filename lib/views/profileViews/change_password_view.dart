@@ -2,7 +2,7 @@ import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/services/input_field_validator.dart';
 import 'package:fcfoodcourt/shared/confirmation_view.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fcfoodcourt/shared/loading_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -22,9 +22,10 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
   String newPassword='';
   String error = '';
   final _formKey = GlobalKey<FormState>();
+  bool loading = false;
   @override
-  Widget build(BuildContext context) {
-    return Container(
+  Widget  build(BuildContext context) {
+    return loading? Loading(): Container(
       padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
       child: Form(
         key: _formKey,
@@ -118,13 +119,16 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                       createConfirmationView(context).then((onValue) async {
                         print("User Confirm:"+onValue.toString());
                         if (onValue == true) {
-                          bool result = await AuthenticationService().checkCorrectPassword(widget.userData.email,oldPassword);
+                          bool result = await AuthenticationService().checkCorrectPassword(widget.userData.password,oldPassword);
                           if(result==true){
                             //password provided correct
                             String message;
-                            dynamic token = await AuthenticationService().changePassword(newPassword);
-                            token != null ? message = 'Password changed successfully' : message = 'Error, try again later!';
-                            Navigator.pop(context,message);
+                            setState(() {
+                              loading=true;
+                            });
+                            bool token = await AuthenticationService().changePassword(newPassword);
+                            token == true ? message = 'Password changed successfully' : message = 'Error, you might want to log-in again for this operation';
+                            Navigator.of(context).pop(message);
                           }else{
                             //password provided non-correct
                             Fluttertoast.showToast(msg: "Wrong password provided!");
@@ -159,7 +163,7 @@ Future createPopUpChangePassword(BuildContext context, User userData) {
           child: SingleChildScrollView(
             child: AlertDialog(
               title: Text(
-                'Edit Vendor Form',
+                'Password Change',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,

@@ -60,6 +60,7 @@ class ItemStaffView extends StatelessWidget {
                         width: 2,
                       )),
                   child: GFAvatar(
+                    backgroundColor: Colors.transparent,
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: showImage(context)

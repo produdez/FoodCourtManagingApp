@@ -44,9 +44,9 @@ class _NewStaffFormState extends State<NewStaffForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               GFAvatar(
+                backgroundColor: Colors.transparent,
                 shape: GFAvatarShape.square,
                 radius: 50,
-                backgroundColor: Colors.white,
                 child: ClipRect(
                   child: new SizedBox(
                     width: 100.0,

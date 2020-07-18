@@ -21,7 +21,8 @@ dependencies:
     sdk: flutter
   fluttertoast: ^4.0.0
   firebase_auth: ^0.14.0+5
-  cloud_firestore: ^0.12.9+4
+#  cloud_firestore: ^0.12.9+4
+  cloud_firestore: ^0.13.7
   provider: ^3.1.0
   firebase_storage: ^3.1.1
   image_picker: ^0.6.3+1
@@ -68,6 +69,7 @@ flutter:
     - assets/noDish.jpg
     - assets/staff.png
     - assets/vendor.png
+    - assets/user.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

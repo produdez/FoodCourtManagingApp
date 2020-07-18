@@ -1,8 +1,6 @@
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/user_db_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-
 /*
 Authentication service, dealing with just log-in and sign-up
 This class can return current user's id only (if needed)
@@ -82,32 +80,27 @@ class AuthenticationService {
   }
 
   //change password
-  Future changePassword(String newPassword) async {
+  Future<bool> changePassword(String newPassword) async {
     try {
       FirebaseUser user = await _auth.currentUser();
-      user.updatePassword(newPassword).then((onValue){
-        UserDBService(user.uid).changePassword(newPassword: newPassword);
-         print("Changed password:"+ newPassword);
-      });
+      await user.updatePassword(newPassword);
+      UserDBService(user.uid).changePassword(newPassword: newPassword);
+      print("Changed password:"+ newPassword);
+      return true;
     } on Exception catch (e) {
-      print('Error, password not changed!');
+      print('Error, password not changed! Re login required!');
       print(e.toString());
+      return false;
     }
   }
 
   //check if password provided is current with the current password.
-  Future<bool> checkCorrectPassword(String email,String password) async{
-    FirebaseUser user = await _auth.currentUser();
-    print('Testing email $email, password $password');
-    print('auth email: '+user.email);
-    AuthCredential userCredentials = EmailAuthProvider.getCredential(email: email,password: password);
-    bool result = false;
-    await user.reauthenticateWithCredential(userCredentials).then((AuthResult authResult){
-      if(authResult!=null) result = true;
-      if(result==true) print("Old Password:"+ password);
+  Future<bool> checkCorrectPassword(String oldPassword,String newPassword) async{
+      FirebaseUser user = await _auth.currentUser();
+      print('Testing email ${user.email}, password $newPassword');
+      bool result = newPassword == oldPassword;
+      if(result==true) print("Old Password:"+ newPassword);
       else print("Wrong password");
-
-    });
-    return result;
-  }
+      return result;
+    }
 }

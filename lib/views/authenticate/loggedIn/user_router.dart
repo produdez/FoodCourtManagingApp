@@ -22,60 +22,63 @@ class LoggedInUserRouter extends StatelessWidget {
     final userIdOnly = Provider.of<User>(context);
     if(userIdOnly== null) return Wrapper();
 
-    return FutureBuilder(
-      future: UserDBService(userIdOnly.id).getUserData(),
-      builder: (context, snapshot){
-        print("Status: ${snapshot.connectionState.toString()}");
-        if(snapshot.connectionState == ConnectionState.waiting){
-          return Loading();
-        }else{
-          //THIS IS THE USER DATA
-          User currentUser = snapshot.data;
+    return StreamProvider<User>.value(
+      value: UserDBService(userIdOnly.id).user,
+      child: FutureBuilder(
+        future: UserDBService(userIdOnly.id).getUserData(),
+        builder: (context, snapshot){
+          print("Status: ${snapshot.connectionState.toString()}");
+          if(snapshot.connectionState == ConnectionState.waiting){
+            return Loading();
+          }else{
+            //THIS IS THE USER DATA
+            User currentUser = snapshot.data;
 
-          //Customer Home UI Here
-          if(currentUser.role == "Customer"){
-            return Container(
-              child: Scaffold(
-                body: Text("Customer UI"),
-                appBar: AppBar(
-                  actions: <Widget>[
-                    FlatButton.icon(
-                      icon: Icon(Icons.person),
-                      label: Text('logout'),
-                      onPressed: () async {
-                        await AuthenticationService().signOut();
-                      },)
-                  ],
+            //Customer Home UI Here
+            if(currentUser.role == "Customer"){
+              return Container(
+                child: Scaffold(
+                  body: Text("Customer UI"),
+                  appBar: AppBar(
+                    actions: <Widget>[
+                      FlatButton.icon(
+                        icon: Icon(Icons.person),
+                        label: Text('logout'),
+                        onPressed: () async {
+                          await AuthenticationService().signOut();
+                        },)
+                    ],
+                  ),
                 ),
-              ),
-            );
+              );
+            }
+
+            //Vendor Manager Home UI Here
+            if(currentUser.role == "Vendor Manager"){
+              return VendorManagerNavBar(userData: currentUser,);
+
+            }
+
+            //FC manager Home UI Here
+            if(currentUser.role == "Food Court Manager") {
+              return FoodCourtManagerNavBar(userData: currentUser,);
+            }
+
+            //Staff Home UI Here
+            if(currentUser.role == "Staff") {
+              return Container(
+                child: Text("Staff UI"),
+              );
+            }
           }
 
-          //Vendor Manager Home UI Here
-          if(currentUser.role == "Vendor Manager"){
-            return VendorManagerNavBar(userData: currentUser,);
 
-          }
-
-          //FC manager Home UI Here
-          if(currentUser.role == "Food Court Manager") {
-            return FoodCourtManagerNavBar(userData: currentUser,);
-          }
-
-          //Staff Home UI Here
-          if(currentUser.role == "Staff") {
-            return Container(
-              child: Text("Staff UI"),
-            );
-          }
-        }
-
-
-        //Worst case where everything fail (wont happen i hope :D)
-        return Container(
-          child: Text("Fail again!"),
-        );
-      },
+          //Worst case where everything fail (wont happen i hope :D)
+          return Container(
+            child: Text("Fail again!"),
+          );
+        },
+      ),
     );
   }
 }

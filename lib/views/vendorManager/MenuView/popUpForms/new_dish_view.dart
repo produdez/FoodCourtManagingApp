@@ -42,7 +42,7 @@ class _NewDishFormState extends State<NewDishForm> {
               GFAvatar(
                 shape: GFAvatarShape.square,
                 radius: 50,
-                backgroundColor: Colors.white,
+                backgroundColor: Colors.transparent,
                 child: ClipRect(
                   child: new SizedBox(
                     width: 100.0,

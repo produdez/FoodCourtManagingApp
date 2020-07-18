@@ -25,7 +25,7 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
 
     children.add(SelectTypeView(userData: widget.userData));
 
-    children.add(ProfileView(userData: widget.userData,));
+    children.add(ProfileView());
     super.initState();
   }
   @override

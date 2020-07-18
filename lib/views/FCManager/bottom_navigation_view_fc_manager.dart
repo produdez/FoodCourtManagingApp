@@ -27,7 +27,7 @@ class _FoodCourtManagerNavBarState extends State<FoodCourtManagerNavBar> {
 
     children.add(SelectTypeView(userData: widget.userData));
 
-    children.add(ProfileView(userData: widget.userData,));
+    children.add(ProfileView());
     super.initState();
   }
   @override

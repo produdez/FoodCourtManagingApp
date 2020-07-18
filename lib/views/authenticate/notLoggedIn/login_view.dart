@@ -32,7 +32,7 @@ class _LoginViewState extends State<LoginView> {
       appBar: AppBar(
         backgroundColor: Color(0xffff8a84),
         elevation: 0.0,
-        title: Text('Sign up for Food Court'),
+        title: Text('Sign in Food Court'),
         actions: <Widget>[
           FlatButton.icon(
             icon: Icon(Icons.person),
