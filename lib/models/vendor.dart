@@ -9,12 +9,14 @@ class Vendor {
   bool hasImage;
   File imageFile;
   //Normal constructor
-  Vendor(this.name, this.phone, {this.id = "",this.hasImage=false,this.imageFile, this.imageURL});
+  Vendor(this.name, this.phone,
+      {this.id = "", this.hasImage = false, this.imageFile, this.imageURL});
 
   @override
   String toString() {
     return 'Vendor{id: $id, name: $name, phone: $phone, imageURL: $imageURL, hasImage: $hasImage, imageFile: $imageFile}';
   } //Copy constructor
+
   Vendor.clone(Vendor vendor) {
     this.id = vendor.id;
     this.name = vendor.name;

@@ -68,6 +68,9 @@ flutter:
     - assets/noDish.jpg
     - assets/staff.png
     - assets/vendor.png
+    - assets/breakfast.jpeg
+    - assets/lunch.jpeg
+    - assets/supper_1.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

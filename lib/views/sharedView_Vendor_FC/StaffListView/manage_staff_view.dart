@@ -1,5 +1,3 @@
-
-
 /*
 This is the menu view that holds the frame for the whole staff management view
 It does holds the add Staff button
@@ -32,7 +30,7 @@ class _ManageStaffViewState extends State<ManageStaffView> {
 
   @override
   Widget build(BuildContext context) {
-    String place = widget.userData.role ==  "Vendor Manager" ? "VENDOR" : "FC";
+    String place = widget.userData.role == "Vendor Manager" ? "VENDOR" : "FC";
     return StreamProvider<List<Staff>>.value(
       value: StaffDBService().allStaffsOfOwner,
       child: Scaffold(
@@ -50,7 +48,8 @@ class _ManageStaffViewState extends State<ManageStaffView> {
               label: Text('logout'),
               onPressed: () async {
                 await AuthenticationService().signOut();
-              },)
+              },
+            )
           ],
         ),
         body: Column(

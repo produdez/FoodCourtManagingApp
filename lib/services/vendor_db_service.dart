@@ -1,30 +1,31 @@
-  import 'package:cloud_firestore/cloud_firestore.dart';
-  import 'package:fcfoodcourt/models/vendor.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcfoodcourt/models/vendor.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'image_upload_service.dart';
-  
-class VendorDBService{
 
-  final CollectionReference vendorDB = Firestore.instance.collection("vendorDB");
+class VendorDBService {
+  final CollectionReference vendorDB =
+      Firestore.instance.collection("vendorDB");
 
   Future addVendor(Vendor vendor) async {
     DocumentReference _vendorRef = vendorDB.document();
-    ImageUploadService().uploadPic(vendor.imageFile,_vendorRef);
+    ImageUploadService().uploadPic(vendor.imageFile, _vendorRef);
     return await _vendorRef.setData({
       "id": _vendorRef.documentID,
       "name": vendor.name,
       "phone": vendor.phone,
-      "hasImage" : vendor.hasImage,
+      "hasImage": vendor.hasImage,
     });
   }
+
   Future editVendor(Vendor vendor, Vendor newVendor) async {
     DocumentReference _staffRef = vendorDB.document(vendor.id);
-    ImageUploadService().uploadPic(newVendor.imageFile,_staffRef);
+    ImageUploadService().uploadPic(newVendor.imageFile, _staffRef);
     return await _staffRef.updateData({
       "name": newVendor.name,
-      "phone":newVendor.phone,
-      "hasImage" : newVendor.hasImage ? newVendor.hasImage : vendor.hasImage,
+      "phone": newVendor.phone,
+      "hasImage": newVendor.hasImage ? newVendor.hasImage : vendor.hasImage,
       //no update vendor ID
     });
   }
@@ -35,7 +36,7 @@ class VendorDBService{
     return await _staffRef.delete();
   }
 
-  void callVendor(Vendor vendor){
+  void callVendor(Vendor vendor) {
     launch("tel://${vendor.phone}");
     print('Calling: ${vendor.phone}');
   }
@@ -59,8 +60,7 @@ class VendorDBService{
 
   //Mapping a database snapshot into a vendorList
   List<Vendor> _vendorListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents
-        .map((doc) {
+    return snapshot.documents.map((doc) {
       return Vendor(
         doc.data['name'] ?? '',
         doc.data['phone'] ?? '',

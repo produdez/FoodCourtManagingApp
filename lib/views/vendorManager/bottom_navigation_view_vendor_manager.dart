@@ -20,28 +20,35 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
   @override
   void initState() {
     currentIndex = 0;
-    children.add(MenuView(userData: widget.userData,));
-    children.add(ManageStaffView(userData: widget.userData,));
+    children.add(MenuView(
+      userData: widget.userData,
+    ));
+    children.add(ManageStaffView(
+      userData: widget.userData,
+    ));
 
     children.add(SelectTypeView(userData: widget.userData));
 
-    children.add(ProfileView(userData: widget.userData,));
+    children.add(ProfileView(
+      userData: widget.userData,
+    ));
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false, // address bottom overflow error
       //resizeToAvoidBottomPadding: false,
       body: children[currentIndex],
-      bottomNavigationBar:Container(
+      bottomNavigationBar: Container(
         height: 75,
         decoration: BoxDecoration(
             border: Border(
-              top: BorderSide(width: 4, color: Colors.black),
-            )),
+          top: BorderSide(width: 4, color: Colors.black),
+        )),
         child: BottomNavigationBar(
-          onTap: (index){
+          onTap: (index) {
             setState(() {
               currentIndex = index;
             });
@@ -53,10 +60,7 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
           unselectedFontSize: 20,
           currentIndex: currentIndex,
           selectedLabelStyle: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 20
-          ),
+              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
           showSelectedLabels: true,
           showUnselectedLabels: true,
           selectedItemColor: Colors.black,
@@ -66,9 +70,9 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
           selectedIconTheme: IconThemeData(color: Colors.white, size: 25),
           items: [
             BottomNavigationBarItem(
-                backgroundColor: Color(0xffff8a84),
-                icon: Icon(Icons.restaurant),
-                title: Text("Menu"),
+              backgroundColor: Color(0xffff8a84),
+              icon: Icon(Icons.restaurant),
+              title: Text("Menu"),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.work),
@@ -85,7 +89,6 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
           ],
         ),
       ),
-
     );
   }
 }
