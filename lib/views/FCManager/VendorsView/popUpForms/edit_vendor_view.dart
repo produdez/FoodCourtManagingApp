@@ -3,11 +3,12 @@ import 'dart:io';
 
 import 'package:fcfoodcourt/models/vendor.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
+import 'package:fcfoodcourt/services/input_field_validator.dart';
 import 'package:fcfoodcourt/shared/confirmation_view.dart';
 import 'package:flutter/material.dart';
 import 'package:getflutter/components/avatar/gf_avatar.dart';
 import 'package:getflutter/shape/gf_avatar_shape.dart';
-//TODO: find a way to notify view and update when storage is updated
+
 /*
 A form that shows edit.
 The function createEditView returns a Future<Vendor>
@@ -29,7 +30,7 @@ class _EditVendorFormState extends State<EditVendorForm> {
   ImageUploadService _imageUploadService = ImageUploadService();
   File _image;
   bool hasImage;
-
+  final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     name = widget.vendor.name;
@@ -38,10 +39,11 @@ class _EditVendorFormState extends State<EditVendorForm> {
     hasImage = widget.vendor.hasImage;
     super.initState();
   }
-//TODO: add image picker,... after implementing better way to use image
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Form(
+      key: _formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -91,7 +93,7 @@ class _EditVendorFormState extends State<EditVendorForm> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
-            child: TextField(
+            child: TextFormField(
               onChanged: (String name) {
                 this.name = name;
               },
@@ -116,7 +118,8 @@ class _EditVendorFormState extends State<EditVendorForm> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
-            child: TextField(
+            child: TextFormField(
+              validator: InputFieldValidator.phoneValidator,
               onChanged: (String phone) {
                 this.phone = phone;
               },
@@ -162,12 +165,14 @@ class _EditVendorFormState extends State<EditVendorForm> {
                   ),
                 ),
                 onPressed: () {
-                  createConfirmationView(context).then((onValue) {
+                  if(_formKey.currentState.validate()){
+                    createConfirmationView(context).then((onValue) {
                     if (onValue == true) {
                       hasImage = _image !=null? true : false;
                       Navigator.of(context).pop(new Vendor(name, phone,imageFile: _image,hasImage: hasImage));
                     }
                   });
+                  }
                 },
               ),
             ],
@@ -177,38 +182,27 @@ class _EditVendorFormState extends State<EditVendorForm> {
     );
   }
   Widget showImage(BuildContext context){
-    return  FutureBuilder(
-      future: ImageUploadService().getImageFromCloud(context, imageName),
-      builder: (context, snapshot) {
-        if(_image != null){
-          return Container(
-              height: MediaQuery.of(context).size.height /
-                  1.25,
-              width: MediaQuery.of(context).size.width /
-                  1.25,
-              child: Image.file(_image, fit: BoxFit.fill,));
-        }
-        if(hasImage==false || snapshot.connectionState == ConnectionState.waiting){
-          return Container(
-              height: MediaQuery.of(context).size.height /
-                  1.25,
-              width: MediaQuery.of(context).size.width /
-                  1.25,
-              child: Image.asset("assets/bowl.png", fit: BoxFit.fill,));
-        }
-        if (snapshot.connectionState == ConnectionState.done) //image is found
-          return Container(
-            height:
-            MediaQuery.of(context).size.height,
-            width:
-            MediaQuery.of(context).size.width,
-            child: snapshot.data,
-            //TODO: future builder will keep refreshing while scrolling, find a way to keep data offline and use a stream to watch changes instead.
-          );
-        return Container();
-
-      },
-    );
+    if(widget.vendor.hasImage==false){
+      return Container(
+          height: MediaQuery.of(context).size.height /
+              1.25,
+          width: MediaQuery.of(context).size.width /
+              1.25,
+          child: Image.asset("assets/bowl.png", fit: BoxFit.fill,));
+    }else if(widget.vendor.imageURL==null){
+      return CircularProgressIndicator();
+    }else{
+      return Container(
+        height:
+        MediaQuery.of(context).size.height,
+        width:
+        MediaQuery.of(context).size.width,
+        child: Image.network(
+          widget.vendor.imageURL,
+          fit: BoxFit.fill,
+        ),
+      );
+    }
   }
 }
 
@@ -216,21 +210,25 @@ Future<Vendor> createPopUpEditVendor(BuildContext context, Vendor vendor) {
   return showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text(
-            'Edit Vendor Form',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 30,
-              color: Color(0xffff6624),
+        return Center(
+          child: SingleChildScrollView(
+            child: AlertDialog(
+              title: Text(
+                'Edit Vendor Form',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                  color: Color(0xffff6624),
+                ),
+              ),
+              content: SizedBox(
+                  height: 400,
+                  width: 300,
+                  child: EditVendorForm(
+                    vendor: vendor,
+                  )),
             ),
           ),
-          content: SizedBox(
-              height: 350,
-              width: 300,
-              child: EditVendorForm(
-                vendor: vendor,
-              )),
         );
       });
 }

@@ -57,8 +57,7 @@ class CustomerDishView extends StatelessWidget {
                       )),
                   child: GFAvatar(
                     backgroundImage: AssetImage(
-                        //TODO: Find a way to store cloud image and load that also
-                        //TODO: And then implement image choosing for vendor profile when newvendor or editvendor
+
                         'assets/${dish.id}.jpg'),
                     shape: GFAvatarShape.square,
                     radius: 25,

@@ -7,17 +7,20 @@ class Dish {
   double discountPercentage; //discount
   double realPrice;//real price due to discount
   bool isOutOfOrder;
-
+  String imageURL;
 
   bool hasImage;
   File imageFile;
   //normal constructor
   Dish(this.name, this.originPrice,
-      {this.discountPercentage = 0, this.realPrice, this.id = "",this.imageFile,this.hasImage = false, this.isOutOfOrder = false}) {
+      {this.discountPercentage = 0, this.realPrice, this.id = "",this.imageFile,this.hasImage = false, this.isOutOfOrder = false,this.imageURL}) {
     if (this.realPrice == null) this.realPrice = this.originPrice;
   }
 
-  //copy constructor
+  @override
+  String toString() {
+    return 'Dish{id: $id, name: $name, originPrice: $originPrice, discountPercentage: $discountPercentage, realPrice: $realPrice, isOutOfOrder: $isOutOfOrder, imageURL: $imageURL, hasImage: $hasImage, imageFile: $imageFile}';
+  } //copy constructor
   Dish.clone(Dish dish) {
     this.name = dish.name;
     this.originPrice = dish.originPrice;
@@ -26,6 +29,7 @@ class Dish {
     this.realPrice = dish.realPrice;
     this.hasImage = dish.hasImage;
     this.isOutOfOrder = dish.isOutOfOrder;
+    this.imageURL = dish.imageURL;
     //do not copy imageFile
   }
 }

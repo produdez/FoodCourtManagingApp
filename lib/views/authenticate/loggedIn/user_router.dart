@@ -29,10 +29,9 @@ class LoggedInUserRouter extends StatelessWidget {
           return Loading();
         } else {
           //THIS IS THE USER DATA
-          //TODO: pass this down to below classes to use.
           User currentUser = snapshot.data;
 
-          //TODO: Customer Home UI Here
+          //Customer Home UI Here
           if (currentUser.role == "Customer") {
             return Container(
               child: Scaffold(
@@ -52,24 +51,24 @@ class LoggedInUserRouter extends StatelessWidget {
             );
           }
 
-          //TODO: Vendor Manager Home UI Here
+          //Vendor Manager Home UI Here
           if (currentUser.role == "Vendor Manager") {
             return VendorManagerNavBar(
               userData: currentUser,
             );
           }
 
-          //TODO: FC manager Home UI Here
+          //FC manager Home UI Here
           if (currentUser.role == "Food Court Manager") {
             return FoodCourtManagerNavBar(
               userData: currentUser,
             );
           }
 
-          //TODO: Staff Home UI Here
+          //Staff Home UI Here
           if (currentUser.role == "Staff") {
-            return StaffView(
-              userData: currentUser,
+            return Container(
+              child: Text("Staff UI"),
             );
           }
         }

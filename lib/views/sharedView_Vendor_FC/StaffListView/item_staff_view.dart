@@ -1,5 +1,4 @@
 import 'package:fcfoodcourt/models/staff.dart';
-import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getflutter/getflutter.dart';
@@ -43,9 +42,13 @@ class ItemStaffView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               InkWell(
+                //TODO: remove after debug
                 onTap: () {
+                  print(staff.toString());
                   Fluttertoast.cancel();
-                  Fluttertoast.showToast(msg: "ID: ${staff.id}");
+                  Fluttertoast.showToast(
+                    msg: staff.toString(),
+                  );
                 },
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
@@ -200,28 +203,25 @@ class ItemStaffView extends StatelessWidget {
   }
 
   Widget showImage(BuildContext context) {
-    return FutureBuilder(
-      future: ImageUploadService().getImageFromCloud(context, staff.id),
-      builder: (context, snapshot) {
-        if (staff.hasImage == false ||
-            snapshot.connectionState == ConnectionState.waiting) {
-          return Container(
-              height: MediaQuery.of(context).size.height / 1.25,
-              width: MediaQuery.of(context).size.width / 1.25,
-              child: Image.asset(
-                "assets/staff.png",
-                fit: BoxFit.fill,
-              ));
-        }
-        if (snapshot.connectionState == ConnectionState.done) //image is found
-          return Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: snapshot.data,
-            //TODO: future builder will keep refreshing while scrolling, find a way to keep data offline and use a stream to watch changes instead.
-          );
-        return Container();
-      },
-    );
+    if (staff.hasImage == false) {
+      return Container(
+          height: MediaQuery.of(context).size.height / 1.25,
+          width: MediaQuery.of(context).size.width / 1.25,
+          child: Image.asset(
+            "assets/bowl.png",
+            fit: BoxFit.fill,
+          ));
+    } else if (staff.imageURL == null) {
+      return CircularProgressIndicator();
+    } else {
+      return Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Image.network(
+          staff.imageURL,
+          fit: BoxFit.fill,
+        ),
+      );
+    }
   }
 }

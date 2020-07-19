@@ -1,5 +1,3 @@
-//import 'package:fcfoodcourt/services/view_logic_helper.dart';
-import 'package:fcfoodcourt/views/customer/Menu/customer_dish_list_view.dart';
 import 'package:fcfoodcourt/views/customer/Menu/dishes_of_vendor.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -63,10 +61,7 @@ class VendorView extends StatelessWidget {
                           width: 2,
                         )),
                     child: GFAvatar(
-                      backgroundImage: AssetImage(
-                          //TODO: Find a way to store cloud image and load that also
-                          //TODO: And then implement image choosing for vendor profile when newvendor or editvendor
-                          'assets/${vendor.id}.jpg'),
+                      backgroundImage: AssetImage('assets/${vendor.id}.jpg'),
                       shape: GFAvatarShape.square,
                       radius: 25,
                       borderRadius: BorderRadius.circular(10),

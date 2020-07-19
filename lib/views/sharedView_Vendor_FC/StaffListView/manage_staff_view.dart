@@ -7,7 +7,7 @@ import 'package:fcfoodcourt/models/staff.dart';
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/services/staff_db_service.dart';
-import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/popUpForms/new_staff_view.dart';
+import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/manage_staff_view_controller.dart';
 import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/staff_list_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -88,15 +88,7 @@ class _ManageStaffViewState extends State<ManageStaffView> {
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Color(0xffff8a84),
-          onPressed: () {
-            //On newDish chosen, show newDish popUp and process information
-            //The return value is a Dish with name, price (every other fields are defaulted)
-            createPopUpNewStaff(context).then((onValue) {
-              if (onValue != null) {
-                StaffDBService().addStaff(onValue);
-              }
-            }); //This request the pop-up new vendor form
-          },
+          onPressed: () => ManageStaffViewController.addStaff(context), //onNewStaffSelected
           child: Icon(
             Icons.add,
             size: 50,

@@ -1,7 +1,7 @@
 import 'package:fcfoodcourt/models/user.dart';
-import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/choose_date_view.dart';
-import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/choose_month_view.dart';
-import 'package:fcfoodcourt/views/vendorManager/ReportView/report_view.dart';
+import 'package:fcfoodcourt/views/FCManager/ReportView/PopUpForms/choose_date_view.dart';
+import 'package:fcfoodcourt/views/FCManager/ReportView/PopUpForms/choose_month_view.dart';
+import 'package:fcfoodcourt/views/FCManager/ReportView/report_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
@@ -42,7 +42,7 @@ class _SelectTypeViewState extends State<SelectTypeView> {
         mainAxisAlignment: MainAxisAlignment.center,
         //mainAxisAlignment: MainAxisAlignment.start,
         children: [Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          //mainAxisAlignment: MainAxisAlignment.start,
           children: [
           Row(
             children: <Widget>[
@@ -67,21 +67,13 @@ class _SelectTypeViewState extends State<SelectTypeView> {
             ],
           ),
           Container(
-            margin: EdgeInsets.fromLTRB(0, 85, 0, 75),
-            child: SizedBox(
-              width: 200,
-              height: 100,
-              child: reportType("Daily"),
-            )
-          ),
-          //SizedBox(height: 50,),
-          Container(
-            child: SizedBox(
-              width: 200,
-              height: 100,
-              child: reportType("Monthly"),
+                margin: EdgeInsets.only(top: 150),
+                child: SizedBox(
+                width: 200,
+                height: 100,
+                child: reportType("Monthly"),
               ),
-          )
+          )         
           ]
         ),
         ],
@@ -106,7 +98,7 @@ class _SelectTypeViewState extends State<SelectTypeView> {
               ),
           ),
           onPressed: () {
-            if(type == 'Daily')
+            /*if(type == 'Daily')
             {
               print(type);
               createPopUpChooseDate(context).then((onValue){
@@ -118,7 +110,7 @@ class _SelectTypeViewState extends State<SelectTypeView> {
                 }
               }
               );
-            }
+            }*/
             if(type == 'Monthly')
             {
               print(type);

@@ -27,7 +27,6 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
       userData: widget.userData,
     ));
 
-    //TODO: Add report route here
     children.add(SelectTypeView(userData: widget.userData));
 
     children.add(ProfileView(
