@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
@@ -14,7 +13,7 @@ class DishDBService {
   //add dish as a new document to db, id is randomize by Firebase
   Future addDish(Dish dish) async {
     DocumentReference _dishRef = dishDB.document();
-    ImageUploadService().uploadPic(dish.imageFile,_dishRef.documentID);
+    ImageUploadService().uploadPic(dish.imageFile, _dishRef.documentID);
     return await _dishRef.setData({
       "name": dish.name,
       "id": _dishRef.documentID,
@@ -22,7 +21,7 @@ class DishDBService {
       "realPrice": dish.realPrice,
       "discountPercentage": dish.discountPercentage,
       "vendorID": vendorID,
-      "hasImage" : dish.hasImage,
+      "hasImage": dish.hasImage,
       "isOutOfOrder": dish.isOutOfOrder,
     });
   }
@@ -30,14 +29,16 @@ class DishDBService {
   //update dish, changing name, original price and reset it's discount state
   Future editDish(Dish dish, Dish newDish) async {
     DocumentReference _dishRef = dishDB.document(dish.id);
-    ImageUploadService().uploadPic(newDish.imageFile,_dishRef.documentID);
+    ImageUploadService().uploadPic(newDish.imageFile, _dishRef.documentID);
     return await _dishRef.updateData({
       "name": newDish.name,
       "originPrice": newDish.originPrice,
       "realPrice": newDish.originPrice, //reset on edit
       "discountPercentage": 0.0, //reset on edit
-      "hasImage" : dish.hasImage==true?true:newDish.hasImage==true?true:false,
-      "isOutOfOrder" : false, // reset on edit
+      "hasImage": dish.hasImage == true
+          ? true
+          : newDish.hasImage == true ? true : false,
+      "isOutOfOrder": false, // reset on edit
       //no update vendor ID
     });
   }
@@ -62,7 +63,7 @@ class DishDBService {
   Future setOutOfOrder(Dish dish) async {
     DocumentReference _dishRef = dishDB.document(dish.id);
     return await _dishRef.updateData({
-      "isOutOfOrder" : dish.isOutOfOrder, //this data is set in the dish above
+      "isOutOfOrder": dish.isOutOfOrder, //this data is set in the dish above
       //no update vendor ID
     });
   }
@@ -79,15 +80,14 @@ class DishDBService {
             documentSnapshot.data['vendorID'] == vendorID)
         .map((doc) {
       return Dish(
-        doc.data['name'] ?? '', doc.data['originPrice'] ?? 0.0,
+        doc.data['name'] ?? '',
+        doc.data['originPrice'] ?? 0.0,
         discountPercentage: doc.data['discountPercentage'] ?? 0.0,
         realPrice: doc.data['realPrice'] ?? 0.0,
         id: doc.data['id'] ?? '',
         hasImage: doc.data['hasImage'] ?? false,
-        isOutOfOrder: doc.data ['isOutOfOrder'] ?? false,
+        isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
       );
     }).toList();
   }
-
 }
-

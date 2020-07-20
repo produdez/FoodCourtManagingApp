@@ -1,4 +1,3 @@
-
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/views/authenticate/wrapper.dart';
@@ -36,10 +35,10 @@ class MyApp extends StatelessWidget {
           '/DishMenuView': (context) => MenuView(),
           '/login': (context) => Wrapper(),
           '/ListItemViewTest': (context) => ItemDishView(
-            dish: new Dish('French Fries', 30),
-          ),
+                dish: new Dish('French Fries', 30),
+              ),
           '/CustomerMenuView': (context) => CustomerView(),
-          '/CustomerDishView': (context) => CustomerDishView(),
+          // '/CustomerDishView': (context) => CustomerDishView(),
         },
         initialRoute: '/login',
       ),
@@ -47,11 +46,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container();
   }
 }
-

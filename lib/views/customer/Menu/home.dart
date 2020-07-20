@@ -94,12 +94,22 @@ class _MenuViewState extends State<CustomerView> {
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             backgroundColor: Color(0xffff8a84),
             title: Text(
               "FOOD COURT",
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             centerTitle: true,
+            actions: <Widget>[
+              FlatButton.icon(
+                icon: Icon(Icons.person),
+                label: Text('logout'),
+                onPressed: () async {
+                  await AuthenticationService().signOut();
+                },
+              )
+            ],
           ),
           bottomNavigationBar: Container(
             height: 75,
@@ -113,6 +123,7 @@ class _MenuViewState extends State<CustomerView> {
               backgroundColor: Color(0xffff8a84),
               selectedFontSize: 20,
               unselectedFontSize: 20,
+              selectedItemColor: Colors.white,
               currentIndex: currentIdx, //
               selectedIconTheme: IconThemeData(color: Colors.white, size: 25),
               items: [
@@ -131,8 +142,9 @@ class _MenuViewState extends State<CustomerView> {
                 ),
               ],
               onTap: (idx) {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CartView()));
+                if (idx == 1)
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CartView()));
                 /* setState(() {
                   currentIdx = idx;
                 });*/

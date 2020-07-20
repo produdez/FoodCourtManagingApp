@@ -73,7 +73,7 @@ class ItemDishView extends StatelessWidget {
               ),
               Container(
                 child: Column(
-                 // mainAxisAlignment: MainAxisAlignment.center,
+                  // mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
@@ -101,7 +101,9 @@ class ItemDishView extends StatelessWidget {
                           fontSize: 10,
                         ),
                       ),
-                      onPressed: () => CartService().removeDish(dish),///
+                      onPressed: () => CartService().removeDish(dish),
+
+                      ///
                     ),
                   ],
                 ),
@@ -113,29 +115,29 @@ class ItemDishView extends StatelessWidget {
       ),
     );
   }
-  Widget showImage(BuildContext context){
-    return  FutureBuilder(
+
+  Widget showImage(BuildContext context) {
+    return FutureBuilder(
       future: ImageUploadService().getImageFromCloud(context, dish.id),
       builder: (context, snapshot) {
-        if(dish.hasImage==false || snapshot.connectionState == ConnectionState.waiting){
+        if (dish.hasImage == false ||
+            snapshot.connectionState == ConnectionState.waiting) {
           return Container(
-              height: MediaQuery.of(context).size.height /
-                  1.25,
-              width: MediaQuery.of(context).size.width /
-                  1.25,
-              child: Image.asset("assets/bowl.png", fit: BoxFit.fill,));
+              height: MediaQuery.of(context).size.height / 1.25,
+              width: MediaQuery.of(context).size.width / 1.25,
+              child: Image.asset(
+                "assets/bowl.png",
+                fit: BoxFit.fill,
+              ));
         }
         if (snapshot.connectionState == ConnectionState.done) //image is found
           return Container(
-            height:
-            MediaQuery.of(context).size.height,
-            width:
-            MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
             child: snapshot.data,
             //TODO: future builder will keep refreshing while scrolling, find a way to keep data offline and use a stream to watch changes instead.
           );
         return Container();
-
       },
     );
   }

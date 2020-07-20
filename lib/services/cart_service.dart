@@ -1,9 +1,9 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/models/order.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:fcfoodcourt/services/dish_db_service.dart';
+
 class CartService {
   //Collection reference for DishDB
   final CollectionReference dishDB = Firestore.instance.collection("orderDB");
@@ -11,7 +11,7 @@ class CartService {
   //the dish db only response the correct menu according to the user's id (vendor's id)
   //this field is static and set when we first go to home page (menu,... in this case)
   static String orderID;
-
+  static double totalPrice = 0;
   //add dish as a new document to db, id is randomize by Firebase
   /*Future addOrder(Order order) async {
     DocumentReference _orderRef = orderDB.document();
@@ -22,15 +22,19 @@ class CartService {
   }*/
 
   Future addDish(Dish dish) async {
+    totalPrice += dish.realPrice;
     DocumentReference _dishRef = dishDB.document();
-    ImageUploadService().uploadPic(dish.imageFile,_dishRef.documentID);
+    dish.realId = _dishRef.documentID;
+    //ImageUploadService().uploadPic(dish.imageFile, _dishRef.documentID);
     return await _dishRef.setData({
       "name": dish.name,
-      "id": _dishRef.documentID,
+      "id": dish.id,
+      "realId": dish.realId,
       "originPrice": dish.originPrice,
       "realPrice": dish.realPrice,
       "discountPercentage": dish.discountPercentage,
-      "hasImage" : dish.hasImage,
+      //"vendorID": vendorID,
+      "hasImage": dish.hasImage,
       "isOutOfOrder": dish.isOutOfOrder,
     });
   }
@@ -61,7 +65,8 @@ class CartService {
 
   //remove document from database collection
   Future removeDish(Dish dish) async {
-    DocumentReference _orderRef = dishDB.document(dish.id);
+    totalPrice -= dish.realPrice;
+    DocumentReference _orderRef = dishDB.document(dish.realId);
     return await _orderRef.delete();
   }
 
@@ -77,20 +82,20 @@ class CartService {
   Stream<List<Dish>> get allOrderDishes {
     return dishDB.snapshots().map(_dishListFromSnapshot);
   }
+
   //get DishDB snapshot stream, this stream will auto-update if DB have change and notify any listener
   List<Dish> _dishListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents
-        .map((doc) {
+    return snapshot.documents.map((doc) {
       return Dish(
-        doc.data['name'] ?? '', doc.data['originPrice'] ?? 0.0,
+        doc.data['name'] ?? '',
+        doc.data['originPrice'] ?? 0.0,
         discountPercentage: doc.data['discountPercentage'] ?? 0.0,
+        realId: doc.data['realId'] ?? '',
         realPrice: doc.data['realPrice'] ?? 0.0,
         id: doc.data['id'] ?? '',
         hasImage: doc.data['hasImage'] ?? false,
-        isOutOfOrder: doc.data ['isOutOfOrder'] ?? false,
+        isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
       );
     }).toList();
   }
-
 }
-
