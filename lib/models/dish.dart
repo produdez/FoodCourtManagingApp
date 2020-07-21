@@ -1,19 +1,26 @@
-
+import 'dart:ffi';
 import 'dart:io';
+
 class Dish {
   String id; // id is from database
   String name;
-  double originPrice; //the original price before discount (not price) used in calculation
+  double
+      originPrice; //the original price before discount (not price) used in calculation
   double discountPercentage; //discount
-  double realPrice;//real price due to discount
+  double realPrice; //real price due to discount
   bool isOutOfOrder; //TODO: add to db
-
-
+  String vendorID;
   bool hasImage;
   File imageFile;
   //normal constructor
   Dish(this.name, this.originPrice,
-      {this.discountPercentage = 0, this.realPrice, this.id = "", this.imageFile,this.hasImage = false, this.isOutOfOrder = false}) {
+      {this.discountPercentage = 0,
+      this.realPrice,
+      this.id = "",
+      this.vendorID = "",
+      this.imageFile,
+      this.hasImage = false,
+      this.isOutOfOrder = false}) {
     if (this.realPrice == null) this.realPrice = this.originPrice;
   }
 
@@ -28,5 +35,23 @@ class Dish {
     this.isOutOfOrder = dish.isOutOfOrder;
     //do not copy imageFile
   }
+  @override
+  String toString() => 'Dish { name: $name }';
 }
 
+//List<String> suggestion = [];
+//List<String> vID = [];
+
+class SearchItem {
+  //Dish dish;
+  String name = "";
+  String vendorID = "";
+  String vendorName = "";
+  SearchItem(this.name, this.vendorID) {
+    this.name = name;
+    this.vendorID = vendorID;
+    this.vendorName = vendorName;
+  }
+  static List<SearchItem> suggestion = [];
+  static List<SearchItem> history = [];
+}

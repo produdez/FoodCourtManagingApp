@@ -1,10 +1,9 @@
-  import 'package:cloud_firestore/cloud_firestore.dart';
-  import 'package:fcfoodcourt/models/vendor.dart';
-  
-class VendorDBService{
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcfoodcourt/models/vendor.dart';
 
-  final CollectionReference vendorDB = Firestore.instance.collection("vendorDB");
-
+class VendorDBService {
+  final CollectionReference vendorDB =
+      Firestore.instance.collection("vendorDB");
   //TODO: just to test, delete later when the Vendor Management finished
   Future addVendor(Vendor vendor) async {
     DocumentReference _vendorRef = vendorDB.document();
@@ -34,8 +33,7 @@ class VendorDBService{
 
   //Mapping a database snapshot into a vendorList
   List<Vendor> _vendorListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents
-        .map((doc) {
+    return snapshot.documents.map((doc) {
       return Vendor(
         doc.data['name'] ?? '',
         doc.data['phone'] ?? '',
@@ -45,4 +43,21 @@ class VendorDBService{
       );
     }).toList();
   }
+
+  // Future<String> nameOfVendor(String vendorID, String vendorName) async {
+  //   await vendorDB.getDocuments().then((snapshot) async {
+  //     for (int i = 0; i < snapshot.documents.length; i++) {
+  //       //SearchItem.suggestion.add(SearchItem(snapshot.documents[i].data['name'],
+  //       //snapshot.documents[i].data['vendorID']));
+  //       if (snapshot.documents[i].data['id'] == vendorID) {
+  //         vendorName = snapshot.documents[i].data['name'];
+  //       }
+  //       //vID.add(snapshot.documents[i].data['vendorID']);
+  //       //print(suggestion[i]);
+  //       //print(vID[i]);
+  //     }
+  //   });
+  //   //print(vendorName);
+  //   return vendorName;
+  // }
 }

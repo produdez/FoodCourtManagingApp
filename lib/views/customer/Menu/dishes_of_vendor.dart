@@ -1,5 +1,6 @@
 import 'package:fcfoodcourt/services/dish_db_service.dart';
 import 'package:fcfoodcourt/models/dish.dart';
+import 'package:fcfoodcourt/services/vendor_db_service.dart';
 import 'package:fcfoodcourt/views/customer/MyCart/cart_view.dart';
 
 //import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_dish_view.dart';
@@ -15,14 +16,18 @@ It does holds the add Dish button
  */
 class CustomerDishView extends StatefulWidget {
   final String vendorId;
-  const CustomerDishView(this.vendorId);
+  final String name;
+  const CustomerDishView(this.vendorId, this.name);
   @override
-  _MenuViewState createState() => _MenuViewState(vendorId);
+  _MenuViewState createState() => _MenuViewState(vendorId, name);
 }
 
 class _MenuViewState extends State<CustomerDishView> {
   String vendorId;
-  _MenuViewState(this.vendorId);
+  String name;
+
+  _MenuViewState(this.vendorId, this.name);
+
   @override
   void initState() {
     DishDBService.vendorID = vendorId;
@@ -31,6 +36,7 @@ class _MenuViewState extends State<CustomerDishView> {
 
   @override
   Widget build(BuildContext context) {
+    print(name);
     return StreamProvider<List<Dish>>.value(
       value: DishDBService().allVendorDishes,
       child: Scaffold(
@@ -38,7 +44,7 @@ class _MenuViewState extends State<CustomerDishView> {
         appBar: AppBar(
           backgroundColor: Color(0xffff8a84),
           title: Text(
-            "FODDER",
+            name,
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,

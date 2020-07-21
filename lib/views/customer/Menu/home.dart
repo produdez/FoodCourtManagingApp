@@ -1,4 +1,6 @@
+import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/models/vendor.dart';
+import 'package:fcfoodcourt/services/search_service.dart';
 import 'package:fcfoodcourt/services/vendor_db_service.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/models/user.dart';
@@ -98,34 +100,33 @@ class _MenuViewState extends State<CustomerView> {
                   // try to centre the search box without relying much on it width
                   children: <Widget>[
                     SizedBox(
-                      width: 15,
+                      width: 30,
                     ),
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      height: 50,
-                      width: 320, //400
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xffff8a84), width: 4),
-                      ),
-
-                      child: TextField(
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.all(10),
-                            hintText: '   Search....'),
-                        onChanged: (String keyword) {
-                          this.keyword = keyword;
-                        },
-                      ),
+                    GestureDetector(
+                      onTap: () {
+                        SearchService().passToArray();
+                        showSearch(context: context, delegate: SearchService());
+                      },
+                      child: Container(
+                          padding: EdgeInsets.all(5),
+                          height: 50,
+                          width: 320,
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Color(0xffff8a84), width: 4),
+                          ),
+                          child: IgnorePointer(
+                            child: TextField(
+                              decoration: InputDecoration(
+                                  prefixIcon: Icon(Icons.search,
+                                      color: Color(0xffff8a84)),
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.all(0),
+                                  hintText: '   Search....'),
+                            ),
+                          )),
                     ),
-                    IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SearchView(keyword)));
-                        })
+                    //Icon(Icons.search, size: 50, color: Color(0xffff8a84)),
                   ],
                 ),
                 SizedBox(

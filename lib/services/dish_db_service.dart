@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
+import 'package:fcfoodcourt/services/search_service.dart';
 
 class DishDBService {
   //Collection reference for DishDB
@@ -10,6 +11,7 @@ class DishDBService {
   //this field is static and set when we first go to home page (menu,... in this case)
   static String vendorID = 'fakeVendorID';
   static String keyword = "";
+  List<String> suggestion = [];
 
   //add dish as a new document to db, id is randomize by Firebase
   Future addDish(Dish dish) async {
@@ -86,6 +88,7 @@ class DishDBService {
         discountPercentage: doc.data['discountPercentage'] ?? 0.0,
         realPrice: doc.data['realPrice'] ?? 0.0,
         id: doc.data['id'] ?? '',
+        vendorID: doc.data['vendorID'] ?? '',
         hasImage: doc.data['hasImage'] ?? false,
         isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
       );
