@@ -56,9 +56,9 @@ class _EditStaffFormState extends State<EditStaffForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               GFAvatar(
+                backgroundColor: Colors.transparent,
                 shape: GFAvatarShape.square,
                 radius: 50,
-                backgroundColor: Colors.white,
                 child: ClipRect(
                   child: new SizedBox(
                     width: 100.0,
@@ -214,7 +214,7 @@ class _EditStaffFormState extends State<EditStaffForm> {
               1.25,
           width: MediaQuery.of(context).size.width /
               1.25,
-          child: Image.asset("assets/bowl.png", fit: BoxFit.fill,));
+          child: Image.asset("assets/staff.png", fit: BoxFit.fill,));
     }else if(widget.staff.imageURL==null){
       return CircularProgressIndicator();
     }else{

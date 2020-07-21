@@ -1,3 +1,5 @@
+
+
 /*
 This is the menu view that holds the frame for the whole staff management view
 It does holds the add Staff button
@@ -14,8 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ManageStaffView extends StatefulWidget {
-  final User userData; // userData passed down by the userRouter
-  const ManageStaffView({Key key, this.userData}) : super(key: key);
+  const ManageStaffView({Key key}) : super(key: key);
   @override
   _ManageStaffViewState createState() => _ManageStaffViewState();
 }
@@ -25,12 +26,13 @@ class _ManageStaffViewState extends State<ManageStaffView> {
   void initState() {
     super.initState();
     //set owner id
-    StaffDBService.ownerID = widget.userData.id;
   }
 
   @override
   Widget build(BuildContext context) {
-    String place = widget.userData.role == "Vendor Manager" ? "VENDOR" : "FC";
+    final User userData = Provider.of<User>(context);
+    StaffDBService.ownerID = userData.role =='Vendor Manager' ? userData==null?null:userData.manageID : userData.id;
+    String place = userData.role ==  "Vendor Manager" ? "VENDOR" : "FC";
     return StreamProvider<List<Staff>>.value(
       value: StaffDBService().allStaffsOfOwner,
       child: Scaffold(
@@ -48,8 +50,7 @@ class _ManageStaffViewState extends State<ManageStaffView> {
               label: Text('logout'),
               onPressed: () async {
                 await AuthenticationService().signOut();
-              },
-            )
+              },)
           ],
         ),
         body: Column(

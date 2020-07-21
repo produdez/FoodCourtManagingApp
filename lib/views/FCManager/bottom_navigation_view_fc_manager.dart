@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:fcfoodcourt/models/user.dart';
-import 'package:fcfoodcourt/shared/profile_view.dart';
+import 'package:fcfoodcourt/views/profileViews/profile_view.dart';
 import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/manage_staff_view.dart';
 import 'package:fcfoodcourt/views/FCManager/ReportView/select_type_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,11 +23,11 @@ class _FoodCourtManagerNavBarState extends State<FoodCourtManagerNavBar> {
   void initState() {
     currentIndex = 0;
     children.add(VendorManagementView());
-    children.add(ManageStaffView(userData: widget.userData,));
+    children.add(ManageStaffView());
 
-    children.add(SelectTypeView(userData: widget.userData));
+    children.add(SelectTypeView());
 
-    children.add(ProfileView(userData: widget.userData,));
+    children.add(ProfileView());
     super.initState();
   }
   @override

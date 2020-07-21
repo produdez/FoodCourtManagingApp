@@ -56,7 +56,7 @@ class _EditDishFormState extends State<EditDishForm> {
               GFAvatar(
                 shape: GFAvatarShape.square,
                 radius: 50,
-                backgroundColor: Colors.white,
+                backgroundColor: Colors.transparent,
                 child: ClipRect(
                   child: new SizedBox(
                     width: 100.0,
