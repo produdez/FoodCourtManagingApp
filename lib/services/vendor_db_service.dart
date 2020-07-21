@@ -70,4 +70,44 @@ class VendorDBService{
       );
     }).toList();
   }
+
+  Future<bool> canCreateVendorAccount(String id) async {
+    bool available = false;
+    try {
+      DocumentSnapshot staffSnapshot = await vendorDB.document(id).get();
+      if(staffSnapshot.exists){
+        bool hasAccount = staffSnapshot.data['hasAccount']??false;
+        available = !hasAccount;
+      }
+      return available;
+    } on Exception catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future linkAccount(String vendorID, String userId) async {
+    DocumentReference _vendorRef = vendorDB.document(vendorID);
+    return await _vendorRef.updateData({
+      'hasAccount' : true,
+      'accountID' : userId,
+      //no update vendor ID
+    });
+  }
+
+  Future<Vendor> vendorInfoFromAccountId(String accountID) async{
+    Vendor vendorInfo;
+    await vendorDB.where("accountID", isEqualTo: accountID).getDocuments().then((value){
+      value.documents.forEach((doc) {
+        vendorInfo = Vendor(
+          doc.data['name'] ?? '',
+          doc.data['phone'] ?? '',
+          id: doc.data['id'] ?? '',
+          hasImage: doc.data['hasImage'] ?? false,
+          imageURL: doc.data['imageURL'] ?? null,
+        );
+      });
+    });
+    return vendorInfo;
+  }
 }

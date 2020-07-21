@@ -1,29 +1,28 @@
 import 'dart:ui';
 import 'package:fcfoodcourt/views/profileViews/profile_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/select_type_view.dart';
-import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/manage_staff_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/MenuView/menu_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class VendorManagerNavBar extends StatefulWidget {
-  final User userData;
-  const VendorManagerNavBar({Key key, this.userData}) : super(key: key);
+  const VendorManagerNavBar({Key key}) : super(key: key);
   @override
   _VendorManagerNavBarState createState() => _VendorManagerNavBarState();
 }
 
 class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
+
   int currentIndex;
   final List<Widget> children = [];
   @override
   void initState() {
     currentIndex = 0;
-    children.add(MenuView(userData: widget.userData,));
-    children.add(ManageStaffView(userData: widget.userData,));
+    children.add(MenuView());
+    children.add(ManageStaffView());
 
-    children.add(SelectTypeView(userData: widget.userData));
+    children.add(SelectTypeView());
 
     children.add(ProfileView());
     super.initState();

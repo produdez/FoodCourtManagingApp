@@ -3,6 +3,7 @@
 
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
+import 'package:fcfoodcourt/services/staff_db_service.dart';
 import 'package:fcfoodcourt/services/user_db_service.dart';
 import 'package:fcfoodcourt/shared/loading_view.dart';
 import 'package:fcfoodcourt/views/FCManager/bottom_navigation_view_fc_manager.dart';
@@ -55,19 +56,53 @@ class LoggedInUserRouter extends StatelessWidget {
 
             //Vendor Manager Home UI Here
             if(currentUser.role == "Vendor Manager"){
-              return VendorManagerNavBar(userData: currentUser,);
+              return VendorManagerNavBar();
 
             }
 
             //FC manager Home UI Here
             if(currentUser.role == "Food Court Manager") {
-              return FoodCourtManagerNavBar(userData: currentUser,);
+              return FoodCourtManagerNavBar();
             }
 
             //Staff Home UI Here
             if(currentUser.role == "Staff") {
-              return Container(
-                child: Text("Staff UI"),
+              return FutureBuilder(
+                future: StaffDBService().staffInfoFromAccountId(currentUser.id), //get staff info from account id of staff
+                builder: (context,snapshot){
+                  if(snapshot.connectionState==ConnectionState.waiting){
+                    return Container(
+                      child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Text('Out'),
+                        onPressed: () => AuthenticationService().signOut(),
+                      ),
+                    );
+                  }else{
+                    return Scaffold(
+                      body: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                            Text(snapshot.toString(),
+                              style: TextStyle(
+                                fontSize: 15
+                              ),
+                            ),
+                         SizedBox(height: 30,),
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text('Out'),
+                            onPressed: () => AuthenticationService().signOut(),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
               );
             }
           }

@@ -23,9 +23,9 @@ class _FoodCourtManagerNavBarState extends State<FoodCourtManagerNavBar> {
   void initState() {
     currentIndex = 0;
     children.add(VendorManagementView());
-    children.add(ManageStaffView(userData: widget.userData,));
+    children.add(ManageStaffView());
 
-    children.add(SelectTypeView(userData: widget.userData));
+    children.add(SelectTypeView());
 
     children.add(ProfileView());
     super.initState();

@@ -24,6 +24,7 @@ class ProfileView extends StatefulWidget {// userData passed down by the userRou
 
 class _MenuViewState extends State<ProfileView> {
   bool pickedImage = false;
+  File image;
   @override
   void initState() {
     super.initState();
@@ -105,7 +106,7 @@ class _MenuViewState extends State<ProfileView> {
                               onPressed: () async {
                                 File returnImage = await ImageUploadService().getImageFromImagePicker();
                                 setState(() {
-                                  userData.imageFile = returnImage;
+                                  image = returnImage;
                                   pickedImage = true;
                                 });
                                 //upload image here
@@ -201,7 +202,7 @@ class _MenuViewState extends State<ProfileView> {
     );
   }
   Widget showImage(BuildContext context, User userData){
-    if(pickedImage == true) {return Image.file(userData.imageFile,fit: BoxFit.fill,);}
+    if(pickedImage == true) {return Image.file(image,fit: BoxFit.fill,);}
     if(userData.hasImage==false){
       return Container(
           child: Image.asset("assets/user.png", fit: BoxFit.fill,));

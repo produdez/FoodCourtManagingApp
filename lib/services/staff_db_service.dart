@@ -22,6 +22,7 @@ class StaffDBService {
       "phone" : staff.phone,
       "position" : staff.position,
       "hasImage" : staff.hasImage,
+      "hasAccount" : false,
     });
   }
 
@@ -73,4 +74,44 @@ class StaffDBService {
     }).toList();
   }
 
+  Future<bool> canCreateStaffAccount(String id) async {
+    bool available = false;
+    try {
+      DocumentSnapshot staffSnapshot = await staffDB.document(id).get();
+      if(staffSnapshot.exists){
+        bool hasAccount = staffSnapshot.data['hasAccount']??false;
+        available = !hasAccount;
+      }
+      return available;
+    } on Exception catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future linkAccount(String staffId, String userId) async {
+    DocumentReference _staffRef = staffDB.document(staffId);
+    return await _staffRef.updateData({
+      'hasAccount' : true,
+      'accountID' : userId,
+      //no update vendor ID
+    });
+  }
+
+  Future<Staff> staffInfoFromAccountId(String accountID) async{
+    Staff staffInfo;
+    await staffDB.where("accountID", isEqualTo: accountID).getDocuments().then((value){
+      value.documents.forEach((doc) {
+        staffInfo = Staff(
+          doc.data['name'] ?? '',
+          id: doc.data['id'] ?? '',
+          phone: doc.data['phone'] ?? '',
+          position: doc.data['position'] ?? '',
+          hasImage: doc.data['hasImage'] ?? false,
+          imageURL: doc.data['imageURL'] ?? null,
+        );
+      });
+    });
+    return staffInfo;
+  }
 }

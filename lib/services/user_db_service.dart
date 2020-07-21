@@ -12,7 +12,7 @@ This class can create/get user data from DB, just remember to use this by:
 
 class UserDBService {
 
-  final String id;
+  final String id; //should be static but it's too late for that :D
   String role;
   UserDBService(this.id);
 
@@ -52,8 +52,9 @@ class UserDBService {
         email: snapshot.data['email'] ?? null,
         role: snapshot.data['role'] ?? null,
       password: snapshot.data['password'] ?? null,
-      hasImage: snapshot.data['hasImage'] ?? null,
+      hasImage: snapshot.data['hasImage'] ?? false,
       imageURL: snapshot.data['imageURL'] ?? null,
+      manageID: snapshot.data['manageID'] ?? null,
     );
   }
 
@@ -77,6 +78,13 @@ class UserDBService {
       user = _userDataFromSnapshot(onValue);
     });
     return user;
+  }
+
+  Future setManageID(String manageID) async {
+    DocumentReference _userRef = userDB.document(id);
+    return await _userRef.updateData({
+      'manageID' : manageID,
+    });
   }
 
 }

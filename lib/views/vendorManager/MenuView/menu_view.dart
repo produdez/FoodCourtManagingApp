@@ -15,8 +15,7 @@ This is the menu view that holds the frame for the whole menu
 It does holds the add Dish button
  */
 class MenuView extends StatefulWidget {
-  final User userData; // userData passed down by the userRouter
-  const MenuView({Key key, this.userData}) : super(key: key);
+  const MenuView({Key key}) : super(key: key);
   @override
   _MenuViewState createState() => _MenuViewState();
 }
@@ -25,12 +24,16 @@ class _MenuViewState extends State<MenuView> {
   @override
   void initState() {
     super.initState();
-    //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
-    DishDBService.vendorID = widget.userData.id;
+
   }
 
   @override
   Widget build(BuildContext context) {
+    final User userData =  Provider.of<User>(context);
+    //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
+    DishDBService.vendorID = userData == null? null : userData.manageID;
+
+
     return StreamProvider<List<Dish>>.value(
       value: DishDBService().allVendorDishes,
       child: Scaffold(
