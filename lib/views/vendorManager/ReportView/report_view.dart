@@ -29,6 +29,10 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   static double totalSale;
   static double totalReturn;
+  bool monthlySaleSort = true;
+  bool dailySort = true;
+  bool sortAsc = true;
+  int sortIndex;
   int reportType;
   int toggleReportType = 0;
   String date;
@@ -118,6 +122,8 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   //DataTable for monthly report
   Widget monthlyTable() {
     return DataTable(
+      sortColumnIndex: 1,
+      sortAscending: monthlySaleSort,
       columns: <DataColumn>[
         DataColumn(
           label: Text(
@@ -126,6 +132,12 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
           )
         ),
         DataColumn(
+          onSort: (columnIndex, ascending){
+            setState(() {
+              monthlySaleSort = !monthlySaleSort;
+            });
+            onSortColumn(columnIndex, ascending);
+          },
           label: Text(
           'Sale',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -148,30 +160,73 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   //DataTable for daily report
   Widget dailyTable(){ 
     return DataTable(
+      sortColumnIndex: sortIndex,
+      sortAscending: sortAsc,
+      //sortColumnIndex: [2,3],
+      //List<int> sortColumnIndex = [],
       columns: <DataColumn>[
         DataColumn(
           label: Text(
           'Orders',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          )
+          ),
         ),
         DataColumn(
           label: Text(
           'Quantity',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          )
+          ),
+          onSort: (columnIndex, sortAscending){
+            setState(() {
+              if(columnIndex == sortIndex){sortAsc = dailySort = sortAscending;}
+              else{
+                sortIndex = columnIndex;
+                sortAsc = dailySort;
+              }
+              previousOrders.sort((a, b) => a.quantity.compareTo(b.quantity));
+              if(!sortAsc){
+                previousOrders.sort((b, a) => a.quantity.compareTo(b.quantity));
+              }
+            });
+          }
         ),
         DataColumn(
           label: Text(
           'Price',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          )
+          ),
+          onSort: (columnIndex, sortAscending){
+            setState(() {
+              if(columnIndex == sortIndex){sortAsc = dailySort = sortAscending;}
+              else{
+                sortIndex = columnIndex;
+                sortAsc = dailySort;
+              }
+              previousOrders.sort((a, b) => a.price.compareTo(b.price));
+              if(!sortAsc){
+                previousOrders.sort((b, a) => a.price.compareTo(b.price));
+              }
+            });
+          }
         ),
         DataColumn(
           label: Text(
           'Revenue',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          )
+          ),
+          onSort: (columnIndex, sortAscending){
+            setState(() {
+              if(columnIndex == sortIndex){sortAsc = dailySort = sortAscending;}
+              else{
+                sortIndex = columnIndex;
+                sortAsc = dailySort;
+              }
+              previousOrders.sort((a, b) => a.revenue.compareTo(b.revenue));
+              if(!sortAsc){
+                previousOrders.sort((b, a) => a.revenue.compareTo(b.revenue));
+              }
+            });
+          }
         ),
       ],
       rows: previousOrders
@@ -494,6 +549,15 @@ int checkReportType(String  date)
   if(date.length < 9)
     reportType = 1;
   return reportType;
+}
+onSortColumn(int columnIndex, bool ascending) {
+  if (columnIndex == 1) {
+    if (ascending) {
+      previousReport.sort((a, b) => a.sale.compareTo(b.sale));
+    } else {
+      previousReport.sort((a, b) => b.sale.compareTo(a.sale));
+    }
+  }
 }
 }
 

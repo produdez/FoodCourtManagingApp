@@ -84,19 +84,19 @@ class VendorReportDBService{
     // update the total sale
     await vendorReportDB.document(reportId).get().then((documentSnapshot){
       vendorReportDB.document(reportId).updateData({
-        "sale": double.tryParse(documentSnapshot.data['sale']) + calculateTotalSale(newOrders)
+        "sale": "${double.tryParse(documentSnapshot.data['sale']) + calculateTotalSale(newOrders)}"
       });
     });
     // update the Orders
-    return await vendorReportDB.document(reportId).collection("Orders").getDocuments().then((querySnapshot){
+    return await vendorReportDB.document(reportId).collection("Orders").getDocuments().then((querySnapshot) async{
       var docs = querySnapshot.documents;
       for(int i = 0; i < newOrders.length; i++){
         for(DocumentSnapshot doc in docs){
           // If the order already exists in the firebase => update the revenue and quantity
           if(newOrders[i].name == doc.documentID){
-            vendorReportDB.document(reportId).collection("Orders").document(doc.documentID).get().then((_ordersSnapshot){
+            await vendorReportDB.document(reportId).collection("Orders").document(doc.documentID).get().then((_ordersSnapshot)async{
               double updatedRevenue = double.tryParse(_ordersSnapshot.data['revenue']) + newOrders[i].revenue;
-              vendorReportDB.document(reportId).collection("Orders").document(doc.documentID).updateData({
+              await vendorReportDB.document(reportId).collection("Orders").document(doc.documentID).updateData({
                 //"name": newOrders[i].name,
                 //"price": "${newOrders[i].price}",
                 "quantity": _ordersSnapshot.data['quantity'] + newOrders[i].quantity,
@@ -124,7 +124,7 @@ class VendorReportDBService{
   //Create new Daily Vendor Report
   Future createDailyReport(List<Order> newOrders) async{
     //DateTime date = DateTime.now();
-    double sale = calculateTotalSale(newOrders);
+    double sale = newOrders == null ? 0.0 : calculateTotalSale(newOrders);
     //String formattedDate = DateFormat('ddMMyyyy').format(date);
     await vendorReportDB.document("$vendorId$formattedDate").setData({
       "id": "$vendorId$formattedDate",
@@ -132,13 +132,16 @@ class VendorReportDBService{
       "date": DateFormat('dd/MM/yyyy').format(_dateTime),
       "sale": "$sale"
     });
-    for(int i = 0; i < newOrders.length; i++){
-      await vendorReportDB.document("$vendorId$formattedDate").collection("Orders").document(newOrders[i].name).setData({
-        "name": newOrders[i].name,
-        "price": "${newOrders[i].price}",
-        "quantity": newOrders[i].quantity,
-        "revenue": "${newOrders[i].revenue}",
-      });
+    if(newOrders != null)
+    {
+      for(int i = 0; i < newOrders.length; i++){
+        await vendorReportDB.document("$vendorId$formattedDate").collection("Orders").document(newOrders[i].name).setData({
+          "name": newOrders[i].name,
+          "price": "${newOrders[i].price}",
+          "quantity": newOrders[i].quantity,
+          "revenue": "${newOrders[i].revenue}",
+        });
+      }
     }
   }
 

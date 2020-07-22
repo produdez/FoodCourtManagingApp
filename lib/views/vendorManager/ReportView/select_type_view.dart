@@ -8,10 +8,41 @@ import 'package:fcfoodcourt/views/vendorManager/ReportView/report_view.dart';
 import 'package:fcfoodcourt/models/vendor_report.dart';
 import 'package:fcfoodcourt/shared/dialog_loading_view.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:workmanager/workmanager.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
-
+void callbackDispatcher(){
+    //print("initial");
+    Workmanager.executeTask((taskName, inputData)async{
+      // VendorReportDBService.vendorId = _getFirstUserId(widget.userData.id);
+      switch (taskName) {
+        case "simplePeriodic1HourTask":
+          
+          int day = int.parse(DateFormat('d').format(DateTime.now()));
+          int month = int.parse(DateFormat('M').format(DateTime.now()));
+          int year = int.parse(DateFormat('y').format(DateTime.now()));
+          int hour = int.parse(DateFormat('H').format(DateTime.now()));
+          var nextDate = new DateTime(year, month, day + 1);
+          VendorReportDBService.vendorId = await _getFirstUserId(inputData['vendorId']);
+          // print("${VendorReportDBService.vendorId}");
+          // print("get in task");
+          if(nextDate.day == 1 && hour >= 21)
+            await VendorReportDBService().createMonthlyReport(DateFormat('MM/yyyy').format(DateTime.now()));
+          break;
+      }
+      return Future.value(true);
+    });
+  }
+_getFirstUserId(String userId) async{
+    String firstUserId;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if(prefs.getString('firstUserId') == null)
+      prefs.setString('firstUserId', userId);
+    firstUserId = prefs.getString('firstUserId');
+    return firstUserId;
+  }
 class SelectTypeView extends StatefulWidget {
   final User userData;
   const SelectTypeView({this.userData});
@@ -23,7 +54,13 @@ class _SelectTypeViewState extends State<SelectTypeView> {
   String formattedDate;
   String formattedMonth;
   String formatId;
+  int currentDay;
+  int currentMonth;
+  int currentYear;
+  int currentHour;
+  //const static simplePeriodicHourTask = "simplePeriodic1HourTask";
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  
  @override
   void initState() {
     super.initState();
@@ -31,23 +68,18 @@ class _SelectTypeViewState extends State<SelectTypeView> {
     VendorReportDBService.vendorId = widget.userData.id;
     // Check if it turns to new month => create monthly report of the latest month (each vendor may has different "latest month")
     int found = 0;
-    if(VendorReportDBService.currentMonth == null)
-      VendorReportDBService.currentMonth.add(Month(VendorReportDBService.vendorId, DateFormat('MMyyyy').format(DateTime.now())));
-    else
-    {
-      for(int i = 0; i < VendorReportDBService.currentMonth.length; i++){        
-        if(VendorReportDBService.currentMonth[i].vendorId == VendorReportDBService.vendorId){
-          found = 1;
-          if(VendorReportDBService.currentMonth[i].month != DateFormat('MMyyyy').format(DateTime.now()))
-            VendorReportDBService().createMonthlyReport(VendorReportDBService.currentMonth[i].month);
-          VendorReportDBService.currentMonth[i].month = DateFormat('MMyyyy').format(DateTime.now());
-          break;
-        }
-      }
-      if(found == 0){
-        VendorReportDBService.currentMonth.add(Month(VendorReportDBService.vendorId, DateFormat('MMyyyy').format(DateTime.now())));
-      }
-    }
+    // currentDay = int.parse(DateFormat('d').format(DateTime.now()));
+    // currentMonth = int.parse(DateFormat('M').format(DateTime.now()));
+    // currentYear = int.parse(DateFormat('y').format(DateTime.now()));
+    // currentHour = int.parse(DateFormat('H').format(DateTime.now()));
+    // Workmanager.initialize(
+    //   //print("initialize"),
+    //   callbackDispatcher,
+    // );
+    // setState(() async{
+    // });+
+    
+    //VendorReportDBService.vendorId = widget.userData.id;
   }
   @override
   Widget build(BuildContext context) {
@@ -116,17 +148,18 @@ class _SelectTypeViewState extends State<SelectTypeView> {
               child: reportType("Monthly"),
               ),
           ),
-          /*Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
           FloatingActionButton(
           heroTag: "FAB1",
           backgroundColor: Color(0xffff8a84),
           onPressed: () {
+                List<Order> emptyList;
                 //print(VendorReportDBService.vendorId.toString());
-                VendorReportDBService().createDailyReport(<Order>[Order(name: "pho", price: 400 , quantity: 4, revenue: 1600000 ),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200 )
-                ]);
+                print("Create Daily Report");
+                VendorReportDBService().createDailyReport(emptyList);
+                //]);
 
             }, //This request the pop-up new dish form
           child: Icon(
@@ -140,6 +173,7 @@ class _SelectTypeViewState extends State<SelectTypeView> {
           onPressed: () {
             //On newDish chosen, show newDish popUp and process information
             //The return value is a Dish with name, price (every other fields are defaulted)
+              print("Update Daily Report");
                 VendorReportDBService().updateDailyReport(<Order>[Order(name: "pho", price: 400 , quantity: 1, revenue: 400 ),
                 Order(name: "Hu tieu", price: 40, quantity: 2, revenue: 80 ), Order(name: "Bun Rieu", price: 40, quantity: 2, revenue: 80 )
                 ]);
@@ -156,6 +190,7 @@ class _SelectTypeViewState extends State<SelectTypeView> {
           onPressed: () {
             //On newDish chosen, show newDish popUp and process information
             //The return value is a Dish with name, price (every other fields are defaulted)
+              print("Create Monthly Report");
                 VendorReportDBService().createMonthlyReport("072020");
 
             }, //This request the pop-up new dish form
@@ -164,7 +199,22 @@ class _SelectTypeViewState extends State<SelectTypeView> {
             size: 50,
           ),
           ),
-          ],)*/
+          FloatingActionButton(
+          heroTag: "FAB4",
+          backgroundColor: Color(0xffff8a84),
+          onPressed: () async{
+            //On newDish chosen, show newDish popUp and process information
+            //The return value is a Dish with name, price (every other fields are defaulted)
+              print("cancel task");
+                //VendorReportDBService().createMonthlyReport("072020");
+            await Workmanager.cancelAll();
+            }, //This request the pop-up new dish form
+          child: Icon(
+            Icons.add,
+            size: 50,
+          ),
+          ),
+          ],)
           ]
         ),
         ],

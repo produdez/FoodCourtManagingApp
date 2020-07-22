@@ -25,13 +25,20 @@ class _SelectTypeViewState extends State<SelectTypeView> {
     super.initState();
     //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
     FoodCourtReportDBService.foodCourtId = widget.userData.id;
-    if(FoodCourtReportDBService.currentMonth == null)
-      FoodCourtReportDBService.currentMonth = DateFormat('MMyyyy').format(DateTime.now());
-    else{
-      if(FoodCourtReportDBService.currentMonth != DateFormat('MMyyyy').format(DateTime.now()))
-        FoodCourtReportDBService().createMonthlyReport(DateFormat('MMyyyy').format(DateTime.now()));
-      FoodCourtReportDBService.currentMonth = DateFormat('MMyyyy').format(DateTime.now());
+    int hour = int.tryParse(DateFormat('H').format(DateTime.now()));
+    String firstLogginDate = DateFormat('d').format(DateTime.now());
+    /*if(FoodCourtReportDBService.currentMonth == null)
+      FoodCourtReportDBService.currentMonth = DateFormat('MMyyyy').format(DateTime.now());*/
+    if(FoodCourtReportDBService.currentMonth != null){
+      if(FoodCourtReportDBService.currentMonth != DateFormat('MMyyyy').format(DateTime.now())){
+        if(firstLogginDate == "01" && hour < 12)
+          FoodCourtReportDBService.currentMonth = DateFormat('MMyyyy').format(DateTime.now());
+        else
+          FoodCourtReportDBService().createMonthlyReport(DateFormat('MMyyyy').format(DateTime.now()));
+      }
+      //FoodCourtReportDBService.currentMonth = DateFormat('MMyyyy').format(DateTime.now());
     }
+    FoodCourtReportDBService.currentMonth = DateFormat('MMyyyy').format(DateTime.now());
   }
   @override
   Widget build(BuildContext context) {
