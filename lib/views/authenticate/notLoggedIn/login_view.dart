@@ -30,6 +30,7 @@ class _LoginViewState extends State<LoginView> {
     return loading ? Loading() : Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color(0xffff8a84),
         elevation: 0.0,
         title: Text('Sign in Food Court'),

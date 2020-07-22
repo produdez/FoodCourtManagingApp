@@ -37,6 +37,7 @@ class _RegisterViewState extends State<RegisterView> {
     return loading ? Loading() : Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color(0xffff8a84),
         elevation: 0.0,
         title: Text('Sign up Food Court'),
@@ -168,7 +169,7 @@ class _RegisterViewState extends State<RegisterView> {
                     color: Colors.black,
                     fontSize: 20,
                   ),
-                  items: <String>[/*'Vendor Manager',*/ 'Food Court Manager', 'Staff', 'Customer'].map((String value) {
+                  items: <String>['Vendor Manager', /*'Food Court Manager',*/ 'Staff', 'Customer'].map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),

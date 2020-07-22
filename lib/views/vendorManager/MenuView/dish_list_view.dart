@@ -18,7 +18,6 @@ class _DishListViewState extends State<DishListView> {
   @override
   Widget build(BuildContext context) {
     final List<Dish> dishList = Provider.of<List<Dish>>(context);
-
     return ListView.builder(
       itemCount: dishList == null ? 0 : dishList.length,
       itemBuilder: (context, index) {

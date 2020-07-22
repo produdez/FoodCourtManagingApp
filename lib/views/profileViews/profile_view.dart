@@ -36,6 +36,7 @@ class _MenuViewState extends State<ProfileView> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color(0xffff8a84),
         title: Text(
           "Profile",
@@ -221,8 +222,7 @@ class _MenuViewState extends State<ProfileView> {
       );
     }
     
-    
-    //TODO: profile edit and creation/login overhaul
+
   }
 }
 

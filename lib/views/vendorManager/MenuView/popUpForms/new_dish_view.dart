@@ -109,9 +109,11 @@ class _NewDishFormState extends State<NewDishForm> {
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
             child: TextFormField(
+//              validator: InputFieldValidator.priceValidator,
               validator: MultiValidator([
                 RequiredValidator(errorText: 'Price is required'),
-                InputFieldValidator.priceValidator,
+                NumberValidator(max: null,min: null,errorText: 'Enter a number'),
+                NumberValidator(min: 0, errorText: 'Price must be non-negative'),
               ]),
               onChanged: (String price) {
                 this.price = price;

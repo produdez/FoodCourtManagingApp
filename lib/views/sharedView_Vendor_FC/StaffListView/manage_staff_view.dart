@@ -31,16 +31,18 @@ class _ManageStaffViewState extends State<ManageStaffView> {
   @override
   Widget build(BuildContext context) {
     final User userData = Provider.of<User>(context);
-    StaffDBService.ownerID = userData.role =='Vendor Manager' ? userData==null?null:userData.manageID : userData.id;
+    StaffDBService.ownerID = userData.role =='Vendor Manager' ? userData==null?null:userData.vendorDBID : userData.id;
     String place = userData.role ==  "Vendor Manager" ? "VENDOR" : "FC";
     return StreamProvider<List<Staff>>.value(
       value: StaffDBService().allStaffsOfOwner,
       child: Scaffold(
+
         backgroundColor: Colors.white,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Color(0xffff8a84),
           title: Text(
-            "$place STAFF LIST",
+            "$place STAFF",
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
@@ -59,31 +61,31 @@ class _ManageStaffViewState extends State<ManageStaffView> {
             SizedBox(
               height: 10,
             ),
-            Row(
-              children: <Widget>[
-                SizedBox(
-                  width: 30,
-                ),
-                Container(
-                  padding: EdgeInsets.all(5),
-                  height: 50,
-                  width: 400,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xffff8a84), width: 4),
-                  ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(0),
-                        hintText: '   Search....'),
-                  ),
-                ),
-                Icon(Icons.search, size: 50, color: Color(0xffff8a84)),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
+//            Row(
+//              children: <Widget>[
+//                SizedBox(
+//                  width: 30,
+//                ),
+//                Container(
+//                  padding: EdgeInsets.all(5),
+//                  height: 50,
+//                  width: 400,
+//                  decoration: BoxDecoration(
+//                    border: Border.all(color: Color(0xffff8a84), width: 4),
+//                  ),
+//                  child: TextField(
+//                    decoration: InputDecoration(
+//                        border: InputBorder.none,
+//                        contentPadding: EdgeInsets.all(0),
+//                        hintText: '   Search....'),
+//                  ),
+//                ),
+//                Icon(Icons.search, size: 50, color: Color(0xffff8a84)),
+//              ],
+//            ),
+//            SizedBox(
+//              height: 10,
+//            ),
             Expanded(child: StaffListView()),
           ],
         ),

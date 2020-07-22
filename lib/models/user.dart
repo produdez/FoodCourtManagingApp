@@ -6,7 +6,7 @@ class User {
   final String email;
   final String role;
 
-  final String manageID;
+  final String vendorDBID;
 
   final String password; //for debug only
   String imageURL;
@@ -14,9 +14,9 @@ class User {
   bool hasImage;
   File imageFile;
 
-  User({this.id, this.name, this.email, this.role,this.hasImage=false,this.imageURL,this.imageFile, this.password,this.manageID});
+  User({this.id, this.name, this.email, this.role,this.hasImage=false,this.imageURL,this.imageFile, this.password,this.vendorDBID});
 
-  User.clone({User user, this.id, this.name, this.email, this.role, this.password,this.manageID}) {
+  User.clone({User user, this.id, this.name, this.email, this.role, this.password,this.vendorDBID}) {
     // password //debug only
     this.hasImage = user.hasImage;
     this.imageURL = user.imageURL;
@@ -24,7 +24,7 @@ class User {
 
   @override
   String toString() {
-    return 'User{id: $id, name: $name, email: $email, role: $role, imageURL: $imageURL, hasImage: $hasImage, imageFile: $imageFile, manageID: $manageID}';
+    return 'User{id: $id, name: $name, email: $email, role: $role, imageURL: $imageURL, hasImage: $hasImage, imageFile: $imageFile, manageID: $vendorDBID}';
   }
 
   User.fromData(Map<String, dynamic> data)
@@ -32,7 +32,7 @@ class User {
         name = data['fullName'],
         email = data['email'],
         role = data['userRole'],
-        manageID = data['manageID'],
+        vendorDBID = data['manageID'],
         password = data['password']; //debug only
   Map<String, dynamic> toJson() {
     return {

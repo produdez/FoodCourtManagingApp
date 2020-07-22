@@ -1,5 +1,6 @@
 import 'package:fcfoodcourt/models/staff.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getflutter/getflutter.dart';
 
@@ -76,14 +77,13 @@ class ItemStaffView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Container(
-                          child: Text(
-                            staff.name,
-                            style: TextStyle(
-                                color: Color(0xffffa834),
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.bold),
-                          )),
+                      Text(
+                        staff.name,
+                        style: TextStyle(
+                            color: Color(0xffffa834),
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold),
+                      ),
                       Container(
                         child: Row(
                           children: <Widget>[
@@ -101,6 +101,7 @@ class ItemStaffView extends StatelessWidget {
                                 fontSize: 8,
                               ),
                             ),
+
                           ],
                         ),
                       ),
@@ -119,6 +120,54 @@ class ItemStaffView extends StatelessWidget {
                               style: TextStyle(
                                 color: Colors.black54,
                                 fontSize: 8,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                              width: 10,
+                              child: IconButton(
+                                padding: EdgeInsets.symmetric(horizontal: 5,vertical: 0),
+                                icon: Icon(Icons.info,
+                                  size: 10,),
+                                onPressed: (){
+                                  showDialog(context: context,
+                                      builder: (context){
+                                        return AlertDialog(
+                                          title: Center(
+                                            child: Text(
+                                              'Staff ID',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20,
+                                                color: Color(0xffff6624),
+                                              ),
+                                            ),
+                                          ),
+                                          content: SizedBox(height: 50, width: 200, child: Center(child: Column(
+                                            children: <Widget>[
+                                              SelectableText(staff.id),
+                                              SizedBox(height: 10,),
+                                              FlatButton(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(5),
+                                                ),
+                                                color: Color(0xfff85f6a),
+                                                child: Text('Copy ID'),
+                                                onPressed: () {
+                                                  Clipboard.setData(ClipboardData(text: staff.id));
+                                                  print("Copied id to clipboard: "+ staff.id);
+                                                  Fluttertoast.cancel();
+                                                  Fluttertoast.showToast(
+                                                    msg: "Copied id to clipboard!",
+                                                  );
+                                                },
+                                              )
+                                            ],
+                                          ))),
+                                        );
+                                      }
+                                  );
+                                },
                               ),
                             ),
                           ],

@@ -75,7 +75,7 @@ class _DiscountDishFormState extends State<DiscountDishForm> {
                           widget.dish.originPrice *
                           100;
                   percentageInputController.text =
-                      HelperService.formatDouble(discountedPercentage) + "%";
+                      HelperService.formatDouble(discountedPercentage);
                 } else {
                   percentageInputController.text = "";
                 }

@@ -219,7 +219,7 @@ Future<Staff> createPopUpNewStaff(BuildContext context) {
                   color: Color(0xffff6624),
                 ),
               ),
-              content: SizedBox(height: 480, width: 300, child: NewStaffForm()),
+              content: SizedBox(height: 530, width: 300, child: NewStaffForm()),
             ),
           ),
         );
