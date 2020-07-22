@@ -54,7 +54,7 @@ class UserDBService {
       password: snapshot.data['password'] ?? null,
       hasImage: snapshot.data['hasImage'] ?? false,
       imageURL: snapshot.data['imageURL'] ?? null,
-      vendorDBID: snapshot.data['manageID'] ?? null,
+      databaseID: snapshot.data['manageID'] ?? null,
     );
   }
 
@@ -80,10 +80,10 @@ class UserDBService {
     return user;
   }
 
-  Future setManageID(String manageID) async {
+  Future setDatabaseID(String databaseID) async {
     DocumentReference _userRef = userDB.document(id);
     return await _userRef.updateData({
-      'manageID' : manageID,
+      'databaseID' : databaseID,
     });
   }
 

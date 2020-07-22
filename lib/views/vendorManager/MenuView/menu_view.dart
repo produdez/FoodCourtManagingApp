@@ -31,7 +31,7 @@ class _MenuViewState extends State<MenuView> {
   Widget build(BuildContext context) {
     final User userData =  Provider.of<User>(context);
     //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
-    DishDBService.vendorID = userData == null? null : userData.vendorDBID;
+    DishDBService.vendorID = userData == null? null : userData.databaseID;
 
 
     return StreamProvider<List<Dish>>.value(

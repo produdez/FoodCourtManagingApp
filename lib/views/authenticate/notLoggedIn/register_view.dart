@@ -226,11 +226,12 @@ class _RegisterViewState extends State<RegisterView> {
                             if(role == 'Staff') {
                               //change back to not waiting
                               await StaffDBService().linkAccount(id, userData.id);
+                              await UserDBService(userData.id).setDatabaseID(id);
                             }
                             //vendor update here
                             if(role == 'Vendor Manager'){
                               await VendorDBService().linkAccount(id, userData.id);
-                              await UserDBService(userData.id).setManageID(id);
+                              await UserDBService(userData.id).setDatabaseID(id);
                             }
                             //
                           }

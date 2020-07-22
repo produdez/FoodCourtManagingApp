@@ -31,7 +31,7 @@ class _ManageStaffViewState extends State<ManageStaffView> {
   @override
   Widget build(BuildContext context) {
     final User userData = Provider.of<User>(context);
-    StaffDBService.ownerID = userData.role =='Vendor Manager' ? userData==null?null:userData.vendorDBID : userData.id;
+    StaffDBService.ownerID = userData.role =='Vendor Manager' ? userData==null?null:userData.databaseID : userData.id;
     String place = userData.role ==  "Vendor Manager" ? "VENDOR" : "FC";
     return StreamProvider<List<Staff>>.value(
       value: StaffDBService().allStaffsOfOwner,
