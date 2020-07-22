@@ -15,14 +15,16 @@ It does holds the add Dish button
  */
 class CustomerDishView extends StatefulWidget {
   final String vendorId;
-  const CustomerDishView(this.vendorId);
+  final String vendorName;
+  const CustomerDishView(this.vendorId, this.vendorName);
   @override
-  _MenuViewState createState() => _MenuViewState(vendorId);
+  _MenuViewState createState() => _MenuViewState(vendorId, vendorName);
 }
 
 class _MenuViewState extends State<CustomerDishView> {
   String vendorId;
-  _MenuViewState(this.vendorId);
+  String vendorName;
+  _MenuViewState(this.vendorId, this.vendorName);
   @override
   void initState() {
     DishDBService.vendorID = vendorId;
@@ -113,7 +115,9 @@ class _MenuViewState extends State<CustomerDishView> {
             SizedBox(
               height: 10,
             ),
-            Expanded(child: CustomerDishListView()),
+            Expanded(
+                child: CustomerDishListView(
+                    vendorName)), //vendorname needed for cart
           ],
         ),
       ),

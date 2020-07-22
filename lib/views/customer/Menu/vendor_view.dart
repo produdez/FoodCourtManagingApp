@@ -38,7 +38,8 @@ class VendorView extends StatelessWidget {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => CustomerDishView(vendor.id)));
+                  builder: (context) => CustomerDishView(vendor.id,
+                      vendor.name))); //Pass vendor name for cart work
         },
         child: FittedBox(
           alignment: Alignment.centerLeft,

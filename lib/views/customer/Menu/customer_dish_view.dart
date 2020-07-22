@@ -7,6 +7,7 @@ import '../../../models/dish.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:fcfoodcourt/services/view_logic_helper.dart';
 import 'package:fcfoodcourt/services/cart_service.dart';
+
 /*
 This is the vendor element in the list view
 it has call back fields so that the parent that contains this can specify
@@ -14,11 +15,10 @@ it's functionality.
  */
 class CustomerDishView extends StatelessWidget {
   final Dish dish;
+  final String vendorName;
 
-  const CustomerDishView({
-    Key key,
-    this.dish,
-  }) : super(key: key);
+  const CustomerDishView({Key key, this.dish, this.vendorName})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class CustomerDishView extends StatelessWidget {
               ),
               Container(
                 child: Column(
-                 // mainAxisAlignment: MainAxisAlignment.center,
+                  // mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
@@ -96,7 +96,9 @@ class CustomerDishView extends StatelessWidget {
                           fontSize: 10,
                         ),
                       ),
-                      onPressed: () => CartService().addDish(dish),///
+                      onPressed: () => CartService().addDish(dish, vendorName),
+
+                      ///
                     ),
                   ],
                 ),

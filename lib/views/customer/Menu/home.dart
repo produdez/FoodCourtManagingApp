@@ -1,3 +1,4 @@
+import 'package:fcfoodcourt/models/order.dart';
 import 'package:fcfoodcourt/models/vendor.dart';
 import 'package:fcfoodcourt/services/vendor_db_service.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
@@ -23,68 +24,11 @@ class CustomerView extends StatefulWidget {
 }
 
 class _MenuViewState extends State<CustomerView> {
-  int currentIdx = 0;
-
-  final tabs = [
-    Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            // try to centre the search box without relying much on it width
-            children: <Widget>[
-              SizedBox(
-                width: 15,
-              ),
-              Container(
-                padding: EdgeInsets.all(5),
-                height: 50,
-                width: 320, //400
-                decoration: BoxDecoration(
-                  border: Border.all(color: Color(0xffff8a84), width: 4),
-                ),
-
-                child: TextField(
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(10),
-                      hintText: '   Search....'),
-                ),
-              ),
-              Icon(Icons.search, size: 50, color: Color(0xffff8a84)),
-            ],
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Expanded(child: VendorListView()),
-        ],
-      ),
-    ),
-    Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Expanded(child: CartView()),
-        ],
-      ),
-    ),
-  ];
   @override
   void initState() {
     super.initState();
     //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
-    //DishDBService.vendorID = widget.userData.id;
+    Order.customerID = widget.userData.id;
   }
 
   @override
@@ -124,7 +68,7 @@ class _MenuViewState extends State<CustomerView> {
               selectedFontSize: 20,
               unselectedFontSize: 20,
               selectedItemColor: Colors.white,
-              currentIndex: currentIdx, //
+              currentIndex: 0, //
               selectedIconTheme: IconThemeData(color: Colors.white, size: 25),
               items: [
                 BottomNavigationBarItem(

@@ -1,14 +1,17 @@
-import 'package:fcfoodcourt/services/cart_service.dart';
-import 'package:fcfoodcourt/services/order_db_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'cart_dish_list_view.dart';
+import 'cart_view.dart';
 
 /*
 A form that shows confirmation.
 The function createConfirmationView returns a Future<bool>
 which tells if user confirmed or not
  */
-class ConfirmationView extends StatelessWidget {
+class OrderedDishesPopUp extends StatelessWidget {
+  String vendorId;
+  OrderedDishesPopUp(this.vendorId);
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -21,32 +24,13 @@ class ConfirmationView extends StatelessWidget {
             // borderRadius: BorderRadius.circular(40),
             //border: Border.all(color: Color(0xfff85f6a), width: 4)
           ),
-          height: 250,
+          height: 500,
           width: 350,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  SizedBox(width: 12),
-                  Text(
-                    "Do you want to order?",
-                    style: TextStyle(
-                      color: Color(0xffff6624),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 26,
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                "  Please confirm!",
-                style: TextStyle(
-                  color: Color(0xfff85f6a),
-                  fontSize: 25,
-                ),
-              ),
+              Expanded(child: CartDishListView(vendorId)),
               SizedBox(
                 height: 5,
               ),
@@ -85,11 +69,14 @@ class ConfirmationView extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      OrderDBService().createOrder(CartService.cart);
-                      Navigator.of(context).pop(true);
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => CartView()));
                     },
                   ),
                 ],
+              ),
+              SizedBox(
+                height: 15,
               )
             ],
           ),
@@ -99,10 +86,10 @@ class ConfirmationView extends StatelessWidget {
   }
 }
 
-Future<bool> createConfirmationView(BuildContext context) {
+Future<bool> createOrderedDishesPopUp(BuildContext context, String vendorId) {
   return showDialog(
       context: context,
       builder: (context) {
-        return ConfirmationView();
+        return OrderedDishesPopUp(vendorId);
       });
 }

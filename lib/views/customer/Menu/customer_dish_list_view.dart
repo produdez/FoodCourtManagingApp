@@ -9,11 +9,16 @@ import 'package:provider/provider.dart';
  */
 
 class CustomerDishListView extends StatefulWidget {
+  final String vendorName;
+  const CustomerDishListView(this.vendorName);
   @override
-  _CustomerDishListViewState createState() => _CustomerDishListViewState();
+  _CustomerDishListViewState createState() =>
+      _CustomerDishListViewState(vendorName);
 }
 
 class _CustomerDishListViewState extends State<CustomerDishListView> {
+  String vendorName;
+  _CustomerDishListViewState(this.vendorName);
   @override
   Widget build(BuildContext context) {
     final List<Dish> dishList = Provider.of<List<Dish>>(context);
@@ -22,6 +27,7 @@ class _CustomerDishListViewState extends State<CustomerDishListView> {
       itemBuilder: (context, index) {
         return CustomerDishView(
           dish: dishList[index],
+          vendorName: vendorName,
           /*onRemoveSelected: () {
             //Remove chosen, ask user for confirmation and remove in DB if confirmed
             createConfirmationView(context).then((onValue) {

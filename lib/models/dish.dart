@@ -8,9 +8,7 @@ class Dish {
   double discountPercentage; //discount
   double realPrice; //real price due to discount
   bool isOutOfOrder; //TODO: add to db
-
-  String realId; //TODO: Remove later
-
+  String vendorID; // Needed for cart
   bool hasImage;
   File imageFile;
   //normal constructor
@@ -21,7 +19,7 @@ class Dish {
       this.imageFile,
       this.hasImage = false,
       this.isOutOfOrder = false,
-      this.realId = ""}) {
+      this.vendorID = ""}) {
     //realId
     if (this.realPrice == null) this.realPrice = this.originPrice;
   }

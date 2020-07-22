@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fcfoodcourt/services/cart_service.dart';
 import 'cart_dish_list_view.dart';
+import 'vendor_list_view.dart';
 
 /*
 This is the menu view that holds the frame for the whole menu
@@ -32,149 +33,150 @@ class _CartViewState extends State<CartView> {
   @override
   Widget build(BuildContext context) {
     var totalPrice = CartService.totalPrice;
-    return StreamProvider<List<Dish>>.value(
-        value: CartService().allOrderDishes,
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            backgroundColor: Color(0xffff8a84),
-            title: Text(
-              "MY CART",
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-            ),
-            centerTitle: true,
-            actions: <Widget>[
-              FlatButton.icon(
-                icon: Icon(Icons.person),
-                label: Text('logout'),
-                onPressed: () async {
-                  await AuthenticationService().signOut();
-                },
-              )
-            ],
-          ),
-          bottomNavigationBar: Container(
-            height: 75,
-            decoration: BoxDecoration(
-                border: Border(
-              top: BorderSide(width: 4, color: Colors.black),
-            )),
-            child: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              iconSize: 25,
-              backgroundColor: Color(0xffff8a84),
-              selectedFontSize: 20,
-              unselectedFontSize: 20,
-              currentIndex: 1, //
-              selectedItemColor: Colors.white,
-              selectedIconTheme: IconThemeData(color: Colors.white, size: 25),
-              /* selectedLabelStyle: TextStyle(
+    return //StreamProvider<List<Dish>>.value(
+        //value: CartService().allOrderDishes,
+        //child:
+        Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Color(0xffff8a84),
+        title: Text(
+          "MY CART",
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        actions: <Widget>[
+          FlatButton.icon(
+            icon: Icon(Icons.person),
+            label: Text('logout'),
+            onPressed: () async {
+              await AuthenticationService().signOut();
+            },
+          )
+        ],
+      ),
+      bottomNavigationBar: Container(
+        height: 75,
+        decoration: BoxDecoration(
+            border: Border(
+          top: BorderSide(width: 4, color: Colors.black),
+        )),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          iconSize: 25,
+          backgroundColor: Color(0xffff8a84),
+          selectedFontSize: 20,
+          unselectedFontSize: 20,
+          currentIndex: 1, //
+          selectedItemColor: Colors.white,
+          selectedIconTheme: IconThemeData(color: Colors.white, size: 25),
+          /* selectedLabelStyle: TextStyle(
                     color: Colors.white,
                   ),
                   showSelectedLabels: true,
                   //showUnselectedLabels: true,*/
-              items: [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.restaurant),
-                    title: Text(
-                      "Menu",
-                    )),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_cart),
-                  title: Text("MyCart"),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  title: Text("Profile"),
-                ),
-              ],
-              onTap: (idx) {
-                if (idx == 0) {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CustomerView()));
-                  /* setState(() {
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.restaurant),
+                title: Text(
+                  "Menu",
+                )),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_cart),
+              title: Text("MyCart"),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              title: Text("Profile"),
+            ),
+          ],
+          onTap: (idx) {
+            if (idx == 0) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => CustomerView()));
+              /* setState(() {
                       currentIdx = idx;
                     });*/
-                }
-              },
+            }
+          },
+        ),
+      ),
+      body: //tabs[currentIdx],
+          Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            SizedBox(
+              height: 10,
             ),
-          ),
-          body: //tabs[currentIdx],
-              Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Expanded(child: CartDishListView()),
-                Row(mainAxisAlignment: MainAxisAlignment.center,
-                    // try to centre the search box without relying much on it width
-                    children: <Widget>[
-                      SizedBox(
-                        width: 15,
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        height: 65,
-                        width: 280, //400
-                        decoration: BoxDecoration(
-                          border:
-                              Border.all(color: Color(0xfff85f6a), width: 4),
-                        ),
+            SizedBox(
+              height: 10,
+            ),
+            Expanded(child: VendorListView()),
+            Row(mainAxisAlignment: MainAxisAlignment.center,
+                // try to centre the search box without relying much on it width
+                children: <Widget>[
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    height: 65,
+                    width: 280, //400
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xfff85f6a), width: 4),
+                    ),
 
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                                child: Text(totalPrice.toString(),
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                    )))
-                          ],
-                        ),
-                      ),
-                      /*SizedBox(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                            child: Text(totalPrice.toString(),
+                                style: TextStyle(
+                                  fontSize: 20,
+                                )))
+                      ],
+                    ),
+                  ),
+                  /*SizedBox(
                         width: 8,
                       ),*/
-                      // ignore: missing_required_param
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        height: 65,
-                        width: 80, //400
-                        decoration: BoxDecoration(
-                          color: Color(0xfff85f6a),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            GestureDetector(
-                                onTap: () {
-                                  createConfirmationView(context)
-                                      .then((onValue) {});
-                                },
-                                child: Container(
-                                    child: Text('ORDER',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white))))
-                          ],
-                        ),
-                      )
-                    ]),
-                SizedBox(
-                  height: 10,
-                ),
-              ],
+                  // ignore: missing_required_param
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    height: 65,
+                    width: 80, //400
+                    decoration: BoxDecoration(
+                      color: Color(0xfff85f6a),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        GestureDetector(
+                            onTap: () {
+                              createConfirmationView(context)
+                                  .then((onValue) {});
+                            },
+                            child: Container(
+                                child: Text('ORDER',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white))))
+                      ],
+                    ),
+                  )
+                ]),
+            SizedBox(
+              height: 10,
             ),
-          ),
-          /*floatingActionButton: FloatingActionButton(
+          ],
+        ),
+      ),
+      /*floatingActionButton: FloatingActionButton(
             backgroundColor: Color(0xffff8a84),
             onPressed: () {
               //On newDish chosen, show newDish popUp and process information
@@ -189,7 +191,7 @@ class _CartViewState extends State<CartView> {
               Icons.add,
               size: 50,
             ),
-          ),*/
-        ));
+          ),)*/
+    );
   }
 }

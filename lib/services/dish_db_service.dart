@@ -79,15 +79,13 @@ class DishDBService {
         .where((DocumentSnapshot documentSnapshot) =>
             documentSnapshot.data['vendorID'] == vendorID)
         .map((doc) {
-      return Dish(
-        doc.data['name'] ?? '',
-        doc.data['originPrice'] ?? 0.0,
-        discountPercentage: doc.data['discountPercentage'] ?? 0.0,
-        realPrice: doc.data['realPrice'] ?? 0.0,
-        id: doc.data['id'] ?? '',
-        hasImage: doc.data['hasImage'] ?? false,
-        isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
-      );
+      return Dish(doc.data['name'] ?? '', doc.data['originPrice'] ?? 0.0,
+          discountPercentage: doc.data['discountPercentage'] ?? 0.0,
+          realPrice: doc.data['realPrice'] ?? 0.0,
+          id: doc.data['id'] ?? '',
+          hasImage: doc.data['hasImage'] ?? false,
+          isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+          vendorID: doc.data['vendorID']);
     }).toList();
   }
 }

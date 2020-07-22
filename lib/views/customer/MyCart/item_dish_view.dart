@@ -1,3 +1,4 @@
+import 'package:fcfoodcourt/models/order.dart';
 import 'package:fcfoodcourt/services/view_logic_helper.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,8 @@ This is the dish element in the list view
 it has call back fields so that the parent that contains this can specify
 it's functionality.
  */
-class ItemDishView extends StatelessWidget {
-  final Dish dish;
+class ItemDishView extends StatefulWidget {
+  final OrderedDish dish;
   final VoidCallback onRemoveSelected;
   final VoidCallback onEditSelected;
   final VoidCallback onDiscountSelected;
@@ -24,7 +25,15 @@ class ItemDishView extends StatelessWidget {
       this.onEditSelected,
       this.onDiscountSelected})
       : super(key: key);
+  @override
+  _ItemDishViewState createState() => new _ItemDishViewState(dish);
+}
 
+class _ItemDishViewState extends State<ItemDishView> {
+  OrderedDish dish;
+  _ItemDishViewState(OrderedDish _dish) {
+    this.dish = _dish;
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -51,7 +60,7 @@ class ItemDishView extends StatelessWidget {
                 onTap: () {
                   Fluttertoast.cancel();
                   Fluttertoast.showToast(
-                    msg: "ID: ${dish.id}",
+                    msg: "ID: ${dish.dishID}",
                   );
                 },
                 child: Container(
@@ -85,7 +94,21 @@ class ItemDishView extends StatelessWidget {
                               fontSize: 15.0,
                               fontWeight: FontWeight.bold),
                         )),
-                    ViewLogic.displayPrice(context, dish),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          child: Text(
+                            "Price: ${dish.revenue}\ Đ",
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     SizedBox(height: 2),
                     FlatButton(
                       //TODO: check whether dish is out of stock to fade the button
@@ -108,7 +131,31 @@ class ItemDishView extends StatelessWidget {
                   ],
                 ),
                 //The price is displayed dynamically by view logic
-              ) // ViewLogic.displayPrice(context, vendor)
+              ),
+              Container(
+                child: Row(
+                  children: <Widget>[
+                    dish.quantity != 1
+                        ? new IconButton(
+                            icon: new Icon(Icons.remove),
+                            onPressed: () =>
+                                setState(() => CartService().reduceDish(dish)))
+                        : new IgnorePointer(
+                            child: IconButton(
+                                icon: new Icon(
+                                  Icons.remove,
+                                  color: Colors.grey,
+                                ),
+                                onPressed: () => setState(
+                                    () => CartService().reduceDish(dish)))),
+                    new Text(dish.quantity.toString()),
+                    new IconButton(
+                        icon: new Icon(Icons.add),
+                        onPressed: () =>
+                            setState(() => CartService().addFromCart(dish)))
+                  ],
+                ),
+              ), // ViewLogic.displayPrice(context, vendor)
             ],
           ),
         ),
@@ -118,9 +165,16 @@ class ItemDishView extends StatelessWidget {
 
   Widget showImage(BuildContext context) {
     return FutureBuilder(
-      future: ImageUploadService().getImageFromCloud(context, dish.id),
+      future: ImageUploadService().getImageFromCloud(context, dish.dishID),
       builder: (context, snapshot) {
-        if (dish.hasImage == false ||
+        return Container(
+            height: MediaQuery.of(context).size.height / 1.25,
+            width: MediaQuery.of(context).size.width / 1.25,
+            child: Image.asset(
+              "assets/bowl.png",
+              fit: BoxFit.fill,
+            ));
+        /*if (dish.hasImage == false ||
             snapshot.connectionState == ConnectionState.waiting) {
           return Container(
               height: MediaQuery.of(context).size.height / 1.25,
@@ -137,7 +191,7 @@ class ItemDishView extends StatelessWidget {
             child: snapshot.data,
             //TODO: future builder will keep refreshing while scrolling, find a way to keep data offline and use a stream to watch changes instead.
           );
-        return Container();
+        return Container();*/
       },
     );
   }
