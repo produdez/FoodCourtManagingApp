@@ -10,7 +10,7 @@ class DishDBService {
   //the dish db only response the correct menu according to the user's id (vendor's id)
   //this field is static and set when we first go to home page (menu,... in this case)
   static String vendorID = 'fakeVendorID';
-  static String keyword = "";
+  static double filter = 0;
   List<String> suggestion = [];
 
   //add dish as a new document to db, id is randomize by Firebase
@@ -78,20 +78,76 @@ class DishDBService {
 
   //Mapping a database snapshot into a dishList, but only dishes of the user (vendor) that's currently logged in
   List<Dish> _dishListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents
-        .where((DocumentSnapshot documentSnapshot) =>
-            documentSnapshot.data['vendorID'] == vendorID)
-        .map((doc) {
-      return Dish(
-        doc.data['name'] ?? '',
-        doc.data['originPrice'] ?? 0.0,
-        discountPercentage: doc.data['discountPercentage'] ?? 0.0,
-        realPrice: doc.data['realPrice'] ?? 0.0,
-        id: doc.data['id'] ?? '',
-        vendorID: doc.data['vendorID'] ?? '',
-        hasImage: doc.data['hasImage'] ?? false,
-        isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
-      );
-    }).toList();
+    print('hi $filter');
+    if (filter == 0) {
+      return snapshot.documents
+          .where((DocumentSnapshot documentSnapshot) =>
+              documentSnapshot.data['vendorID'] == vendorID)
+          .map((doc) {
+        return Dish(
+          doc.data['name'] ?? '',
+          doc.data['originPrice'].toDouble() ?? 0.0,
+          discountPercentage: doc.data['discountPercentage'] ?? 0.0,
+          realPrice: doc.data['realPrice'].toDouble() ?? 0.0,
+          id: doc.data['id'] ?? '',
+          vendorID: doc.data['vendorID'] ?? '',
+          hasImage: doc.data['hasImage'] ?? false,
+          isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+        );
+      }).toList();
+    } else if (filter == 1) {
+      return snapshot.documents
+          .where((DocumentSnapshot documentSnapshot) =>
+              documentSnapshot.data['vendorID'] == vendorID &&
+              documentSnapshot.data['realPrice'].toDouble() < 30000)
+          .map((doc) {
+        return Dish(
+          doc.data['name'] ?? '',
+          doc.data['originPrice'].toDouble() ?? 0.0,
+          discountPercentage: doc.data['discountPercentage'] ?? 0.0,
+          realPrice: doc.data['realPrice'].toDouble() ?? 0.0,
+          id: doc.data['id'] ?? '',
+          vendorID: doc.data['vendorID'] ?? '',
+          hasImage: doc.data['hasImage'] ?? false,
+          isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+        );
+      }).toList();
+    } else if (filter == 2) {
+      print(filter);
+      return snapshot.documents
+          .where((DocumentSnapshot documentSnapshot) =>
+              documentSnapshot.data['vendorID'] == vendorID &&
+              documentSnapshot.data['realPrice'].toDouble() <= 50000 &&
+              documentSnapshot.data['realPrice'].toDouble() >= 30000)
+          .map((doc) {
+        return Dish(
+          doc.data['name'] ?? '',
+          doc.data['originPrice'].toDouble() ?? 0.0,
+          discountPercentage: doc.data['discountPercentage'] ?? 0.0,
+          realPrice: doc.data['realPrice'].toDouble() ?? 0.0,
+          id: doc.data['id'] ?? '',
+          vendorID: doc.data['vendorID'] ?? '',
+          hasImage: doc.data['hasImage'] ?? false,
+          isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+        );
+      }).toList();
+    } else if (filter == 3) {
+      return snapshot.documents
+          .where((DocumentSnapshot documentSnapshot) =>
+              documentSnapshot.data['vendorID'] == vendorID &&
+              documentSnapshot.data['realPrice'].toDouble() >= 50000)
+          .map((doc) {
+        return Dish(
+          doc.data['name'] ?? '',
+          doc.data['originPrice'].toDouble() ?? 0.0,
+          discountPercentage: doc.data['discountPercentage'] ?? 0.0,
+          realPrice: doc.data['realPrice'].toDouble() ?? 0.0,
+          id: doc.data['id'] ?? '',
+          vendorID: doc.data['vendorID'] ?? '',
+          hasImage: doc.data['hasImage'] ?? false,
+          isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+        );
+      }).toList();
+    }
   }
 }

@@ -47,7 +47,7 @@ class SearchService extends SearchDelegate<String> {
   }
 
   CollectionReference dishDB = Firestore.instance.collection("dishDB");
-  CollectionReference vendorDB = Firestore.instance.collection("vendorDB");
+  //CollectionReference vendorDB = Firestore.instance.collection("vendorDB");
   String cIndex = "";
   @override
   List<Widget> buildActions(BuildContext context) {

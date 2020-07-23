@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             )),
         routes: {
-          '/': (context) => Home(),
+          //'/': (context) => Home(),
           '/DishMenuView': (context) => MenuView(),
           '/login': (context) => Wrapper(),
           '/ListItemViewTest': (context) => ItemDishView(

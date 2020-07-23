@@ -1,6 +1,5 @@
 import 'package:fcfoodcourt/services/dish_db_service.dart';
 import 'package:fcfoodcourt/models/dish.dart';
-import 'package:fcfoodcourt/services/vendor_db_service.dart';
 import 'package:fcfoodcourt/views/customer/MyCart/cart_view.dart';
 
 //import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_dish_view.dart';
@@ -17,6 +16,7 @@ It does holds the add Dish button
 class CustomerDishView extends StatefulWidget {
   final String vendorId;
   final String name;
+  //double filter;
   const CustomerDishView(this.vendorId, this.name);
   @override
   _MenuViewState createState() => _MenuViewState(vendorId, name);
@@ -25,20 +25,29 @@ class CustomerDishView extends StatefulWidget {
 class _MenuViewState extends State<CustomerDishView> {
   String vendorId;
   String name;
-
+  bool firstFilter = false;
+  bool secondFilter = false;
+  bool thirdFilter = false;
+  double filter = 0;
+  Color selected = Colors.red;
+  Color init = Colors.white;
+  //FilterService filterService;
   _MenuViewState(this.vendorId, this.name);
 
   @override
   void initState() {
     DishDBService.vendorID = vendorId;
+    DishDBService.filter = filter;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(name);
+    DishDBService.filter = filter;
+    //print(name);
     return StreamProvider<List<Dish>>.value(
       value: DishDBService().allVendorDishes,
+      //value: FilterService().filterByPrice,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -114,6 +123,98 @@ class _MenuViewState extends State<CustomerDishView> {
                   ),
                 ),
                 Icon(Icons.search, size: 50, color: Color(0xffff8a84)),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      side: BorderSide(color: Color(0xffff8a84))),
+                  color: firstFilter ? Color(0xffff8a84) : Colors.white,
+                  textColor: firstFilter ? Colors.white : Color(0xffff8a84),
+                  padding: EdgeInsets.all(8.0),
+                  onPressed: () {
+                    //Colors.white;
+                    setState(() {
+                      if (firstFilter == false) {
+                        firstFilter = true;
+                        secondFilter = false;
+                        thirdFilter = false;
+                        filter = 1;
+                        //init = Colors.red;
+                      } else {
+                        firstFilter = false;
+                        filter = 0;
+                      }
+                    });
+                  },
+                  child: Text(
+                    "< 30.000 đ".toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+                FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      side: BorderSide(color: Color(0xffff8a84))),
+                  color: secondFilter ? Color(0xffff8a84) : Colors.white,
+                  textColor: secondFilter ? Colors.white : Color(0xffff8a84),
+                  padding: EdgeInsets.all(8.0),
+                  onPressed: () {
+                    setState(() {
+                      if (secondFilter == false) {
+                        secondFilter = true;
+                        firstFilter = false;
+                        thirdFilter = false;
+                        filter = 2;
+                      } else {
+                        secondFilter = false;
+                        filter = 0;
+                      }
+                    });
+                    print(filter);
+                  },
+                  child: Text(
+                    "30.000 đ - 50.000 đ".toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+                FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      side: BorderSide(color: Color(0xffff8a84))),
+                  color: thirdFilter ? Color(0xffff8a84) : Colors.white,
+                  textColor: thirdFilter ? Colors.white : Color(0xffff8a84),
+                  padding: EdgeInsets.all(8.0),
+                  onPressed: () {
+                    setState(() {
+                      if (thirdFilter == false) {
+                        thirdFilter = true;
+                        firstFilter = false;
+                        secondFilter = false;
+                        filter = 3;
+                      } else {
+                        thirdFilter = false;
+                        filter = 0;
+                      }
+                    });
+                  },
+                  child: Text(
+                    "> 50.000 đ".toUpperCase(),
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
               ],
             ),
             SizedBox(
