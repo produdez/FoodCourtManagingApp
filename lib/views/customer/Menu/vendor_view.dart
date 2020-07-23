@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getflutter/getflutter.dart';
 
 import '../../../models/vendor.dart';
+import 'home.dart';
 
 /*
 This is the vendor element in the list view
@@ -14,10 +15,11 @@ it's functionality.
  */
 class VendorView extends StatelessWidget {
   final Vendor vendor;
-
+  final Function(String, String) onVendorSelected;
   const VendorView({
     Key key,
     this.vendor,
+    this.onVendorSelected,
   }) : super(key: key);
 
   @override
@@ -35,11 +37,8 @@ class VendorView extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CustomerDishView(vendor.id,
-                      vendor.name))); //Pass vendor name for cart work
+          onVendorSelected(
+              vendor.id, vendor.name); //Pass vendor name for cart work
         },
         child: FittedBox(
           alignment: Alignment.centerLeft,

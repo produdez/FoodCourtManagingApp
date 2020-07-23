@@ -56,52 +56,6 @@ class _CartViewState extends State<CartView> {
           )
         ],
       ),
-      bottomNavigationBar: Container(
-        height: 75,
-        decoration: BoxDecoration(
-            border: Border(
-          top: BorderSide(width: 4, color: Colors.black),
-        )),
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          iconSize: 25,
-          backgroundColor: Color(0xffff8a84),
-          selectedFontSize: 20,
-          unselectedFontSize: 20,
-          currentIndex: 1, //
-          selectedItemColor: Colors.white,
-          selectedIconTheme: IconThemeData(color: Colors.white, size: 25),
-          /* selectedLabelStyle: TextStyle(
-                    color: Colors.white,
-                  ),
-                  showSelectedLabels: true,
-                  //showUnselectedLabels: true,*/
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.restaurant),
-                title: Text(
-                  "Menu",
-                )),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart),
-              title: Text("MyCart"),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              title: Text("Profile"),
-            ),
-          ],
-          onTap: (idx) {
-            if (idx == 0) {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CustomerView()));
-              /* setState(() {
-                      currentIdx = idx;
-                    });*/
-            }
-          },
-        ),
-      ),
       body: //tabs[currentIdx],
           Center(
         child: Column(

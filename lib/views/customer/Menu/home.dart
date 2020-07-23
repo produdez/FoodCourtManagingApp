@@ -3,7 +3,9 @@ import 'package:fcfoodcourt/models/vendor.dart';
 import 'package:fcfoodcourt/services/vendor_db_service.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/models/user.dart';
+import 'package:fcfoodcourt/views/customer/Menu/dishes_of_vendor.dart';
 import 'package:fcfoodcourt/views/customer/Menu/vendor_list_view.dart';
+import 'package:fcfoodcourt/views/customer/Menu/vendor_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,17 +19,33 @@ It does holds the add Dish button
  */
 class CustomerView extends StatefulWidget {
   final User userData; // userData passed down by the userRouter
-  const CustomerView({Key key, this.userData}) : super(key: key);
+  CustomerView({Key key, this.userData}) : super(key: key);
+  String vendorId;
+  String vendorName;
 
   @override
   _MenuViewState createState() => _MenuViewState();
 }
 
 class _MenuViewState extends State<CustomerView> {
+  static int currentIndex = 0;
+  final List<Widget> children = [];
+
   @override
   void initState() {
     super.initState();
-    //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
+    currentIndex = 0;
+    children.add(VendorListView(
+      onVendorSelected: (String id, String name) {
+        print(name);
+        setState(() {
+          currentIndex = 1;
+          CustomerDishView.vendorId = id;
+          CustomerDishView.vendorName = name;
+        });
+      },
+    ));
+    children.add(CustomerDishView());
     Order.customerID = widget.userData.id;
   }
 
@@ -38,7 +56,20 @@ class _MenuViewState extends State<CustomerView> {
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            automaticallyImplyLeading: false,
+            // leading: (currentIndex == 1)
+            //     ? Row(
+            //         mainAxisAlignment: MainAxisAlignment.start,
+            //         children: <Widget>[
+            //           IconButton(
+            //               icon: Icon(Icons.arrow_back),
+            //               onPressed: () {
+            //                 setState(() {
+            //                   currentIndex = 0;
+            //                 });
+            //               })
+            //         ],
+            //       )
+            //     : SizedBox(),
             backgroundColor: Color(0xffff8a84),
             title: Text(
               "FOOD COURT",
@@ -54,46 +85,6 @@ class _MenuViewState extends State<CustomerView> {
                 },
               )
             ],
-          ),
-          bottomNavigationBar: Container(
-            height: 75,
-            decoration: BoxDecoration(
-                border: Border(
-              top: BorderSide(width: 4, color: Colors.black),
-            )),
-            child: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              iconSize: 25,
-              backgroundColor: Color(0xffff8a84),
-              selectedFontSize: 20,
-              unselectedFontSize: 20,
-              selectedItemColor: Colors.white,
-              currentIndex: 0, //
-              selectedIconTheme: IconThemeData(color: Colors.white, size: 25),
-              items: [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.restaurant),
-                    title: Text(
-                      "Menu",
-                    )),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_cart),
-                  title: Text("MyCart"),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  title: Text("Profile"),
-                ),
-              ],
-              onTap: (idx) {
-                if (idx == 1)
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CartView()));
-                /* setState(() {
-                  currentIdx = idx;
-                });*/
-              },
-            ),
           ),
           body: //tabs[currentIdx],
               Center(
@@ -131,7 +122,7 @@ class _MenuViewState extends State<CustomerView> {
                 SizedBox(
                   height: 10,
                 ),
-                Expanded(child: VendorListView()),
+                Expanded(child: children[currentIndex]),
               ],
             ),
           ),
