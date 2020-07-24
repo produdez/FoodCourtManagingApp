@@ -14,17 +14,13 @@ it's functionality.
  */
 class ItemDishView extends StatefulWidget {
   final OrderedDish dish;
-  final VoidCallback onRemoveSelected;
-  final VoidCallback onEditSelected;
-  final VoidCallback onDiscountSelected;
+  final Function(OrderedDish) onRemoveSelected;
 
-  const ItemDishView(
-      {Key key,
-      this.dish,
-      this.onRemoveSelected,
-      this.onEditSelected,
-      this.onDiscountSelected})
-      : super(key: key);
+  const ItemDishView({
+    Key key,
+    this.dish,
+    this.onRemoveSelected,
+  }) : super(key: key);
   @override
   _ItemDishViewState createState() => new _ItemDishViewState(dish);
 }
@@ -124,7 +120,7 @@ class _ItemDishViewState extends State<ItemDishView> {
                           fontSize: 10,
                         ),
                       ),
-                      onPressed: () => CartService().removeDish(dish),
+                      onPressed: () => widget.onRemoveSelected(dish),
 
                       ///
                     ),

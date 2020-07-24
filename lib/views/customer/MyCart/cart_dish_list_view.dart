@@ -37,6 +37,11 @@ class _CartDishListViewState extends State<CartDishListView> {
       itemBuilder: (context, index) {
         return ItemDishView(
           dish: dishList[index],
+          onRemoveSelected: (OrderedDish dish) {
+            setState(() {
+              CartService().removeDish(dish);
+            });
+          },
           /*onRemoveSelected: () {
             //Remove chosen, ask user for confirmation and remove in DB if confirmed
             createConfirmationView(context).then((onValue) {

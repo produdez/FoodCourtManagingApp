@@ -3,6 +3,8 @@ import 'package:fcfoodcourt/services/order_db_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'pop_order_fail.dart';
+
 /*
 A form that shows confirmation.
 The function createConfirmationView returns a Future<bool>
@@ -28,10 +30,13 @@ class ConfirmationView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(width: 12),
                   Text(
-                    "Do you want to order?",
+                    (CartService.cart.length != 0)
+                        ? "Do you want to order?"
+                        : "Failed to place order",
                     style: TextStyle(
                       color: Color(0xffff6624),
                       fontWeight: FontWeight.bold,
@@ -41,7 +46,9 @@ class ConfirmationView extends StatelessWidget {
                 ],
               ),
               Text(
-                "  Please confirm!",
+                (CartService.cart.length != 0)
+                    ? "  Please confirm!"
+                    : "Your cart is empty!",
                 style: TextStyle(
                   color: Color(0xfff85f6a),
                   fontSize: 25,
@@ -51,7 +58,7 @@ class ConfirmationView extends StatelessWidget {
                 height: 5,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   FlatButton(
                     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
@@ -60,7 +67,7 @@ class ConfirmationView extends StatelessWidget {
                     ),
                     color: Colors.white,
                     child: Text(
-                      'CANCEL',
+                      (CartService.cart.length != 0) ? 'CANCEL' : "BACK",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 20,
@@ -70,25 +77,28 @@ class ConfirmationView extends StatelessWidget {
                       Navigator.of(context).pop(false);
                     },
                   ),
-                  FlatButton(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    color: Color(0xfff85f6a),
-                    child: Text(
-                      'OK',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () {
-                      OrderDBService().createOrder(CartService.cart);
-                      Navigator.of(context).pop(true);
-                    },
-                  ),
+                  (CartService.cart.length != 0)
+                      ? FlatButton(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          color: Color(0xfff85f6a),
+                          child: Text(
+                            'OK',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          onPressed: () => {
+                            OrderDBService().createOrder(CartService.cart),
+                            Navigator.of(context).pop(true),
+                          },
+                        )
+                      : Container(),
                 ],
               )
             ],

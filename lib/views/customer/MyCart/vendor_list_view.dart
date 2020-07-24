@@ -11,47 +11,22 @@ import 'package:provider/provider.dart';
  */
 
 class VendorListView extends StatefulWidget {
+  final Function() onChangeConfirm;
+  const VendorListView({Key key, this.onChangeConfirm}) : super(key: key);
   @override
   _VendorListViewState createState() => _VendorListViewState();
 }
 
 class _VendorListViewState extends State<VendorListView> {
+  List<Order> vendorList = CartService.cart;
+
   @override
   Widget build(BuildContext context) {
-    final List<Order> vendorList = CartService.cart;
-
     return ListView.builder(
       itemCount: vendorList.length,
       itemBuilder: (context, index) {
         return VendorView(
-          vendor: vendorList[index],
-          /*onRemoveSelected: () {
-            //Remove chosen, ask user for confirmation and remove in DB if confirmed
-            createConfirmationView(context).then((onValue) {
-              if (onValue == true) {
-                DishDBService().removeDish(dishList[index]);
-              }
-            });
-          },
-          onEditSelected: () {
-            //Edit chosen, show edit form and process returned information
-            //The return value is Dish with name and price (no realPrice,...)
-            createPopUpEditDish(context, dishList[index]).then((onValue) {
-              if (onValue != null) {
-                DishDBService().editDish(dishList[index], onValue);
-              }
-            });
-          },
-          onDiscountSelected: () {
-            //Discount chosen, show discount form and process returned information
-            //The return value is Dish with discounted price and percentage (no name,...)
-            createPopUpDiscountDish(context, dishList[index]).then((onValue) {
-              if (onValue != null) {
-                DishDBService().discountDish(dishList[index], onValue);
-              }
-            });
-          },*/
-        );
+            vendor: vendorList[index], onChangeConfirm: widget.onChangeConfirm);
       },
     );
   }

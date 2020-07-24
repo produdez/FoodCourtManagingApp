@@ -67,7 +67,11 @@ class _CartViewState extends State<CartView> {
             SizedBox(
               height: 10,
             ),
-            Expanded(child: VendorListView()),
+            Expanded(child: VendorListView(
+              onChangeConfirm: () {
+                setState(() {});
+              },
+            )),
             Row(mainAxisAlignment: MainAxisAlignment.center,
                 // try to centre the search box without relying much on it width
                 children: <Widget>[

@@ -56,20 +56,20 @@ class _MenuViewState extends State<CustomerView> {
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            // leading: (currentIndex == 1)
-            //     ? Row(
-            //         mainAxisAlignment: MainAxisAlignment.start,
-            //         children: <Widget>[
-            //           IconButton(
-            //               icon: Icon(Icons.arrow_back),
-            //               onPressed: () {
-            //                 setState(() {
-            //                   currentIndex = 0;
-            //                 });
-            //               })
-            //         ],
-            //       )
-            //     : SizedBox(),
+            leading: (currentIndex == 1)
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      IconButton(
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: () {
+                            setState(() {
+                              currentIndex = 0;
+                            });
+                          })
+                    ],
+                  )
+                : SizedBox(),
             backgroundColor: Color(0xffff8a84),
             title: Text(
               "FOOD COURT",

@@ -80,7 +80,9 @@ class CartService {
         for (int i = 0; i < cart[j].detail.length; i++) {
           if (cart[j].detail[i].dishID == dish.dishID) {
             totalPrice -= dish.revenue;
+            cart[j].totalPrice -= dish.revenue;
             cart[j].detail.removeAt(i);
+            if (cart[j].totalPrice == 0) cart.removeAt(j);
             return;
           }
         }

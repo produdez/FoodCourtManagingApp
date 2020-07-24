@@ -13,10 +13,12 @@ it's functionality.
  */
 class VendorView extends StatelessWidget {
   final Order vendor;
+  final Function() onChangeConfirm;
 
   const VendorView({
     Key key,
     this.vendor,
+    this.onChangeConfirm,
   }) : super(key: key);
 
   @override
@@ -34,12 +36,8 @@ class VendorView extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: () {
-          createOrderedDishesPopUp(context, vendor.vendorID).then((onValue) {});
-          /*
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CartDishView(vendor.vendorID)));*/
+          createOrderedDishesPopUp(context, vendor.vendorID, onChangeConfirm)
+              .then((onValue) {});
         },
         child: FittedBox(
           alignment: Alignment.centerLeft,

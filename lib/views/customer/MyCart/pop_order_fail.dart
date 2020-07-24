@@ -1,18 +1,14 @@
+import 'package:fcfoodcourt/services/cart_service.dart';
+import 'package:fcfoodcourt/services/order_db_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'cart_dish_list_view.dart';
-import 'cart_view.dart';
 
 /*
 A form that shows confirmation.
 The function createConfirmationView returns a Future<bool>
 which tells if user confirmed or not
  */
-class OrderedDishesPopUp extends StatelessWidget {
-  String vendorId;
-  OrderedDishesPopUp(this.vendorId, this.onChangeConfirm);
-  final Function() onChangeConfirm;
+class FailedMessageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -25,13 +21,32 @@ class OrderedDishesPopUp extends StatelessWidget {
             // borderRadius: BorderRadius.circular(40),
             //border: Border.all(color: Color(0xfff85f6a), width: 4)
           ),
-          height: 500,
+          height: 250,
           width: 350,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Expanded(child: CartDishListView(vendorId)),
+              Row(
+                children: <Widget>[
+                  SizedBox(width: 12),
+                  Text(
+                    "Failed",
+                    style: TextStyle(
+                      color: Color(0xffff6624),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 26,
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                "  Your cart is empty!",
+                style: TextStyle(
+                  color: Color(0xfff85f6a),
+                  fontSize: 25,
+                ),
+              ),
               SizedBox(
                 height: 5,
               ),
@@ -45,7 +60,7 @@ class OrderedDishesPopUp extends StatelessWidget {
                     ),
                     color: Colors.white,
                     child: Text(
-                      'CANCEL',
+                      'BACK',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 20,
@@ -55,29 +70,7 @@ class OrderedDishesPopUp extends StatelessWidget {
                       Navigator.of(context).pop(false);
                     },
                   ),
-                  FlatButton(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    color: Color(0xfff85f6a),
-                    child: Text(
-                      'OK',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop(true);
-                      onChangeConfirm();
-                    },
-                  ),
                 ],
-              ),
-              SizedBox(
-                height: 15,
               )
             ],
           ),
@@ -87,11 +80,10 @@ class OrderedDishesPopUp extends StatelessWidget {
   }
 }
 
-Future<bool> createOrderedDishesPopUp(
-    BuildContext context, String vendorId, Function onChangeConfirm) {
+Future<bool> createFailMessage(BuildContext context) {
   return showDialog(
       context: context,
       builder: (context) {
-        return OrderedDishesPopUp(vendorId, onChangeConfirm);
+        return FailedMessageView();
       });
 }
