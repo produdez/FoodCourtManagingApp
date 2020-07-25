@@ -2,11 +2,13 @@ import 'dart:ui';
 
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/FoodCourtReportDBService/background_auto_generate_report_service.dart';
-import 'package:fcfoodcourt/shared/profile_view.dart';
+//import 'package:fcfoodcourt/shared/profile_view.dart';
+import 'package:fcfoodcourt/views/profileViews/profile_view.dart';
 import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/manage_staff_view.dart';
 import 'package:fcfoodcourt/views/FCManager/ReportView/select_type_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:workmanager/workmanager.dart';
 import 'VendorsView/vendor_management_view.dart';
 
@@ -24,16 +26,16 @@ class _FoodCourtManagerNavBarState extends State<FoodCourtManagerNavBar> {
   void initState() {
     currentIndex = 0;
     children.add(VendorManagementView());
-    children.add(ManageStaffView(userData: widget.userData,));
+    children.add(ManageStaffView());
 
-    //TODO: Add report route here
-    children.add(SelectTypeView(userData: widget.userData));
+    children.add(SelectTypeView());
 
-    children.add(ProfileView(userData: widget.userData,));
+    children.add(ProfileView());
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
+    final User userData =  Provider.of<User>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: children[currentIndex],
@@ -52,7 +54,7 @@ class _FoodCourtManagerNavBarState extends State<FoodCourtManagerNavBar> {
                 "auto-generating food court monthly report",
                 frequency: Duration(minutes: 15),
                 inputData: <String, dynamic>{
-                  'vendorId': widget.userData.id
+                  'databaseID': userData.id
                 }
               );
             }

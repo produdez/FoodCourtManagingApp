@@ -4,9 +4,7 @@
  */
 
 import 'package:fcfoodcourt/models/staff.dart';
-import 'package:fcfoodcourt/services/staff_db_service.dart';
-import 'package:fcfoodcourt/shared/confirmation_view.dart';
-import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/popUpForms/edit_staff_view.dart';
+import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/manage_staff_view_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
@@ -27,28 +25,9 @@ class _StaffListViewState extends State<StaffListView> {
       itemBuilder: (context, index) {
         return ItemStaffView(
           staff: staffList[index],
-          onRemoveSelected: () {
-            //Remove chosen, ask user for confirmation and remove in DB if confirmed
-            createConfirmationView(context).then((onValue) {
-              if (onValue == true) {
-                StaffDBService().removeStaff(staffList[index]);
-              }
-            });
-          },
-          onEditSelected: () {
-            //Edit chosen, show edit form and process returned information
-            //The return value is Dish with name and price (no realPrice,...)
-            createPopUpEditStaff(context, staffList[index]).then((onValue) {
-              if (onValue != null) {
-                StaffDBService().editStaff(staffList[index], onValue);
-              }
-            });
-          },
-          onCallSelected: () {
-            //Discount chosen, show discount form and process returned information
-            //The return value is Dish with discounted price and percentage (no name,...)
-                StaffDBService().callStaff(staffList[index]);
-          },
+          onRemoveSelected: () => ManageStaffViewController.removeStaff(context, staffList[index]),
+          onEditSelected: () => ManageStaffViewController.editStaff(context, staffList[index]),
+          onCallSelected: () => ManageStaffViewController.callStaff(context, staffList[index]),
         );
       },
     );

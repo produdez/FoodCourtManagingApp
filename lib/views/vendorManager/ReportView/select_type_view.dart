@@ -9,13 +9,13 @@ import 'package:fcfoodcourt/models/vendor_report.dart';
 import 'package:fcfoodcourt/shared/dialog_loading_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
 class SelectTypeView extends StatefulWidget {
-  final User userData;
-  const SelectTypeView({this.userData});
+  const SelectTypeView();
   @override
   _SelectTypeViewState createState() => _SelectTypeViewState();
 }
@@ -30,8 +30,7 @@ class _SelectTypeViewState extends State<SelectTypeView> {
  @override
   void initState() {
     super.initState();
-    //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
-    VendorReportDBService.vendorId = widget.userData.id;
+    
     // var currentDate = new DateTime(2020, 1, 31);
     // var prevMonth = new DateTime(currentDate.year, currentDate.month - 1, currentDate.day);
     // var currentMonth = DateFormat('MMyyyy').format(prevMonth);
@@ -39,6 +38,10 @@ class _SelectTypeViewState extends State<SelectTypeView> {
   }
   @override
   Widget build(BuildContext context) {
+    final User userData =  Provider.of<User>(context);
+    //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
+    VendorReportDBService.vendorId = userData.databaseID;
+    print(VendorReportDBService.vendorId);
     return Scaffold(
       //child: Scaffold(
         resizeToAvoidBottomInset: false, // address bottom overflow error

@@ -1,5 +1,6 @@
 
 import 'package:fcfoodcourt/services/authentication_service.dart';
+import 'package:fcfoodcourt/services/input_field_validator.dart';
 import 'package:fcfoodcourt/shared/loading_view.dart';
 import 'package:flutter/material.dart';
 
@@ -29,9 +30,10 @@ class _LoginViewState extends State<LoginView> {
     return loading ? Loading() : Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color(0xffff8a84),
         elevation: 0.0,
-        title: Text('Sign up for Food Court'),
+        title: Text('Sign in Food Court'),
         actions: <Widget>[
           FlatButton.icon(
             icon: Icon(Icons.person),
@@ -59,7 +61,7 @@ class _LoginViewState extends State<LoginView> {
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.black, width: 2)),
                 child: TextFormField(
-                  validator: (val) => val.isEmpty ? 'Enter an email' : null,
+                  validator: InputFieldValidator.emailValidator,
                   onChanged: (val) {
                     setState(() => email = val);
                   },
@@ -84,7 +86,7 @@ class _LoginViewState extends State<LoginView> {
                     border: Border.all(color: Colors.black, width: 2)),
                 child: TextFormField(
                   obscureText: true,
-                  validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
+                  validator: InputFieldValidator.passwordValidator,
                   onChanged: (val) {
                     setState(() => password = val);
                   },

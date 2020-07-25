@@ -91,11 +91,11 @@ class _MenuViewState extends State<CustomerDishView> {
                 Container(
                   padding: EdgeInsets.all(5),
                   height: 50,
-                  width: 320,//400
+                  width: 320, //400
                   decoration: BoxDecoration(
                     border: Border.all(color: Color(0xffff8a84), width: 4),
                   ),
-                  
+
                   child: TextField(
                     decoration: InputDecoration(
                         border: InputBorder.none,

@@ -10,13 +10,13 @@ This is the dish element in the list view
 it has call back fields so that the parent that contains this can specify
 it's functionality.
  */
-class ItemDishView extends StatelessWidget {
+class ListItemView extends StatelessWidget {
   final Dish dish;
   final VoidCallback onRemoveSelected;
   final VoidCallback onEditSelected;
   final VoidCallback onDiscountSelected;
 
-  const ItemDishView(
+  const ListItemView(
       {Key key,
       this.dish,
       this.onRemoveSelected,
@@ -44,12 +44,10 @@ class ItemDishView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               InkWell(
-                //TODO: remove after debug
                 onTap: () {
-                  print(dish.toString());
                   Fluttertoast.cancel();
                   Fluttertoast.showToast(
-                  msg: dish.toString(),
+                    msg: "ID: ${dish.id}",
                   );
                 },
                 child: Container(
@@ -61,11 +59,10 @@ class ItemDishView extends StatelessWidget {
                         width: 2,
                       )),
                   child: GFAvatar(
-                    backgroundColor: Colors.transparent,
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: showImage(context)
-                    ),
+                    backgroundImage: AssetImage(
+                        //TODO: Find a way to store cloud image and load that also
+                        //TODO: And then implement image choosing for dish profile when newDish or editDish
+                        'assets/${dish.id}.jpg'),
                     shape: GFAvatarShape.square,
                     radius: 25,
                     borderRadius: BorderRadius.circular(10),
@@ -167,29 +164,5 @@ class ItemDishView extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget showImage(BuildContext context){
-    if(dish.hasImage==false){
-      return Container(
-          height: MediaQuery.of(context).size.height /
-              1.25,
-          width: MediaQuery.of(context).size.width /
-              1.25,
-          child: Image.asset("assets/bowl.png", fit: BoxFit.fill,));
-    }else if(dish.imageURL==null){
-      return CircularProgressIndicator();
-    }else{
-      return Container(
-        height:
-        MediaQuery.of(context).size.height,
-        width:
-        MediaQuery.of(context).size.width,
-        child: Image.network(
-            dish.imageURL,
-            fit: BoxFit.fill,
-        ),
-      );
-    }
   }
 }

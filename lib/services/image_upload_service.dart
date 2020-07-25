@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,20 +14,25 @@ This is the service that help to:
  */
 class ImageUploadService {
   StorageUploadTask uploadTask;
-
+  final CollectionReference dishDB = Firestore.instance.collection("imageDB");
   Future<File> getImageFromImagePicker() async { //picking an image from the gallery
     // ignore: deprecated_member_use
     File image = await ImagePicker.pickImage(source: ImageSource.gallery);
     print('Image Path $image');
     return image;
   }
-  Future<String> uploadPic(File image, String id) async { //upload the currently held image to the cloud
+  Future<String> uploadPic(File image, DocumentReference docRef) async { //upload the currently held image to the cloud
     //the image would be chose from imagePicker, other wise the image file is empty and will not upload
+    String id = docRef.documentID;
+    if(image == null) return null;
     String fileName = basename(id);
-    StorageReference firebaseStorageRef =
-        FirebaseStorage.instance.ref().child(fileName);
-    StorageUploadTask uploadTask = firebaseStorageRef.putFile(image);
-     return (await (await uploadTask.onComplete).ref.getDownloadURL()).toString();
+    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
+    StorageTaskSnapshot uploadTask = await firebaseStorageRef.putFile(image).onComplete;
+     String imageURL = (await uploadTask.ref.getDownloadURL()).toString();
+     docRef.updateData({
+       "imageURL" : imageURL,
+     });
+     return imageURL;
   }
 
   Future<String> getURL(String nameID) async { //get the url of a image on storage from it's name
@@ -39,7 +45,6 @@ class ImageUploadService {
 
   Future<Widget> getImageFromCloud(BuildContext context, String imageName) async { // Get the image widget from it's name on the cloud
     //currently, the image is an URL, which is slow and get reset when scrolling (not very good)
-    //TODO: maybe find a way to get a file from the storage so that the dish can keep that data offline and not refresh (stream?)
     Image m;
     await loadImage(imageName).then((downloadUrl) async {
       m = Image.network(
