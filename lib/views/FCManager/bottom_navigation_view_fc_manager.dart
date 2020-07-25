@@ -1,12 +1,13 @@
 import 'dart:ui';
 
 import 'package:fcfoodcourt/models/user.dart';
+import 'package:fcfoodcourt/services/FoodCourtReportDBService/background_auto_generate_report_service.dart';
 import 'package:fcfoodcourt/shared/profile_view.dart';
 import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/manage_staff_view.dart';
 import 'package:fcfoodcourt/views/FCManager/ReportView/select_type_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:workmanager/workmanager.dart';
 import 'VendorsView/vendor_management_view.dart';
 
 class FoodCourtManagerNavBar extends StatefulWidget {
@@ -43,7 +44,18 @@ class _FoodCourtManagerNavBarState extends State<FoodCourtManagerNavBar> {
               top: BorderSide(width: 4, color: Colors.black),
             )),
         child: BottomNavigationBar(
-          onTap: (index){
+          onTap: (index) async{
+            await Workmanager.initialize(callbackDispatcher);
+            if(index == 2){
+              await Workmanager.registerPeriodicTask(
+                "Create monthly report", 
+                "simplePeriodic1HourTask",
+                frequency: Duration(hours: 1),
+                inputData: <String, dynamic>{
+                  'vendorId': widget.userData.id
+                }
+              );
+            }
             setState(() {
               currentIndex = index;
             });

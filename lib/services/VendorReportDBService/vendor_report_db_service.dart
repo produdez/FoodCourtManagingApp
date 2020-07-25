@@ -73,6 +73,7 @@ class VendorReportDBService{
     dailyReportList.clear();
     for(DocumentSnapshot doc in docs)
       dailyReportList.add(DailyVendorReport.fromFireBase(doc));
+    DailyVendorReport.previousDateSale = 0.0;
   }  
 
   //Update Daily Vendor Report with new list of orders                                                                             

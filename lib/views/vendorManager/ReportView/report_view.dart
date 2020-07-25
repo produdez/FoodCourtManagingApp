@@ -69,27 +69,25 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   }
   Widget printTotalSale(String totalSale, String type){
     return Container(                      
-            color: Colors.black,
+            width: 350,
             height: 75,
+            decoration: BoxDecoration(
+              //color: Color(0xffff8a84),
+              border: Border.all(color: Color(0xffff8a84), width: 4)
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  padding: EdgeInsets.only(top: 18),
+                  padding: EdgeInsets.only(top: type == "Total Daily Sale" ? 20 : 8),
                   height: 75,
-                  width: 230,
-                  //color: Colors.yellow,
-                  decoration: BoxDecoration(
-                    color: Colors.yellow,
-                    border: Border(
-                      top: BorderSide(color: Colors.black, width: 4)
-                    )
-                  ),
+                  width: 170,
+                  color: Colors.white,
                   child: Text(
                     type,
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 25,
+                      fontSize: 21,
                       fontWeight: FontWeight.bold
                     ),
                     textAlign: TextAlign.center,
@@ -97,19 +95,16 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                 ),
                 Container(
                   height: 75,
-                  width: 176.4,
+                  width: 172,
                   padding: EdgeInsets.only(top: 20),
                   decoration: BoxDecoration(
-                    color: Colors.black,
-                    border: Border(
-                      top: BorderSide(color: Colors.black, width: 4)
-                    )
+                    color: Color(0xffff8a84),
                   ),
                   child: Text(
-                    "$totalSale\$",
+                    "$totalSale VND",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 25,
+                      fontSize: 21,
                       fontWeight: FontWeight.bold
                     ),
                     textAlign: TextAlign.center,
@@ -142,7 +137,13 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
           'Sale',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           )
-        )
+        ),
+        DataColumn(
+          label: Text(
+          'Daily Sale Change',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          )
+        ),
       ],
       rows: previousReport
         .map(
@@ -153,6 +154,15 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
             DataCell(
               Text("${report.sale} VND"),
             ),
+            DataCell(
+              Row(children: <Widget>[
+                Icon(
+                  report.totalSaleChange < 0 ? Icons.arrow_downward : Icons.arrow_upward,
+                  color: report.totalSaleChange < 0 ? Colors.red : Colors.green,
+                ),
+                Text(" ${report.totalSaleChange.abs()}%"),
+              ],)  
+            )
           ])
         ).toList()
     );
@@ -478,8 +488,10 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                     ),
                     // Print total sale
                     Container(
+                      alignment: Alignment.center,
                       child: previousDate == "Please choose the date!!" ? null : printTotalSale("$totalSale", "Total Daily Sale")
-                    )
+                    ),
+                    SizedBox(height: 25,)
                   ],
                 ),
                 // MONTHLY REPORT
@@ -534,7 +546,11 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                     ),
                     //Print total return
                     Container(
+                      alignment: Alignment.center,
                       child: previousMonth == "Please choose the month!!" ? null : printTotalSale("$totalReturn", "Total Monthly Sale")
+                    ),
+                    SizedBox(
+                      height: 25,
                     )
                   ],
                 ),

@@ -8,6 +8,7 @@ import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/shared/dialog_loading_view.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
+import 'package:workmanager/workmanager.dart';
 
 class SelectTypeView extends StatefulWidget {
   final User userData;
@@ -98,7 +99,22 @@ class _SelectTypeViewState extends State<SelectTypeView> {
                 height: 100,
                 child: reportType("Monthly"),
               ),
-          )         
+          ),
+          FloatingActionButton(
+          heroTag: "FAB4",
+          backgroundColor: Color(0xffff8a84),
+          onPressed: () async{
+            //On newDish chosen, show newDish popUp and process information
+            //The return value is a Dish with name, price (every other fields are defaulted)
+              print("cancel task");
+                //VendorReportDBService().createMonthlyReport("072020");
+            await Workmanager.cancelAll();
+            }, //This request the pop-up new dish form
+          child: Icon(
+            Icons.add,
+            size: 50,
+          ),
+          ),       
           ]
         ),
         ],

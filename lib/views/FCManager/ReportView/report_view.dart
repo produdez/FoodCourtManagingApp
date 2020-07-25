@@ -36,22 +36,21 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   }
   Widget printTotalProceed(String totalProceed){
     return Container(                      
-            color: Colors.black,
+            width: 350,
             height: 75,
+            decoration: BoxDecoration(border: Border.all(
+              color: Color(0xffff8a84), 
+              width: 4
+              )
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
                   padding: EdgeInsets.only(top: 20),
                   height: 75,
-                  width: 230,
-                  //color: Colors.yellow,
-                  decoration: BoxDecoration(
-                    color: Colors.yellow,
-                    border: Border(
-                      top: BorderSide(color: Colors.black, width: 4)
-                    )
-                  ),
+                  width: 170,
+                  color: Colors.white,
                   child: Text(
                     "Total Proceed",
                     style: TextStyle(
@@ -64,19 +63,14 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                 ),
                 Container(
                   height: 75,
-                  width: 176.4,
+                  width: 172,
                   padding: EdgeInsets.only(top: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    border: Border(
-                      top: BorderSide(color: Colors.black, width: 4)
-                    )
-                  ),
+                  color: Color(0xffff8a84),
                   child: Text(
-                    "$totalProceed\$",
+                    "$totalProceed\ VND",
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 25,
+                      fontSize: 21,
                       fontWeight: FontWeight.bold
                     ),
                     textAlign: TextAlign.center,
@@ -171,7 +165,7 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                 if(onValue != null)
                 {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                    context, 
                   MaterialPageRoute(builder: (context) => ReportView(formattedMonth, onValue))
                   );
@@ -255,7 +249,11 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                           ),
                       )
                     ),
-                    printTotalProceed("$totalProceed")
+                    Container(
+                      alignment: Alignment.center,
+                      child: printTotalProceed("$totalProceed"),
+                    ),
+                    SizedBox(height: 25,)
                   ],
                 ),
               ],

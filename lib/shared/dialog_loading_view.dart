@@ -8,6 +8,8 @@ class Dialogs {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(32.0))),
             content: SizedBox(
               height: 150.0,
               child: Container(

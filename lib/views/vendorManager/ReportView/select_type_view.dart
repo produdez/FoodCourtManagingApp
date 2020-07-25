@@ -8,41 +8,11 @@ import 'package:fcfoodcourt/views/vendorManager/ReportView/report_view.dart';
 import 'package:fcfoodcourt/models/vendor_report.dart';
 import 'package:fcfoodcourt/shared/dialog_loading_view.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
-void callbackDispatcher(){
-    //print("initial");
-    Workmanager.executeTask((taskName, inputData)async{
-      // VendorReportDBService.vendorId = _getFirstUserId(widget.userData.id);
-      switch (taskName) {
-        case "simplePeriodic1HourTask":
-          
-          int day = int.parse(DateFormat('d').format(DateTime.now()));
-          int month = int.parse(DateFormat('M').format(DateTime.now()));
-          int year = int.parse(DateFormat('y').format(DateTime.now()));
-          int hour = int.parse(DateFormat('H').format(DateTime.now()));
-          var nextDate = new DateTime(year, month, day + 1);
-          VendorReportDBService.vendorId = await _getFirstUserId(inputData['vendorId']);
-          // print("${VendorReportDBService.vendorId}");
-          // print("get in task");
-          if(nextDate.day == 1 && hour >= 21)
-            await VendorReportDBService().createMonthlyReport(DateFormat('MM/yyyy').format(DateTime.now()));
-          break;
-      }
-      return Future.value(true);
-    });
-  }
-_getFirstUserId(String userId) async{
-    String firstUserId;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(prefs.getString('firstUserId') == null)
-      prefs.setString('firstUserId', userId);
-    firstUserId = prefs.getString('firstUserId');
-    return firstUserId;
-  }
+
 class SelectTypeView extends StatefulWidget {
   final User userData;
   const SelectTypeView({this.userData});
@@ -54,10 +24,6 @@ class _SelectTypeViewState extends State<SelectTypeView> {
   String formattedDate;
   String formattedMonth;
   String formatId;
-  int currentDay;
-  int currentMonth;
-  int currentYear;
-  int currentHour;
   //const static simplePeriodicHourTask = "simplePeriodic1HourTask";
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   
@@ -66,20 +32,10 @@ class _SelectTypeViewState extends State<SelectTypeView> {
     super.initState();
     //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
     VendorReportDBService.vendorId = widget.userData.id;
-    // Check if it turns to new month => create monthly report of the latest month (each vendor may has different "latest month")
-    int found = 0;
-    // currentDay = int.parse(DateFormat('d').format(DateTime.now()));
-    // currentMonth = int.parse(DateFormat('M').format(DateTime.now()));
-    // currentYear = int.parse(DateFormat('y').format(DateTime.now()));
-    // currentHour = int.parse(DateFormat('H').format(DateTime.now()));
-    // Workmanager.initialize(
-    //   //print("initialize"),
-    //   callbackDispatcher,
-    // );
-    // setState(() async{
-    // });+
-    
-    //VendorReportDBService.vendorId = widget.userData.id;
+    // var currentDate = new DateTime(2020, 1, 31);
+    // var prevMonth = new DateTime(currentDate.year, currentDate.month - 1, currentDate.day);
+    // var currentMonth = DateFormat('MMyyyy').format(prevMonth);
+    // print(currentMonth);
   }
   @override
   Widget build(BuildContext context) {
@@ -265,8 +221,7 @@ class _SelectTypeViewState extends State<SelectTypeView> {
                     }
                   });
                 }
-              }
-              );
+              });
             }
             if(type == 'Monthly')
             {
