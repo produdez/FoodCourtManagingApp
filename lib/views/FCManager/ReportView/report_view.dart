@@ -39,7 +39,7 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
             width: 350,
             height: 75,
             decoration: BoxDecoration(border: Border.all(
-              color: Color(0xffff8a84), 
+              color: Color(0xfff85f6a), 
               width: 4
               )
             ),
@@ -55,7 +55,7 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                     "Total Proceed",
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 25,
+                      fontSize: 23,
                       fontWeight: FontWeight.bold
                     ),
                     textAlign: TextAlign.center,

@@ -149,7 +149,7 @@ class _SelectTypeViewState extends State<SelectTypeView> {
               print("Create Monthly Report");
                 VendorReportDBService().createMonthlyReport("072020");
 
-            }, //This request the pop-up new dish form
+            },
           child: Icon(
             Icons.add,
             size: 50,
@@ -159,12 +159,10 @@ class _SelectTypeViewState extends State<SelectTypeView> {
           heroTag: "FAB4",
           backgroundColor: Color(0xffff8a84),
           onPressed: () async{
-            //On newDish chosen, show newDish popUp and process information
-            //The return value is a Dish with name, price (every other fields are defaulted)
               print("cancel task");
                 //VendorReportDBService().createMonthlyReport("072020");
             await Workmanager.cancelAll();
-            }, //This request the pop-up new dish form
+            },
           child: Icon(
             Icons.add,
             size: 50,

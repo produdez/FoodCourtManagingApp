@@ -49,9 +49,9 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
               print("here");
               //Workmanager.initialize(callbackDispatcher);
               await Workmanager.registerPeriodicTask(
-                "Create monthly report", 
-                "simplePeriodic1HourTask",
-                frequency: Duration(hours: 1),
+                "Create monthly report for vendor", 
+                "auto-generating vendor monthly report",
+                frequency: Duration(minutes: 15),
                 inputData: <String, dynamic>{
                   'vendorId': widget.userData.id
                 }

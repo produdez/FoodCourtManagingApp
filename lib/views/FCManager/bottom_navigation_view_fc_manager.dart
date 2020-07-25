@@ -48,9 +48,9 @@ class _FoodCourtManagerNavBarState extends State<FoodCourtManagerNavBar> {
             await Workmanager.initialize(callbackDispatcher);
             if(index == 2){
               await Workmanager.registerPeriodicTask(
-                "Create monthly report", 
-                "simplePeriodic1HourTask",
-                frequency: Duration(hours: 1),
+                "Create monthly report for food court", 
+                "auto-generating food court monthly report",
+                frequency: Duration(minutes: 15),
                 inputData: <String, dynamic>{
                   'vendorId': widget.userData.id
                 }

@@ -29,10 +29,13 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   static double totalSale;
   static double totalReturn;
-  bool monthlySaleSort = true;
+  bool monthlySort = true;
+  bool totalSaleChangeSort = true;
   bool dailySort = true;
-  bool sortAsc = true;
-  int sortIndex;
+  bool sortDailyAsc = true;
+  bool sortMonthlyAsc = true;
+  int sortDailyIndex;
+  int sortMonthlyIndex;
   int reportType;
   int toggleReportType = 0;
   String date;
@@ -73,7 +76,7 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
             height: 75,
             decoration: BoxDecoration(
               //color: Color(0xffff8a84),
-              border: Border.all(color: Color(0xffff8a84), width: 4)
+              border: Border.all(color: Color(0xfff85f6a), width: 4)
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -98,6 +101,7 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                   width: 172,
                   padding: EdgeInsets.only(top: 20),
                   decoration: BoxDecoration(
+                    //border: Border(left: BorderSide(color: Color(0xfff85f6a), width: 4)),
                     color: Color(0xffff8a84),
                   ),
                   child: Text(
@@ -117,8 +121,8 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   //DataTable for monthly report
   Widget monthlyTable() {
     return DataTable(
-      sortColumnIndex: 1,
-      sortAscending: monthlySaleSort,
+      sortColumnIndex: sortMonthlyIndex,
+      sortAscending: sortMonthlyAsc,
       columns: <DataColumn>[
         DataColumn(
           label: Text(
@@ -127,11 +131,18 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
           )
         ),
         DataColumn(
-          onSort: (columnIndex, ascending){
+          onSort: (columnIndex, sortAscending){
             setState(() {
-              monthlySaleSort = !monthlySaleSort;
+              if(columnIndex == sortMonthlyIndex){sortMonthlyAsc = monthlySort = sortAscending;}
+              else{
+                sortMonthlyIndex = columnIndex;
+                sortMonthlyAsc = monthlySort;
+              }
+              previousReport.sort((a, b) => a.sale.compareTo(b.sale));
+              if(!sortMonthlyAsc){
+                previousReport.sort((b, a) => a.sale.compareTo(b.sale));
+              }
             });
-            onSortColumn(columnIndex, ascending);
           },
           label: Text(
           'Sale',
@@ -139,6 +150,19 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
           )
         ),
         DataColumn(
+          onSort: (columnIndex, sortAscending){
+            setState(() {
+              if(columnIndex == sortMonthlyIndex){sortMonthlyAsc = monthlySort = sortAscending;}
+              else{
+                sortMonthlyIndex = columnIndex;
+                sortMonthlyAsc = monthlySort;
+              }
+              previousReport.sort((a, b) => a.totalSaleChange.compareTo(b.totalSaleChange));
+              if(!sortMonthlyAsc){
+                previousReport.sort((b, a) => a.totalSaleChange.compareTo(b.totalSaleChange));
+              }
+            });
+          },
           label: Text(
           'Daily Sale Change',
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -170,8 +194,8 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   //DataTable for daily report
   Widget dailyTable(){ 
     return DataTable(
-      sortColumnIndex: sortIndex,
-      sortAscending: sortAsc,
+      sortColumnIndex: sortDailyIndex,
+      sortAscending: sortDailyAsc,
       //sortColumnIndex: [2,3],
       //List<int> sortColumnIndex = [],
       columns: <DataColumn>[
@@ -188,13 +212,13 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
           ),
           onSort: (columnIndex, sortAscending){
             setState(() {
-              if(columnIndex == sortIndex){sortAsc = dailySort = sortAscending;}
+              if(columnIndex == sortDailyIndex){sortDailyAsc = dailySort = sortAscending;}
               else{
-                sortIndex = columnIndex;
-                sortAsc = dailySort;
+                sortDailyIndex = columnIndex;
+                sortDailyAsc = dailySort;
               }
               previousOrders.sort((a, b) => a.quantity.compareTo(b.quantity));
-              if(!sortAsc){
+              if(!sortDailyAsc){
                 previousOrders.sort((b, a) => a.quantity.compareTo(b.quantity));
               }
             });
@@ -207,13 +231,13 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
           ),
           onSort: (columnIndex, sortAscending){
             setState(() {
-              if(columnIndex == sortIndex){sortAsc = dailySort = sortAscending;}
+              if(columnIndex == sortDailyIndex){sortDailyAsc = dailySort = sortAscending;}
               else{
-                sortIndex = columnIndex;
-                sortAsc = dailySort;
+                sortDailyIndex = columnIndex;
+                sortDailyAsc = dailySort;
               }
               previousOrders.sort((a, b) => a.price.compareTo(b.price));
-              if(!sortAsc){
+              if(!sortDailyAsc){
                 previousOrders.sort((b, a) => a.price.compareTo(b.price));
               }
             });
@@ -226,13 +250,13 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
           ),
           onSort: (columnIndex, sortAscending){
             setState(() {
-              if(columnIndex == sortIndex){sortAsc = dailySort = sortAscending;}
+              if(columnIndex == sortDailyIndex){sortDailyAsc = dailySort = sortAscending;}
               else{
-                sortIndex = columnIndex;
-                sortAsc = dailySort;
+                sortDailyIndex = columnIndex;
+                sortDailyAsc = dailySort;
               }
               previousOrders.sort((a, b) => a.revenue.compareTo(b.revenue));
-              if(!sortAsc){
+              if(!sortDailyAsc){
                 previousOrders.sort((b, a) => a.revenue.compareTo(b.revenue));
               }
             });
