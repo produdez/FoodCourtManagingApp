@@ -1,59 +1,26 @@
-//import 'dart:js';
-//import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcfoodcourt/models/dish.dart';
-import 'package:fcfoodcourt/services/image_upload_service.dart';
-//import 'package:fcfoodcourt/services/order_db_service.dart';
-import 'package:fcfoodcourt/views/customer/Menu/dishes_of_vendor.dart';
+import 'package:fcfoodcourt/views/customer/Search/search_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:fcfoodcourt/services/dish_db_service.dart';
-import 'package:fcfoodcourt/views/customer/Menu/search_view.dart';
+import 'package:fcfoodcourt/views/customer/Menu/customer_dish_list_view.dart';
 
-//import 'package:flutter_bloc/flutter_bloc.dart';
-//import 'package:';
+bool firstFilter = false;
+bool secondFilter = false;
+bool thirdFilter = false;
+double filter = 0;
+String vendorID = "";
+
 class SearchService extends SearchDelegate<String> {
-  //DishDBService dishDBService;
-  // Stream<List<Dish>> get passToArray {
-  //   return dishDB.snapshots().map(_dishListFromSnapshot);
-  // }
-
-  // // //Mapping a database snapshot into a dishList, but only dishes of the user (vendor) that's currently logged in
-  // List<Dish> _dishListFromSnapshot(QuerySnapshot snapshot) {
-  //   return snapshot.documents.map((doc) {
-  //     return Dish(
-  //       doc.data['name'] ?? '',
-  //       doc.data['originPrice'] ?? 0.0,
-  //       discountPercentage: doc.data['discountPercentage'] ?? 0.0,
-  //       realPrice: doc.data['realPrice'] ?? 0.0,
-  //       id: doc.data['id'] ?? '',
-  //       hasImage: doc.data['hasImage'] ?? false,
-  //       isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
-  //     );
-  //   }).toList();
-  // }
-
-  Future<void> passToArray() async {
-    await dishDB.getDocuments().then((snapshot) async {
-      for (int i = 0; i < snapshot.documents.length; i++) {
-        SearchItem.suggestion.add(SearchItem(snapshot.documents[i].data['name'],
-            snapshot.documents[i].data['vendorID']));
-        //vID.add(snapshot.documents[i].data['vendorID']);
-        //print(suggestion[i]);
-        //print(vID[i]);
-      }
-    });
-    return null;
-  }
-
   CollectionReference dishDB = Firestore.instance.collection("dishDB");
-  //CollectionReference vendorDB = Firestore.instance.collection("vendorDB");
-  String cIndex = "";
+  CollectionReference vendorDB = Firestore.instance.collection("vendorDB");
+
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
           icon: Icon(Icons.clear),
+          color: Color(0xffff8a84),
           onPressed: () {
             query = "";
           })
@@ -64,180 +31,725 @@ class SearchService extends SearchDelegate<String> {
   Widget buildLeading(BuildContext context) {
     return IconButton(
         icon: Icon(Icons.arrow_back),
+        color: Color(0xffff8a84),
         onPressed: () {
-          SearchItem.suggestion = [];
-          //vID = [];
+          vendorID = "";
           close(context, null);
         });
   }
 
   @override
   Widget buildResults(BuildContext context) {
-    if (query.isEmpty == true) {
-      final suggestionList = SearchItem.history.reversed.toList();
-      return ListView.builder(
-        //itemCount: suggestion.length,
-        itemBuilder: (context, index) => ListTile(
-          onTap: () {
-            cIndex = suggestionList[index].vendorID;
-            SearchItem.history.add(SearchItem(
-                suggestionList[index].name, suggestionList[index].vendorID));
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SearchView(
-                          cIndex,
-                        )));
-          },
-          leading: Icon(Icons.history),
-          title: Text(suggestionList[index].name),
-        ),
-        itemCount: suggestionList.length,
-      );
+    if (vendorID == "") {
+      if (query.isEmpty == true) {
+        final suggestionList = SearchHelper.history.reversed.toSet().toList();
+        return ListView.builder(
+          itemBuilder: (context, index) => ListTile(
+            onTap: () async {
+              query = suggestionList[index];
+              showResults(context);
+            },
+            leading: Icon(Icons.history),
+            title: Text(suggestionList[index]),
+          ),
+          itemCount: suggestionList.length,
+        );
+      } else {
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          return StreamProvider<List<Dish>>.value(
+              value: searchByName,
+              child: WillPopScope(
+                  onWillPop: () async {
+                    vendorID = "";
+                    setState(() {});
+                    return true;
+                  },
+                  child: Scaffold(
+                    body: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            FlatButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  side: BorderSide(color: Color(0xffff8a84))),
+                              color: firstFilter
+                                  ? Color(0xffff8a84)
+                                  : Colors.white,
+                              textColor: firstFilter
+                                  ? Colors.white
+                                  : Color(0xffff8a84),
+                              padding: EdgeInsets.all(8.0),
+                              onPressed: () {
+                                setState(() {
+                                  if (firstFilter == false) {
+                                    firstFilter = true;
+                                    secondFilter = false;
+                                    thirdFilter = false;
+                                    filter = 1;
+                                  } else {
+                                    firstFilter = false;
+                                    filter = 0;
+                                  }
+                                });
+                              },
+                              child: Text(
+                                "< 30.000 đ".toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ),
+                            FlatButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  side: BorderSide(color: Color(0xffff8a84))),
+                              color: secondFilter
+                                  ? Color(0xffff8a84)
+                                  : Colors.white,
+                              textColor: secondFilter
+                                  ? Colors.white
+                                  : Color(0xffff8a84),
+                              padding: EdgeInsets.all(8.0),
+                              onPressed: () {
+                                setState(() {
+                                  if (secondFilter == false) {
+                                    secondFilter = true;
+                                    firstFilter = false;
+                                    thirdFilter = false;
+                                    filter = 2;
+                                  } else {
+                                    secondFilter = false;
+                                    filter = 0;
+                                  }
+                                });
+                              },
+                              child: Text(
+                                "30.000 đ - 50.000 đ".toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ),
+                            FlatButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  side: BorderSide(color: Color(0xffff8a84))),
+                              color: thirdFilter
+                                  ? Color(0xffff8a84)
+                                  : Colors.white,
+                              textColor: thirdFilter
+                                  ? Colors.white
+                                  : Color(0xffff8a84),
+                              padding: EdgeInsets.all(8.0),
+                              onPressed: () {
+                                setState(() {
+                                  if (thirdFilter == false) {
+                                    thirdFilter = true;
+                                    firstFilter = false;
+                                    secondFilter = false;
+                                    filter = 3;
+                                  } else {
+                                    thirdFilter = false;
+                                    filter = 0;
+                                  }
+                                });
+                              },
+                              child: Text(
+                                "> 50.000 đ".toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(child: SearchListView()),
+                      ],
+                    ),
+                  )));
+        });
+      }
     } else {
-      final suggestionList = SearchItem.suggestion
-          .where((p) => p.name.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-      return ListView.builder(
-        //itemCount: suggestion.length,
-        itemBuilder: (context, index) => ListTile(
-          onTap: () {
-            cIndex = suggestionList[index].vendorID;
-            SearchItem.history.add(SearchItem(
-                suggestionList[index].name, suggestionList[index].vendorID));
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SearchView(cIndex)));
-          },
-          leading: Icon(Icons.search),
-          title: Text(suggestionList[index].name),
-        ),
-        itemCount: suggestionList.length,
-      );
+      return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+        return StreamProvider<List<Dish>>.value(
+            value: searchByName,
+            child: WillPopScope(
+                onWillPop: () async {
+                  vendorID = "";
+                  setState(() {});
+                  return true;
+                },
+                child: Scaffold(
+                  body: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: BorderSide(color: Color(0xffff8a84))),
+                            color:
+                                firstFilter ? Color(0xffff8a84) : Colors.white,
+                            textColor:
+                                firstFilter ? Colors.white : Color(0xffff8a84),
+                            padding: EdgeInsets.all(8.0),
+                            onPressed: () {
+                              //Colors.white;
+                              setState(() {
+                                if (firstFilter == false) {
+                                  firstFilter = true;
+                                  secondFilter = false;
+                                  thirdFilter = false;
+                                  filter = 1;
+                                  //init = Colors.red;
+                                } else {
+                                  firstFilter = false;
+                                  filter = 0;
+                                }
+                              });
+                            },
+                            child: Text(
+                              "< 30.000 đ".toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ),
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: BorderSide(color: Color(0xffff8a84))),
+                            color:
+                                secondFilter ? Color(0xffff8a84) : Colors.white,
+                            textColor:
+                                secondFilter ? Colors.white : Color(0xffff8a84),
+                            padding: EdgeInsets.all(8.0),
+                            onPressed: () {
+                              setState(() {
+                                if (secondFilter == false) {
+                                  secondFilter = true;
+                                  firstFilter = false;
+                                  thirdFilter = false;
+                                  filter = 2;
+                                } else {
+                                  secondFilter = false;
+                                  filter = 0;
+                                }
+                              });
+                            },
+                            child: Text(
+                              "30.000 đ - 50.000 đ".toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ),
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: BorderSide(color: Color(0xffff8a84))),
+                            color:
+                                thirdFilter ? Color(0xffff8a84) : Colors.white,
+                            textColor:
+                                thirdFilter ? Colors.white : Color(0xffff8a84),
+                            padding: EdgeInsets.all(8.0),
+                            onPressed: () {
+                              setState(() {
+                                if (thirdFilter == false) {
+                                  thirdFilter = true;
+                                  firstFilter = false;
+                                  secondFilter = false;
+                                  filter = 3;
+                                } else {
+                                  thirdFilter = false;
+                                  filter = 0;
+                                }
+                              });
+                            },
+                            child: Text(
+                              "> 50.000 đ".toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Expanded(child: CustomerDishListView()),
+                    ],
+                  ),
+                )));
+      });
     }
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    //final suggestionList = query.isEmpty
-    if (query.isEmpty == true) {
-      final suggestionList = SearchItem.history.reversed.toList();
-      return ListView.builder(
-        //itemCount: suggestion.length,
-        itemBuilder: (context, index) => ListTile(
-          onTap: () {
-            cIndex = suggestionList[index].vendorID;
-            SearchItem.history.add(SearchItem(
-                suggestionList[index].name, suggestionList[index].vendorID));
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SearchView(cIndex)));
-          },
-          leading: Icon(Icons.history),
-          title: Text(suggestionList[index].name),
-        ),
-        itemCount: suggestionList.length,
-      );
+    if (vendorID == "") {
+      if (query.isEmpty == true) {
+        final suggestionList = SearchHelper.history.reversed.toSet().toList();
+        return ListView.builder(
+          itemBuilder: (context, index) => ListTile(
+            onTap: () {
+              query = suggestionList[index];
+              showResults(context);
+            },
+            leading: Icon(Icons.history),
+            title: Text(suggestionList[index]),
+          ),
+          itemCount: suggestionList.length,
+        );
+      } else {
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          return StreamProvider<List<Dish>>.value(
+              value: searchByName,
+              child: WillPopScope(
+                  onWillPop: () async {
+                    vendorID = "";
+                    setState(() {});
+                    return true;
+                  },
+                  child: Scaffold(
+                    body: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            FlatButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  side: BorderSide(color: Color(0xffff8a84))),
+                              color: firstFilter
+                                  ? Color(0xffff8a84)
+                                  : Colors.white,
+                              textColor: firstFilter
+                                  ? Colors.white
+                                  : Color(0xffff8a84),
+                              padding: EdgeInsets.all(8.0),
+                              onPressed: () {
+                                setState(() {
+                                  if (firstFilter == false) {
+                                    firstFilter = true;
+                                    secondFilter = false;
+                                    thirdFilter = false;
+                                    filter = 1;
+                                    //init = Colors.red;
+                                  } else {
+                                    firstFilter = false;
+                                    filter = 0;
+                                  }
+                                });
+                              },
+                              child: Text(
+                                "< 30.000 đ".toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ),
+                            FlatButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  side: BorderSide(color: Color(0xffff8a84))),
+                              color: secondFilter
+                                  ? Color(0xffff8a84)
+                                  : Colors.white,
+                              textColor: secondFilter
+                                  ? Colors.white
+                                  : Color(0xffff8a84),
+                              padding: EdgeInsets.all(8.0),
+                              onPressed: () {
+                                setState(() {
+                                  if (secondFilter == false) {
+                                    secondFilter = true;
+                                    firstFilter = false;
+                                    thirdFilter = false;
+                                    filter = 2;
+                                  } else {
+                                    secondFilter = false;
+                                    filter = 0;
+                                  }
+                                });
+                              },
+                              child: Text(
+                                "30.000 đ - 50.000 đ".toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ),
+                            FlatButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                  side: BorderSide(color: Color(0xffff8a84))),
+                              color: thirdFilter
+                                  ? Color(0xffff8a84)
+                                  : Colors.white,
+                              textColor: thirdFilter
+                                  ? Colors.white
+                                  : Color(0xffff8a84),
+                              padding: EdgeInsets.all(8.0),
+                              onPressed: () {
+                                setState(() {
+                                  if (thirdFilter == false) {
+                                    thirdFilter = true;
+                                    firstFilter = false;
+                                    secondFilter = false;
+                                    filter = 3;
+                                  } else {
+                                    thirdFilter = false;
+                                    filter = 0;
+                                  }
+                                });
+                              },
+                              child: Text(
+                                "> 50.000 đ".toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(child: SearchListView()),
+                      ],
+                    ),
+                  )));
+        });
+      }
     } else {
-      final suggestionList = SearchItem.suggestion
-          .where((p) => p.name.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-      return ListView.builder(
-        //itemCount: suggestion.length,
-        itemBuilder: (context, index) => ListTile(
-          onTap: () {
-            cIndex = suggestionList[index].vendorID;
-            SearchItem.history.add(SearchItem(
-                suggestionList[index].name, suggestionList[index].vendorID));
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SearchView(cIndex)));
-          },
-          leading: Icon(Icons.search),
-          title: Text(suggestionList[index].name),
-        ),
-        itemCount: suggestionList.length,
-      );
+      return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+        return StreamProvider<List<Dish>>.value(
+            value: searchByName,
+            child: WillPopScope(
+                onWillPop: () async {
+                  vendorID = "";
+                  setState(() {});
+                  return true;
+                },
+                child: Scaffold(
+                  body: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: BorderSide(color: Color(0xffff8a84))),
+                            color:
+                                firstFilter ? Color(0xffff8a84) : Colors.white,
+                            textColor:
+                                firstFilter ? Colors.white : Color(0xffff8a84),
+                            padding: EdgeInsets.all(8.0),
+                            onPressed: () {
+                              setState(() {
+                                if (firstFilter == false) {
+                                  firstFilter = true;
+                                  secondFilter = false;
+                                  thirdFilter = false;
+                                  filter = 1;
+                                  //init = Colors.red;
+                                } else {
+                                  firstFilter = false;
+                                  filter = 0;
+                                }
+                              });
+                            },
+                            child: Text(
+                              "< 30.000 đ".toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ),
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: BorderSide(color: Color(0xffff8a84))),
+                            color:
+                                secondFilter ? Color(0xffff8a84) : Colors.white,
+                            textColor:
+                                secondFilter ? Colors.white : Color(0xffff8a84),
+                            padding: EdgeInsets.all(8.0),
+                            onPressed: () {
+                              setState(() {
+                                if (secondFilter == false) {
+                                  secondFilter = true;
+                                  firstFilter = false;
+                                  thirdFilter = false;
+                                  filter = 2;
+                                } else {
+                                  secondFilter = false;
+                                  filter = 0;
+                                }
+                              });
+                            },
+                            child: Text(
+                              "30.000 đ - 50.000 đ".toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ),
+                          FlatButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: BorderSide(color: Color(0xffff8a84))),
+                            color:
+                                thirdFilter ? Color(0xffff8a84) : Colors.white,
+                            textColor:
+                                thirdFilter ? Colors.white : Color(0xffff8a84),
+                            padding: EdgeInsets.all(8.0),
+                            onPressed: () {
+                              setState(() {
+                                if (thirdFilter == false) {
+                                  thirdFilter = true;
+                                  firstFilter = false;
+                                  secondFilter = false;
+                                  filter = 3;
+                                } else {
+                                  thirdFilter = false;
+                                  filter = 0;
+                                }
+                              });
+                            },
+                            child: Text(
+                              "> 50.000 đ".toUpperCase(),
+                              style: TextStyle(
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Expanded(child: CustomerDishListView()),
+                    ],
+                  ),
+                )));
+      });
     }
-
-    // return StreamBuilder(
-    //     stream: Firestore.instance.collection('dishDB').snapshots(),
-    //     builder: (context, snapshot) {
-    //       final results = snapshot.data.documents.where((DocumentSnapshot a) =>
-    //           a.data['name'].toString().contains(query));
-    //       return ListView.builder(
-    //         itemBuilder: (context, index) => ListTile(
-    //           onTap: () {
-    //             showResults(context);
-    //           },
-    //           leading: Icon(Icons.location_city),
-    //           title: Text(results[index]),
-    //         ),
-    //         itemCount: results.length,
-    //       );
-
-    //       // children: results
-    //       //     .map<Widget>((a) => Text(a.data['name'].toString()))
-    //       //     .toList(),
-    //     });
-    //   List<Dish> items = [
-    //     Dish('apple', 120909),
-    //     Dish('basd', 120909),
-    //     Dish('orange', 120909),
-    //     Dish('banana', 120909),
-    //     Dish('pear', 120909),
-    //     Dish('apple', 120909),
-    //   ];
-
-    //   List<Dish> suggestionList = query.isEmpty
-    //       ? searchByName
-    //       : items.where((element) => element.name.contains(query)).toList();
-    //   return suggestionList.isEmpty
-    //       ? Text("no result found")
-    //       : ListView.builder(
-    //           itemBuilder: (context, index) {
-    //             return ListTile(
-    //               title: Text(suggestionList[index].name),
-    //               onTap: () {
-    //                 showResults(context);
-    //               },
-    //             );
-    //           },
-    //           itemCount: suggestionList.length,
-    //         );
-    // }
   }
 
-/*import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fcfoodcourt/models/dish.dart';
-import 'package:fcfoodcourt/services/image_upload_service.dart';
+  Future<void> passToSearchHelper() async {
+    await vendorDB.getDocuments().then((snapshot) async {
+      for (int i = 0; i < snapshot.documents.length; i++) {
+        SearchHelper.searchHelper.add(SearchHelper(
+            snapshot.documents[i].data['id'],
+            snapshot.documents[i].data['name']));
+      }
+    });
+    return null;
+  }
 
-class SearchService {
-  //Collection reference for DishDB
-  final CollectionReference dishDB = Firestore.instance.collection("dishDB");
-
-  //the dish db only response the correct menu according to the user's id (vendor's id)
-  //this field is static and set when we first go to home page (menu,... in this case)
-  //static String vendorID = 'fakeVendorID';
-  static String keyword = "";
   Stream<List<Dish>> get searchByName {
     return dishDB.snapshots().map(_dishListFromSnapshot);
   }
 
-  //Mapping a database snapshot into a dishList, but only dishes of the user (vendor) that's currently logged in
   List<Dish> _dishListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents
-        .where((DocumentSnapshot documentSnapshot) =>
-            documentSnapshot.data['name'].contains(keyword))
-        .map((doc) {
-      return Dish(
-        doc.data['name'] ?? '',
-        doc.data['originPrice'] ?? 0.0,
-        discountPercentage: doc.data['discountPercentage'] ?? 0.0,
-        realPrice: doc.data['realPrice'] ?? 0.0,
-        id: doc.data['id'] ?? '',
-        hasImage: doc.data['hasImage'] ?? false,
-        isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
-      );
-    }).toList();
+    if (vendorID == "") {
+      if (filter == 0) {
+        return snapshot.documents
+            .where((DocumentSnapshot documentSnapshot) => documentSnapshot
+                .data['name']
+                .toLowerCase()
+                .contains(query.toLowerCase()))
+            .map((doc) {
+          return Dish(
+            doc.data['name'] ?? '',
+            doc.data['originPrice'].toDouble() ?? 0.0,
+            discountPercentage: doc.data['discountPercentage'] ?? 0.0,
+            realPrice: doc.data['realPrice'].toDouble() ?? 0.0,
+            id: doc.data['id'] ?? '',
+            vendorID: doc.data['vendorID'] ?? '',
+            hasImage: doc.data['hasImage'] ?? false,
+            isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+          );
+        }).toList();
+      } else if (filter == 1) {
+        return snapshot.documents
+            .where((DocumentSnapshot documentSnapshot) =>
+                documentSnapshot.data['name']
+                    .toLowerCase()
+                    .contains(query.toLowerCase()) &&
+                documentSnapshot.data['realPrice'].toDouble() < 30000)
+            .map((doc) {
+          return Dish(
+            doc.data['name'] ?? '',
+            doc.data['originPrice'].toDouble() ?? 0.0,
+            discountPercentage: doc.data['discountPercentage'] ?? 0.0,
+            realPrice: doc.data['realPrice'].toDouble() ?? 0.0,
+            id: doc.data['id'] ?? '',
+            vendorID: doc.data['vendorID'] ?? '',
+            hasImage: doc.data['hasImage'] ?? false,
+            isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+          );
+        }).toList();
+      } else if (filter == 2) {
+        return snapshot.documents
+            .where((DocumentSnapshot documentSnapshot) =>
+                documentSnapshot.data['name']
+                    .toLowerCase()
+                    .contains(query.toLowerCase()) &&
+                documentSnapshot.data['realPrice'].toDouble() <= 50000 &&
+                documentSnapshot.data['realPrice'].toDouble() >= 30000)
+            .map((doc) {
+          return Dish(
+            doc.data['name'] ?? '',
+            doc.data['originPrice'].toDouble() ?? 0.0,
+            discountPercentage: doc.data['discountPercentage'] ?? 0.0,
+            realPrice: doc.data['realPrice'].toDouble() ?? 0.0,
+            id: doc.data['id'] ?? '',
+            vendorID: doc.data['vendorID'] ?? '',
+            hasImage: doc.data['hasImage'] ?? false,
+            isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+          );
+        }).toList();
+      } else if (filter == 3) {
+        return snapshot.documents
+            .where((DocumentSnapshot documentSnapshot) =>
+                documentSnapshot.data['name']
+                    .toLowerCase()
+                    .contains(query.toLowerCase()) &&
+                documentSnapshot.data['realPrice'].toDouble() >= 50000)
+            .map((doc) {
+          return Dish(
+            doc.data['name'] ?? '',
+            doc.data['originPrice'].toDouble() ?? 0.0,
+            discountPercentage: doc.data['discountPercentage'] ?? 0.0,
+            realPrice: doc.data['realPrice'].toDouble() ?? 0.0,
+            id: doc.data['id'] ?? '',
+            vendorID: doc.data['vendorID'] ?? '',
+            hasImage: doc.data['hasImage'] ?? false,
+            isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+          );
+        }).toList();
+      }
+    } else {
+      if (filter == 0) {
+        return snapshot.documents
+            .where((DocumentSnapshot documentSnapshot) =>
+                documentSnapshot.data['name']
+                    .toLowerCase()
+                    .contains(query.toLowerCase()) &&
+                documentSnapshot.data['vendorID'] == vendorID)
+            .map((doc) {
+          return Dish(
+            doc.data['name'] ?? '',
+            doc.data['originPrice'].toDouble() ?? 0.0,
+            discountPercentage: doc.data['discountPercentage'] ?? 0.0,
+            realPrice: doc.data['realPrice'].toDouble() ?? 0.0,
+            id: doc.data['id'] ?? '',
+            vendorID: doc.data['vendorID'] ?? '',
+            hasImage: doc.data['hasImage'] ?? false,
+            isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+          );
+        }).toList();
+      } else if (filter == 1) {
+        return snapshot.documents
+            .where((DocumentSnapshot documentSnapshot) =>
+                documentSnapshot.data['name']
+                    .toLowerCase()
+                    .contains(query.toLowerCase()) &&
+                documentSnapshot.data['vendorID'] == vendorID &&
+                documentSnapshot.data['realPrice'].toDouble() < 30000)
+            .map((doc) {
+          return Dish(
+            doc.data['name'] ?? '',
+            doc.data['originPrice'].toDouble() ?? 0.0,
+            discountPercentage: doc.data['discountPercentage'] ?? 0.0,
+            realPrice: doc.data['realPrice'].toDouble() ?? 0.0,
+            id: doc.data['id'] ?? '',
+            vendorID: doc.data['vendorID'] ?? '',
+            hasImage: doc.data['hasImage'] ?? false,
+            isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+          );
+        }).toList();
+      } else if (filter == 2) {
+        return snapshot.documents
+            .where((DocumentSnapshot documentSnapshot) =>
+                documentSnapshot.data['name']
+                    .toLowerCase()
+                    .contains(query.toLowerCase()) &&
+                documentSnapshot.data['vendorID'] == vendorID &&
+                documentSnapshot.data['realPrice'].toDouble() <= 50000 &&
+                documentSnapshot.data['realPrice'].toDouble() >= 30000)
+            .map((doc) {
+          return Dish(
+            doc.data['name'] ?? '',
+            doc.data['originPrice'].toDouble() ?? 0.0,
+            discountPercentage: doc.data['discountPercentage'] ?? 0.0,
+            realPrice: doc.data['realPrice'].toDouble() ?? 0.0,
+            id: doc.data['id'] ?? '',
+            vendorID: doc.data['vendorID'] ?? '',
+            hasImage: doc.data['hasImage'] ?? false,
+            isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+          );
+        }).toList();
+      } else if (filter == 3) {
+        return snapshot.documents
+            .where((DocumentSnapshot documentSnapshot) =>
+                documentSnapshot.data['name']
+                    .toLowerCase()
+                    .contains(query.toLowerCase()) &&
+                documentSnapshot.data['vendorID'] == vendorID &&
+                documentSnapshot.data['realPrice'].toDouble() >= 50000)
+            .map((doc) {
+          return Dish(
+            doc.data['name'] ?? '',
+            doc.data['originPrice'].toDouble() ?? 0.0,
+            discountPercentage: doc.data['discountPercentage'] ?? 0.0,
+            realPrice: doc.data['realPrice'].toDouble() ?? 0.0,
+            id: doc.data['id'] ?? '',
+            vendorID: doc.data['vendorID'] ?? '',
+            hasImage: doc.data['hasImage'] ?? false,
+            isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+          );
+        }).toList();
+      }
+    }
   }
-}*/
+}
 
+class SearchHelper {
+  String vendorName;
+  String vendorID;
+  SearchHelper(this.vendorID, this.vendorName);
+  static List<SearchHelper> searchHelper = [];
+  static List<String> history = [];
 }

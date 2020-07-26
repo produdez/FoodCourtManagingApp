@@ -2,6 +2,7 @@ import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/services/helper_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 //special pieces of view that needs logic
 class ViewLogic {
@@ -12,16 +13,35 @@ class ViewLogic {
       return Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
+          // Container(
+          //   child: Text(
+          //     "Price: ${dish.realPrice}\ Đ",
+          //     style: TextStyle(
+          //       color: Colors.black87,
+          //       fontWeight: FontWeight.bold,
+          //       fontSize: 9,
+          //     ),
+          //   ),
+          // ),
           Container(
-            child: Text(
-              "Price: ${dish.realPrice}\ Đ",
+              child: Row(children: <Widget>[
+            Container(
+                child: Text(
+              'Price: ',
               style: TextStyle(
-                color: Colors.black87,
-                fontWeight: FontWeight.bold,
-                fontSize: 9,
-              ),
-            ),
-          ),
+                  fontSize: 9.0,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold),
+            )),
+            Container(
+                child: Text(
+              "${dish.realPrice} \Đ",
+              style: TextStyle(
+                  color: dish.isOutOfOrder ? Colors.blue[800] : Colors.blue,
+                  fontSize: 9.0,
+                  fontWeight: FontWeight.bold),
+            )),
+          ]))
         ],
       );
     } else {
@@ -48,11 +68,14 @@ class ViewLogic {
                     decoration: TextDecoration.lineThrough,
                   ),
                 ),
-                SizedBox(height: 1, width: 5,),
+                SizedBox(
+                  height: 1,
+                  width: 5,
+                ),
                 Text(
                   " ${dish.realPrice}\ Đ",
                   style: TextStyle(
-                    color: Colors.black87,
+                    color: dish.isOutOfOrder ? Colors.blue[800] : Colors.blue,
                     fontSize: 9,
                     fontWeight: FontWeight.bold,
                   ),
@@ -74,4 +97,16 @@ class ViewLogic {
       );
     }
   }
+}
+
+DateTime currentBackPressTime;
+Future<bool> onWillPop() {
+  DateTime now = DateTime.now();
+  if (currentBackPressTime == null ||
+      now.difference(currentBackPressTime) > Duration(seconds: 2)) {
+    currentBackPressTime = now;
+    Fluttertoast.showToast(msg: "Press back again to exit");
+    return Future.value(false);
+  }
+  return Future.value(true);
 }

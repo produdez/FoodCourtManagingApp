@@ -44,20 +44,20 @@ class VendorDBService {
     }).toList();
   }
 
-  // Future<String> nameOfVendor(String vendorID, String vendorName) async {
-  //   await vendorDB.getDocuments().then((snapshot) async {
-  //     for (int i = 0; i < snapshot.documents.length; i++) {
-  //       //SearchItem.suggestion.add(SearchItem(snapshot.documents[i].data['name'],
-  //       //snapshot.documents[i].data['vendorID']));
-  //       if (snapshot.documents[i].data['id'] == vendorID) {
-  //         vendorName = snapshot.documents[i].data['name'];
-  //       }
-  //       //vID.add(snapshot.documents[i].data['vendorID']);
-  //       //print(suggestion[i]);
-  //       //print(vID[i]);
-  //     }
-  //   });
-  //   //print(vendorName);
-  //   return vendorName;
-  // }
+  Future<String> nameOfVendor(String vendorID, String vendorName) async {
+    await vendorDB.getDocuments().then((snapshot) async {
+      for (int i = 0; i < snapshot.documents.length; i++) {
+        if (snapshot.documents[i].data['id'] == vendorID) {
+          vendorName = snapshot.documents[i].data['name'];
+        }
+      }
+    });
+    print('hi $vendorName');
+    return vendorName.toString();
+  }
+
+  void vname(String vendorID, String vname) async {
+    vname = await nameOfVendor(vendorID, vname);
+    print('hello $vname');
+  }
 }

@@ -8,7 +8,6 @@ This class can create/get user data from DB, just remember to use this by:
  */
 
 class UserDBService {
-
   final String id;
   String role;
   UserDBService(this.id);
@@ -28,10 +27,10 @@ class UserDBService {
   // user data from snapshots
   User _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return User(
-        id :snapshot.data['id'] ?? null,
-        name: snapshot.data['name'] ?? null,
-        email: snapshot.data['email'] ?? null,
-        role: snapshot.data['role'] ?? null,
+      id: snapshot.data['id'] ?? null,
+      name: snapshot.data['name'] ?? null,
+      email: snapshot.data['email'] ?? null,
+      role: snapshot.data['role'] ?? null,
     );
   }
 
@@ -44,10 +43,9 @@ class UserDBService {
   //Use this to fetch user data from DB
   Future<User> getUserData() async {
     User user;
-    await userDB.document(id).get().then((onValue){
+    await userDB.document(id).get().then((onValue) {
       user = _userDataFromSnapshot(onValue);
     });
     return user;
   }
-
 }

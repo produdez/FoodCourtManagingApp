@@ -28,6 +28,7 @@ class ItemDishView extends StatelessWidget {
       width: 400,
       margin: EdgeInsets.fromLTRB(5, 10, 5, 0),
       decoration: BoxDecoration(
+        color: dish.isOutOfOrder ? Colors.grey[400] : Colors.transparent,
         border: Border.all(
           color: Colors.black45,
           width: 3,
@@ -37,36 +38,32 @@ class ItemDishView extends StatelessWidget {
       child: FittedBox(
         alignment: Alignment.centerLeft,
         child: Material(
-          color: Colors.white,
+          color: dish.isOutOfOrder ? Colors.grey[400] : Colors.transparent,
           elevation: 0,
           borderRadius: BorderRadius.circular(40),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              InkWell(
-                onTap: () {
-                  Fluttertoast.cancel();
-                  Fluttertoast.showToast(
-                    msg: "ID: ${dish.id}",
-                  );
-                },
-                child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 2,
-                        )),
-                    child: GFAvatar(
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: showImage(context)),
-                      shape: GFAvatarShape.square,
-                      radius: 25,
+              Container(
+                  margin: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                  decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                    )),
-              ),
+                      border: Border.all(
+                        color: dish.isOutOfOrder
+                            ? Colors.grey[400]
+                            : Colors.transparent,
+                        width: 2,
+                      )),
+                  child: GFAvatar(
+                    backgroundColor: Colors.transparent,
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: showImage(context)),
+                    shape: GFAvatarShape.square,
+                    radius: 25,
+                    borderRadius: BorderRadius.circular(10),
+                  )),
+
               Container(
                 child: Column(
                   // mainAxisAlignment: MainAxisAlignment.center,
@@ -82,25 +79,54 @@ class ItemDishView extends StatelessWidget {
                               fontWeight: FontWeight.bold),
                         )),
                     ViewLogic.displayPrice(context, dish),
-                    SizedBox(height: 2),
-                    FlatButton(
-                      //TODO: check whether dish is out of stock to fade the button
-                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      color: Color(0xfff85f6a),
-                      child: Text(
-                        'Add',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                        ),
-                      ),
-                      onPressed: () => CartService().addDish(dish),
-
-                      ///
+                    SizedBox(
+                      height: 4,
+                      //width: 10,
                     ),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 63,
+                          ),
+                          RaisedButton(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 3),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            color: dish.isOutOfOrder
+                                ? Colors.grey
+                                : Color(0xfff85f6a),
+                            child: dish.isOutOfOrder
+                                ? Text(
+                                    'Out of order',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 9.5,
+                                    ),
+                                  )
+                                : Text(
+                                    'Add to card',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                            onPressed: () {
+                              if (dish.isOutOfOrder == false) {
+                                CartService().addDish(dish);
+                              } else {
+                                Fluttertoast.cancel();
+                                Fluttertoast.showToast(
+                                  msg: "Sorry, the dish is out of order",
+                                );
+                              }
+                            },
+
+                            ///
+                          ),
+                        ]),
                   ],
                 ),
                 //The price is displayed dynamically by view logic

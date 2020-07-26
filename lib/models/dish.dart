@@ -38,20 +38,3 @@ class Dish {
   @override
   String toString() => 'Dish { name: $name }';
 }
-
-//List<String> suggestion = [];
-//List<String> vID = [];
-
-class SearchItem {
-  //Dish dish;
-  String name = "";
-  String vendorID = "";
-  String vendorName = "";
-  SearchItem(this.name, this.vendorID) {
-    this.name = name;
-    this.vendorID = vendorID;
-    this.vendorName = vendorName;
-  }
-  static List<SearchItem> suggestion = [];
-  static List<SearchItem> history = [];
-}
