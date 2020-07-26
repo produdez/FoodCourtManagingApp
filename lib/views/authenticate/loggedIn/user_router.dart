@@ -1,6 +1,3 @@
-
-
-
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/services/staff_db_service.dart';
@@ -18,7 +15,7 @@ After user log-in, this will route them to their correct screen
 You must pass the currentUser down to the child class in order to user them
  */
 class LoggedInUserRouter extends StatelessWidget {
-  @override
+  @override 
   Widget build(BuildContext context) {
     final userIdOnly = Provider.of<User>(context);
     if(userIdOnly== null) return Wrapper();
