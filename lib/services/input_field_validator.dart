@@ -18,7 +18,7 @@ class InputFieldValidator{
 
   static final emailValidator = MultiValidator([
     RequiredValidator(errorText: 'Email is required'),
-    EmailValidator(errorText: 'Enter valid Email'),
+    RealEmailValidator(errorText: 'Enter valid Email'),
   ]);
 
 
@@ -71,5 +71,15 @@ class NumberValidator extends TextFieldValidator {
     } catch (_) {
       return false;
     }
+  }
+}
+
+class RealEmailValidator extends EmailValidator{
+  String errorText = "Wrong email format!";
+  RealEmailValidator({ @required String errorText}) : super(errorText: errorText);
+  RegExp emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  @override
+  bool isValid(String value) {
+    return emailValid.hasMatch(value);
   }
 }

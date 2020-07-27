@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
           ),
           '/CustomerMenuView': (context) => CustomerView(),
           '/CustomerDishView': (context) => CustomerDishView(),
+          //'/test': (context) => 
         },
         initialRoute: '/login',
       ),

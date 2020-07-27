@@ -44,9 +44,9 @@ class _NewStaffFormState extends State<NewStaffForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               GFAvatar(
+                backgroundColor: Colors.transparent,
                 shape: GFAvatarShape.square,
                 radius: 50,
-                backgroundColor: Colors.white,
                 child: ClipRect(
                   child: new SizedBox(
                     width: 100.0,
@@ -219,7 +219,7 @@ Future<Staff> createPopUpNewStaff(BuildContext context) {
                   color: Color(0xffff6624),
                 ),
               ),
-              content: SizedBox(height: 480, width: 300, child: NewStaffForm()),
+              content: SizedBox(height: 530, width: 300, child: NewStaffForm()),
             ),
           ),
         );
