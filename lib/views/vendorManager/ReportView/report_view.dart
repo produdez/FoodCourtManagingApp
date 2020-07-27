@@ -1,4 +1,5 @@
 
+import 'package:fcfoodcourt/models/orderedDish.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:fcfoodcourt/models/user.dart';
@@ -12,7 +13,7 @@ import 'package:fcfoodcourt/shared/dialog_loading_view.dart';
 class ReportView extends StatefulWidget{
   final User userData;
   final String date;
-  final List<Order> orders;
+  final List<OrderedDish> orders;
   final List<DailyVendorReport> dailyVendorReport;
   const ReportView(this.date, this.orders, this.dailyVendorReport, {this.userData});
   @override 
@@ -24,7 +25,7 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   static String currentVendorId;
   static String previousDate = "Please choose the date!!";
   static String previousMonth = "Please choose the month!!";
-  static List<Order> previousOrders;
+  static List<OrderedDish> previousOrders;
   static List<DailyVendorReport> previousReport;
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   static double totalSale;
@@ -42,7 +43,7 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   String formattedDate;
   String formattedMonth;
   String formatId;
-  List<Order> orders;
+  List<OrderedDish> orders;
   List<DailyVendorReport> dailyVendorReport;
   //var orderss;
   _ReportViewState(this.date, this.orders, this.dailyVendorReport);
@@ -601,22 +602,22 @@ onSortColumn(int columnIndex, bool ascending) {
 }
 }
 
-var orderss = <Order>[Order(name: "pho", price: 400 , quantity: 4, revenue: 1600000 ),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
-                Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),]; 
+// var orderss = <Order>[Order(name: "pho", price: 400 , quantity: 4, revenue: 1600000 ),
+//                 Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+//                 Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+//                 Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+//                 Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+//                 Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+//                 Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+//                 Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+//                 Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+//                 Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+//                 Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+//                 Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+//                 Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+//                 Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+//                 Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+//                 Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+//                 Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),
+//                 Order(name: "Bun bo", price: 40, quantity: 5, revenue: 200),]; 
 

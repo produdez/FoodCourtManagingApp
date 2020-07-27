@@ -1,6 +1,7 @@
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcfoodcourt/models/orderedDish.dart';
 
 class DailyVendorReport {
   static double previousDateSale = 0;
@@ -8,7 +9,7 @@ class DailyVendorReport {
   String vendorId;
   double sale;
   String date;
-  List<Order> orders;
+  List<OrderedDish> orders;
   double totalSaleChange;
 
   /*bool hasImage;
@@ -36,23 +37,7 @@ class DailyVendorReport {
   }
 }
 
-class Order{
-  String name;
-  double price;
-  int quantity;
-  double revenue;
-  Order({this.name, this.price, this.quantity, this.revenue});
-  factory Order.fromFireBase(DocumentSnapshot doc){
-    Map data = doc.data;
-    return Order(
-      name: data['name'],
-      price: double.tryParse(data['price']),
-      quantity: data['quantity'],
-      revenue: double.tryParse(data['revenue'])
-      //orders: data['orders'],
-    );
-  }
-}
+
 class MonthlyVendorReport{
   double sale;
   String month;
