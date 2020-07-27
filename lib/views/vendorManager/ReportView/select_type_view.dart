@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fcfoodcourt/models/orderedDish.dart';
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:intl/intl.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/invalid_view.dart';
@@ -114,7 +115,7 @@ class _SelectTypeViewState extends State<SelectTypeView> {
           heroTag: "FAB1",
           backgroundColor: Color(0xffff8a84),
           onPressed: () {
-                List<Order> emptyList;
+                List<OrderedDish> emptyList;
                 //print(VendorReportDBService.vendorId.toString());
                 print("Create Daily Report");
                 VendorReportDBService().createDailyReport(emptyList);
@@ -133,8 +134,8 @@ class _SelectTypeViewState extends State<SelectTypeView> {
             //On newDish chosen, show newDish popUp and process information
             //The return value is a Dish with name, price (every other fields are defaulted)
               print("Update Daily Report");
-                VendorReportDBService().updateDailyReport(<Order>[Order(name: "pho", price: 400 , quantity: 1, revenue: 400 ),
-                Order(name: "Hu tieu", price: 40, quantity: 2, revenue: 80 ), Order(name: "Bun Rieu", price: 40, quantity: 2, revenue: 80 )
+                VendorReportDBService().updateDailyReport(<OrderedDish>[OrderedDish(name: "pho", price: 400 , quantity: 1, revenue: 400 ),
+                OrderedDish(name: "Hu tieu", price: 40, quantity: 2, revenue: 80 ), OrderedDish(name: "Bun Rieu", price: 40, quantity: 2, revenue: 80 )
                 ]);
 
             }, //This request the pop-up new dish form

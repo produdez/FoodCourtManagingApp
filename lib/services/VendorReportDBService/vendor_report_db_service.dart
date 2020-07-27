@@ -1,27 +1,28 @@
 //import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcfoodcourt/models/orderedDish.dart';
 import 'package:fcfoodcourt/models/vendor_report.dart';
 import 'package:intl/intl.dart';
 
 class VendorReportDBService{
   static String vendorId;
-  static List<Order> orderList = [];
+  static List<OrderedDish> orderList = [];
   static List<DailyVendorReport> dailyReportList = [];
   static List<Month> currentMonth = [];
   static DateTime _dateTime = DateTime.now();
   String formattedDate = DateFormat('ddMMyyyy').format(_dateTime);
   CollectionReference vendorReportDB = Firestore.instance.collection("vendorReportDB");
-  Future<List<Order>> checkAvailableDailyReport(String time) async {
-    List<Order> dailyReport;
+  Future<List<OrderedDish>> checkAvailableDailyReport(String time) async {
+    List<OrderedDish> dailyReport;
     await _orderListFromSnapshot(time).then((onValue){
       if(onValue != null)
       dailyReport = onValue;
     }).catchError((onError){return null;});
     return dailyReport;
   }
-  Future<List<Order>> _orderListFromSnapshot(String time) async{
-    List<Order> dailyReport;
+  Future<List<OrderedDish>> _orderListFromSnapshot(String time) async{
+    List<OrderedDish> dailyReport;
     int i;
     await vendorReportDB.getDocuments().then((snapshot) async{
       for(i = 0; i < snapshot.documents.length; i++){
@@ -40,7 +41,7 @@ class VendorReportDBService{
     var docs = querySnapshot.documents;
     orderList.clear();
     for(DocumentSnapshot doc in docs)
-      orderList.add(Order.fromFireBase(doc));
+      orderList.add(OrderedDish.fromFireBase(doc));
   }
   //check and return an available monthly report
   Future<List<DailyVendorReport>> checkAvailableMonthlyReport(String time) async{
@@ -77,7 +78,7 @@ class VendorReportDBService{
   }  
 
   //Update Daily Vendor Report with new list of orders                                                                             
-  Future updateDailyReport(List<Order> newOrders) async{
+  Future updateDailyReport(List<OrderedDish> newOrders) async{
     int found = 0;
     //DateTime date = DateTime.now();
     //String formattedDate = DateFormat('ddMMyyyy').format(_dateTime);
@@ -123,7 +124,7 @@ class VendorReportDBService{
   }
 
   //Create new Daily Vendor Report
-  Future createDailyReport(List<Order> newOrders) async{
+  Future createDailyReport(List<OrderedDish> newOrders) async{
     //DateTime date = DateTime.now();
     double sale = newOrders == null ? 0.0 : calculateTotalSale(newOrders);
     //String formattedDate = DateFormat('ddMMyyyy').format(date);
@@ -177,7 +178,7 @@ class VendorReportDBService{
     });
   }
   //calculate the total sale
-  double calculateTotalSale(List<Order> orders) {
+  double calculateTotalSale(List<OrderedDish> orders) {
     double totalSale = 0;
     for(int i = 0; i < orders.length; i++)
       totalSale += (orders[i].revenue);
