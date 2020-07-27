@@ -17,26 +17,35 @@ import '../MyCart/cart_view.dart';
 This is the menu view that holds the frame for the whole menu
 It does holds the add Dish button
  */
+
 class CustomerView extends StatefulWidget {
   final User userData; // userData passed down by the userRouter
   const CustomerView({Key key, this.userData}) : super(key: key);
 
   @override
-  _MenuViewState createState() => _MenuViewState();
+  _CustomerViewState createState() => _CustomerViewState();
 }
 
-class _MenuViewState extends State<CustomerView> {
+class _CustomerViewState extends State<CustomerView> {
   int currentIdx = 0;
   String keyword;
+  List<String> _print;
+  User user;
   @override
   void initState() {
+    // user = userData;
     super.initState();
+
+    //print(list[2]);
+
     //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
     //DishDBService.vendorID = widget.userData.id;
   }
 
   @override
   Widget build(BuildContext context) {
+    List<String> list = ['khoi', 'va', 'minh'];
+
     return StreamProvider<List<Vendor>>.value(
         value: VendorDBService().allVendor,
         child: Scaffold(
@@ -97,7 +106,14 @@ class _MenuViewState extends State<CustomerView> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         GestureDetector(
-                          onTap: () {
+                          onTap: () async {
+                            //_print = _setListString(list);
+                            // setListString(list, user.id).then((onValue) {
+                            //   _print = onValue;
+                            //   print(_print[2]);
+                            // });
+
+                            // print(_print[2]);
                             vendorID = "";
                             SearchService().passToSearchHelper();
                             showSearch(

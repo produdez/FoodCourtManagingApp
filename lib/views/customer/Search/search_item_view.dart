@@ -30,7 +30,6 @@ class SearchItemView extends StatelessWidget {
     for (int i = 0; i < SearchHelper.searchHelper.length; i++) {
       if (dish.vendorID == SearchHelper.searchHelper[i].vendorID) {
         vendorName = SearchHelper.searchHelper[i].vendorName;
-        print(SearchHelper.searchHelper[i].vendorName);
       }
     }
     return Container(
@@ -49,7 +48,6 @@ class SearchItemView extends StatelessWidget {
         onTap: () async {
           String name =
               await VendorDBService().nameOfVendor(dish.vendorID, vendorName);
-          print(name);
           SearchHelper.history.add(dish.name);
           SearchHelper.history.toSet().toList();
           Navigator.push(

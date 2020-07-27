@@ -4,6 +4,7 @@ import 'package:fcfoodcourt/views/customer/Search/search_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fcfoodcourt/views/customer/Menu/customer_dish_list_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 bool firstFilter = false;
 bool secondFilter = false;
@@ -752,4 +753,18 @@ class SearchHelper {
   SearchHelper(this.vendorID, this.vendorName);
   static List<SearchHelper> searchHelper = [];
   static List<String> history = [];
+
+  //static Future<String> setListString(history)
+}
+
+setListString(List<String> list, String cusID) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  List<String> listt;
+  await prefs.setStringList(cusID, list);
+  listt = prefs.getStringList(cusID);
+  return listt;
+}
+
+getListString(String cusID) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
 }
