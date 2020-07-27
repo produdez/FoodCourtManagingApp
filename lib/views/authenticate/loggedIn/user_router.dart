@@ -3,6 +3,7 @@ import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/services/user_db_service.dart';
 import 'package:fcfoodcourt/shared/loading_view.dart';
 import 'package:fcfoodcourt/views/FCManager/bottom_navigation_view_fc_manager.dart';
+import 'package:fcfoodcourt/views/customer/Menu/home.dart';
 import 'package:fcfoodcourt/views/staff/staff_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/bottom_navigation_view_vendor_manager.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,21 +34,8 @@ class LoggedInUserRouter extends StatelessWidget {
 
           //Customer Home UI Here
           if (currentUser.role == "Customer") {
-            return Container(
-              child: Scaffold(
-                body: Text("Customer UI"),
-                appBar: AppBar(
-                  actions: <Widget>[
-                    FlatButton.icon(
-                      icon: Icon(Icons.person),
-                      label: Text('logout'),
-                      onPressed: () async {
-                        await AuthenticationService().signOut();
-                      },
-                    )
-                  ],
-                ),
-              ),
+            return CustomerView(
+              userData: currentUser,
             );
           }
 

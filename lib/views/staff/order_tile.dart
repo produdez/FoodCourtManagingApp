@@ -1,18 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcfoodcourt/views/staff/order_db_service.dart';
+import 'package:fcfoodcourt/views/staff/ordered_dish_detail.dart';
 import 'package:flutter/material.dart';
+import 'order.dart';
 
-class ComingOrder extends StatefulWidget {
-  final String id;
-  final String phoneNumber;
-  final String imagePath;
-  final double totalPrice;
+class OrderTile extends StatelessWidget {
+  final Order order;
+  OrderTile({this.order});
 
-  ComingOrder({this.id, this.phoneNumber, this.imagePath, this.totalPrice});
-
-  @override
-  _ComingOrderState createState() => _ComingOrderState();
-}
-
-class _ComingOrderState extends State<ComingOrder> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -22,7 +17,7 @@ class _ComingOrderState extends State<ComingOrder> {
           Container(
             height: 200.0,
             width: 400.0,
-            child: Image.asset(widget.imagePath, fit: BoxFit.cover),
+            //child: Image.asset(widget.imagePath, fit: BoxFit.cover),
           ),
           Positioned(
             left: 0.0,
@@ -38,7 +33,7 @@ class _ComingOrderState extends State<ComingOrder> {
             ),
           ),
           Positioned(
-            left: 10.0,
+            left: -20.0,
             bottom: 0.0,
             right: 10.0,
             child: Row(
@@ -48,7 +43,7 @@ class _ComingOrderState extends State<ComingOrder> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      widget.phoneNumber,
+                      order.customerID,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18.0,
@@ -68,19 +63,28 @@ class _ComingOrderState extends State<ComingOrder> {
                               ),
                               color: Color(0xffff8a84),
                               onPressed: () {
-                                _showDialog();
+                                finishOrder(context);
                               },
                             ),
                             FlatButton(
                               child: Text(
-                                'Inform',
+                                'Detail',
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
                               color: Color(0xffff8a84),
-                              onPressed: () {
-                                _showDialog1();
+                              onPressed: () async {
+                                await OrderDBService()
+                                    .viewOrderedDish(order.id)
+                                    .then((onValue) {
+                                  print(onValue.length);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              OrderDetail(onValue)));
+                                });
                               },
                             ),
                           ],
@@ -92,7 +96,7 @@ class _ComingOrderState extends State<ComingOrder> {
                 Column(
                   children: <Widget>[
                     Text(
-                      widget.totalPrice.toString(),
+                      order.totalPrice.toString(),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.orangeAccent,
@@ -115,49 +119,32 @@ class _ComingOrderState extends State<ComingOrder> {
     );
   }
 
-  void _showDialog() {
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Text(""),
-          content: new Text("Order Finished"),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text("Close"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showDialog1() {
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Text(""),
-          content: new Text("Customer Informed"),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text("Close"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  finishOrder(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (param) {
+          return AlertDialog(
+            actions: <Widget>[
+              FlatButton(
+                color: Colors.green,
+                onPressed: () => Navigator.pop(context),
+                child: Text('Cancel'),
+              ),
+              FlatButton(
+                color: Colors.red,
+                onPressed: () async {
+                  Navigator.pop(context);
+                  Firestore.instance
+                      .collection('orderDB')
+                      .document(order.id)
+                      .delete();
+                },
+                child: Text('Finish'),
+              )
+            ],
+            title: Text('Finish order?'),
+          );
+        });
   }
 }

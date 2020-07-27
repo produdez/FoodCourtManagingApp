@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'menu_page.dart';
 import 'profile_page.dart';
+import 'order_db_service.dart';
 
 /*
 This is the Staff view that holds the frame for the whole Staff
@@ -34,9 +35,10 @@ class _StaffViewState extends State<StaffView> {
     profilePage = ProfilePage();
     pages = [orderPage, menuPage, profilePage];
     currentPage = orderPage;
+    //OrderDBService.vendorID =
     super.initState();
     //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
-    DishDBService.vendorID = widget.userData.id;
+    OrderDBService.vendorID = widget.userData.id;
   }
 
   @override

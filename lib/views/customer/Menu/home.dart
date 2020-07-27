@@ -4,14 +4,17 @@ import 'package:fcfoodcourt/services/vendor_db_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:fcfoodcourt/models/user.dart';
 import 'vendor_list_view.dart';
+import 'package:fcfoodcourt/services/authentication_service.dart';
 
 /*
 This is the menu view that holds the frame for the whole menu
 It does holds the add Dish button
  */
 class CustomerView extends StatefulWidget {
+  final User userData; // userData passed down by the userRouter
+  const CustomerView({Key key, this.userData}) : super(key: key);
   @override
   _MenuViewState createState() => _MenuViewState();
 }
@@ -35,6 +38,15 @@ class _MenuViewState extends State<CustomerView> {
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
+          actions: <Widget>[
+            FlatButton.icon(
+              icon: Icon(Icons.person),
+              label: Text('logout'),
+              onPressed: () async {
+                await AuthenticationService().signOut();
+              },
+            )
+          ],
         ),
         bottomNavigationBar: Container(
           height: 75,
