@@ -42,7 +42,7 @@ class _NewDishFormState extends State<NewDishForm> {
               GFAvatar(
                 shape: GFAvatarShape.square,
                 radius: 50,
-                backgroundColor: Colors.white,
+                backgroundColor: Colors.transparent,
                 child: ClipRect(
                   child: new SizedBox(
                     width: 100.0,
@@ -109,9 +109,11 @@ class _NewDishFormState extends State<NewDishForm> {
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
             child: TextFormField(
+//              validator: InputFieldValidator.priceValidator,
               validator: MultiValidator([
                 RequiredValidator(errorText: 'Price is required'),
-                InputFieldValidator.priceValidator,
+                NumberValidator(max: null,min: null,errorText: 'Enter a number'),
+                NumberValidator(min: 0, errorText: 'Price must be non-negative'),
               ]),
               onChanged: (String price) {
                 this.price = price;
