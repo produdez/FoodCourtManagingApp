@@ -18,7 +18,13 @@ class VendorListView extends StatefulWidget {
 }
 
 class _VendorListViewState extends State<VendorListView> {
-  List<Order> vendorList = CartService.cart;
+  List<Order> vendorList;
+
+  @override
+  void initState() {
+    vendorList = CartService.cart;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

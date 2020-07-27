@@ -25,8 +25,7 @@ class CartView extends StatefulWidget {
 class _CartViewState extends State<CartView> {
   @override
   void initState() {
-    // TODO:random populate database only when needed
-    //VendorDBService().populateDatabaseRandom();
+    CartService.initCart = CartService.cart; /////////////////////////
     super.initState();
   }
 
@@ -64,9 +63,6 @@ class _CartViewState extends State<CartView> {
             SizedBox(
               height: 10,
             ),
-            SizedBox(
-              height: 10,
-            ),
             Expanded(child: VendorListView(
               onChangeConfirm: () {
                 setState(() {});
@@ -98,10 +94,6 @@ class _CartViewState extends State<CartView> {
                       ],
                     ),
                   ),
-                  /*SizedBox(
-                        width: 8,
-                      ),*/
-                  // ignore: missing_required_param
                   Container(
                     padding: EdgeInsets.all(5),
                     height: 65,
@@ -134,22 +126,6 @@ class _CartViewState extends State<CartView> {
           ],
         ),
       ),
-      /*floatingActionButton: FloatingActionButton(
-            backgroundColor: Color(0xffff8a84),
-            onPressed: () {
-              //On newDish chosen, show newDish popUp and process information
-              //The return value is a Dish with name, price (every other fields are defaulted)
-              /*createPopUpNewDish(context).then((onValue) {
-              if (onValue != null) {
-                DishDBService().addDish(onValue);
-              }
-            });*/ //This request the pop-up new dish form
-            },
-            child: Icon(
-              Icons.add,
-              size: 50,
-            ),
-          ),)*/
     );
   }
 }

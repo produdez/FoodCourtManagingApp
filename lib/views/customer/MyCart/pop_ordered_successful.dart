@@ -8,7 +8,7 @@ A form that shows confirmation.
 The function createConfirmationView returns a Future<bool>
 which tells if user confirmed or not
  */
-class FailedMessageView extends StatelessWidget {
+class ConfirmationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -28,10 +28,13 @@ class FailedMessageView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(width: 12),
                   Text(
-                    "Failed",
+                    (CartService.cart.length != 0)
+                        ? "Do you want to order?"
+                        : "Failed to place order",
                     style: TextStyle(
                       color: Color(0xffff6624),
                       fontWeight: FontWeight.bold,
@@ -41,7 +44,9 @@ class FailedMessageView extends StatelessWidget {
                 ],
               ),
               Text(
-                "  Your cart is empty!",
+                (CartService.cart.length != 0)
+                    ? "  Please confirm!"
+                    : "Your cart is empty!",
                 style: TextStyle(
                   color: Color(0xfff85f6a),
                   fontSize: 25,
@@ -51,7 +56,7 @@ class FailedMessageView extends StatelessWidget {
                 height: 5,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   FlatButton(
                     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
@@ -60,7 +65,7 @@ class FailedMessageView extends StatelessWidget {
                     ),
                     color: Colors.white,
                     child: Text(
-                      'BACK',
+                      (CartService.cart.length != 0) ? 'CANCEL' : "BACK",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 20,
@@ -70,6 +75,28 @@ class FailedMessageView extends StatelessWidget {
                       Navigator.of(context).pop(false);
                     },
                   ),
+                  (CartService.cart.length != 0)
+                      ? FlatButton(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          color: Color(0xfff85f6a),
+                          child: Text(
+                            'OK',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          onPressed: () => {
+                            OrderDBService().createOrder(CartService.cart),
+                            Navigator.of(context).pop(true),
+                          },
+                        )
+                      : Container(),
                 ],
               )
             ],
@@ -80,10 +107,10 @@ class FailedMessageView extends StatelessWidget {
   }
 }
 
-Future<bool> createFailMessage(BuildContext context) {
+Future<bool> createConfirmationView(BuildContext context) {
   return showDialog(
       context: context,
       builder: (context) {
-        return FailedMessageView();
+        return ConfirmationView();
       });
 }

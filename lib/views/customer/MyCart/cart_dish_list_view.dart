@@ -23,8 +23,13 @@ class _CartDishListViewState extends State<CartDishListView> {
   @override
   void initState() {
     for (int i = 0; i < CartService.cart.length; i++) {
-      if (CartService.cart[i].vendorID == vendorId)
+      if (CartService.cart[i].vendorID == vendorId) {
+        // CartService.initCart = CartService.cart;
+        // CartService.cart[i].initDetail = CartService.cart[i].detail;
         dishList = CartService.cart[i].detail;
+        // CartService.cart[i].initRev = CartService.cart[i].totalPrice;
+        // CartService.initTotal = CartService.totalPrice;
+      }
     }
     super.initState();
   }

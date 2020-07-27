@@ -9,6 +9,8 @@ class OrderedDish {
   double price;
   int quantity;
   double revenue;
+  int initQuan = 0;
+  double initRev = 0;
   OrderedDish(
       {this.name,
       this.price,
@@ -37,7 +39,9 @@ class Order {
   String vendorName;
   String vendorID;
   double totalPrice;
+  double initRev = 0;
   List<OrderedDish> detail = [];
+  List<OrderedDish> initDetail = [];
   Order({
     this.totalPrice,
     this.id,

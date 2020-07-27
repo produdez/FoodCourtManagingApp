@@ -3,8 +3,6 @@ import 'package:fcfoodcourt/services/order_db_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'pop_order_fail.dart';
-
 /*
 A form that shows confirmation.
 The function createConfirmationView returns a Future<bool>

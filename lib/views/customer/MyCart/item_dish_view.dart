@@ -31,6 +31,14 @@ class _ItemDishViewState extends State<ItemDishView> {
     this.dish = _dish;
   }
   @override
+  void initState() {
+    // TODO: implement initState
+    dish.initQuan = dish.quantity;
+    dish.initRev = dish.revenue;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       height: 130,
@@ -52,78 +60,62 @@ class _ItemDishViewState extends State<ItemDishView> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              InkWell(
-                onTap: () {
-                  Fluttertoast.cancel();
-                  Fluttertoast.showToast(
-                    msg: "ID: ${dish.dishID}",
-                  );
-                },
-                child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 2,
-                        )),
-                    child: GFAvatar(
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: showImage(context)),
-                      shape: GFAvatarShape.square,
-                      radius: 25,
-                      borderRadius: BorderRadius.circular(10),
-                    )),
-              ),
               Container(
                 child: Column(
                   // mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
                         child: Text(
                           dish.name,
                           style: TextStyle(
                               color: Color(0xbb000000),
-                              fontSize: 15.0,
+                              fontSize: 18.0,
                               fontWeight: FontWeight.bold),
                         )),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Container(
-                          child: Text(
-                            "Price: ${dish.revenue}\ Đ",
-                            style: TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ),
+                            margin: EdgeInsets.fromLTRB(5, 5, 0, 0),
+                            child: SizedBox(
+                              height: 20,
+                              width: 100,
+                              child: Text(
+                                "Price: ${dish.revenue}\ Đ",
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            )),
                       ],
                     ),
                     SizedBox(height: 2),
-                    FlatButton(
-                      //TODO: check whether dish is out of stock to fade the button
-                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      color: Color(0xfff85f6a),
-                      child: Text(
-                        'Remove',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
+                    Container(
+                      margin: EdgeInsets.fromLTRB(5, 0, 0, 3),
+                      child: FlatButton(
+                        //TODO: check whether dish is out of stock to fade the button
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
                         ),
-                      ),
-                      onPressed: () => widget.onRemoveSelected(dish),
+                        color: Color(0xfff85f6a),
+                        child: Text(
+                          'Remove',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                        ),
+                        onPressed: () => widget.onRemoveSelected(dish),
 
-                      ///
-                    ),
+                        ///
+                      ),
+                    )
                   ],
                 ),
                 //The price is displayed dynamically by view logic
@@ -156,39 +148,6 @@ class _ItemDishViewState extends State<ItemDishView> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget showImage(BuildContext context) {
-    return FutureBuilder(
-      future: ImageUploadService().getImageFromCloud(context, dish.dishID),
-      builder: (context, snapshot) {
-        return Container(
-            height: MediaQuery.of(context).size.height / 1.25,
-            width: MediaQuery.of(context).size.width / 1.25,
-            child: Image.asset(
-              "assets/bowl.png",
-              fit: BoxFit.fill,
-            ));
-        /*if (dish.hasImage == false ||
-            snapshot.connectionState == ConnectionState.waiting) {
-          return Container(
-              height: MediaQuery.of(context).size.height / 1.25,
-              width: MediaQuery.of(context).size.width / 1.25,
-              child: Image.asset(
-                "assets/bowl.png",
-                fit: BoxFit.fill,
-              ));
-        }
-        if (snapshot.connectionState == ConnectionState.done) //image is found
-          return Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: snapshot.data,
-            //TODO: future builder will keep refreshing while scrolling, find a way to keep data offline and use a stream to watch changes instead.
-          );
-        return Container();*/
-      },
     );
   }
 }

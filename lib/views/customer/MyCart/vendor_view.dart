@@ -48,65 +48,64 @@ class VendorView extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                InkWell(
-                  onTap: () {
-                    Fluttertoast.cancel();
-                    Fluttertoast.showToast(
-                      msg: "ID: ${vendor.id}",
-                    );
-                  },
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: Colors.white,
-                          width: 2,
-                        )),
-                    child: GFAvatar(
-                      backgroundImage: AssetImage(
-                          //TODO: Find a way to store cloud image and load that also
-                          //TODO: And then implement image choosing for vendor profile when newvendor or editvendor
-                          'assets/${vendor.id}.jpg'),
-                      shape: GFAvatarShape.square,
-                      radius: 25,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
+                // InkWell(
+                //   onTap: () {
+                //     Fluttertoast.cancel();
+                //     Fluttertoast.showToast(
+                //       msg: "ID: ${vendor.id}",
+                //     );
+                //   },
+                //   child: Container(
+                //     margin: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                //     decoration: BoxDecoration(
+                //         borderRadius: BorderRadius.circular(10),
+                //         border: Border.all(
+                //           color: Colors.white,
+                //           width: 2,
+                //         )),
+                //     child: GFAvatar(
+                //       backgroundImage: AssetImage(
+                //           //TODO: Find a way to store cloud image and load that also
+                //           //TODO: And then implement image choosing for vendor profile when newvendor or editvendor
+                //           'assets/${vendor.id}.jpg'),
+                //       shape: GFAvatarShape.square,
+                //       radius: 25,
+                //       borderRadius: BorderRadius.circular(10),
+                //     ),
+                //   ),
+                // ),
                 Container(
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                        margin: EdgeInsets.fromLTRB(0, 0, 0, 3),
+                        margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
                         child: Text(
                           vendor.vendorName,
                           style: TextStyle(
                               color: Color(0xbb000000),
-                              fontSize: 15.0,
+                              fontSize: 10.0,
                               fontWeight: FontWeight.bold),
                         )),
                     Container(
+                        margin: EdgeInsets.fromLTRB(5, 0, 0, 5),
                         child: Row(children: <Widget>[
-                      Container(
-                          child: Text(
-                        'Total: ',
-                        style: TextStyle(
-                            fontSize: 13.0,
-                            color: Colors.black54,
-                            fontWeight: FontWeight.w500),
-                      )),
-                      Container(
-                          child: Text(
-                        vendor.totalPrice.toString(),
-                        style: TextStyle(
-                            color: Colors.green[500],
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.w600),
-                      )),
-                    ]))
+                          Text(
+                            'Total: ',
+                            style: TextStyle(
+                                fontSize: 8.0,
+                                color: Colors.black54,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            vendor.totalPrice.toString(),
+                            style: TextStyle(
+                                color: Colors.green[500],
+                                fontSize: 8.0,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ]))
                     //The price is displayed dynamically by view logic
                     // ViewLogic.displayPrice(context, vendor)
                   ],

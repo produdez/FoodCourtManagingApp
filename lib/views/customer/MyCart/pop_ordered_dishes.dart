@@ -1,3 +1,4 @@
+import 'package:fcfoodcourt/services/cart_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -53,6 +54,23 @@ class OrderedDishesPopUp extends StatelessWidget {
                     ),
                     onPressed: () {
                       Navigator.of(context).pop(false);
+                      for (int i = 0; i < CartService.cart.length; i++) {
+                        if (CartService.cart[i].vendorID == vendorId) {
+                          // for (int j = 0;
+                          //     j < CartService.cart[i].detail.length;
+                          //     j++) {
+                          //   CartService.cart[i].detail[j].quantity =
+                          //       CartService.cart[i].detail[j].initQuan;
+                          //   CartService.cart[i].detail[j].revenue =
+                          //       CartService.cart[i].detail[j].initRev;
+                          //   CartService.cart[i].totalPrice =
+                          //       CartService.cart[i].initRev;
+                          // }
+                          CartService.cart =
+                              List.from(CartService.initCart); /////////////////
+                          return;
+                        }
+                      }
                     },
                   ),
                   FlatButton(

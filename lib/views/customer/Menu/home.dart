@@ -20,9 +20,6 @@ It does holds the add Dish button
 class CustomerView extends StatefulWidget {
   final User userData; // userData passed down by the userRouter
   CustomerView({Key key, this.userData}) : super(key: key);
-  String vendorId;
-  String vendorName;
-
   @override
   _MenuViewState createState() => _MenuViewState();
 }
@@ -37,7 +34,6 @@ class _MenuViewState extends State<CustomerView> {
     currentIndex = 0;
     children.add(VendorListView(
       onVendorSelected: (String id, String name) {
-        print(name);
         setState(() {
           currentIndex = 1;
           CustomerDishView.vendorId = id;
@@ -122,7 +118,8 @@ class _MenuViewState extends State<CustomerView> {
                 SizedBox(
                   height: 10,
                 ),
-                Expanded(child: children[currentIndex]),
+                Expanded(
+                    child: children[currentIndex]), ////////////////// important
               ],
             ),
           ),
