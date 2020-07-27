@@ -130,7 +130,7 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
               Text("5m VND"),
             ),
             DataCell(
-              Text("total"),
+              Text("${report.sale * 0.04 + 5000000}"),
             ),
           ]))
         .toList()
@@ -259,8 +259,6 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
               ],
               controller: _tabController,
             )
-          //],
-          //)
       );
   }
 

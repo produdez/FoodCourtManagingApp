@@ -56,14 +56,14 @@ class Order{
 class MonthlyVendorReport{
   double sale;
   String month;
-  //String name;
+  String name;
   String id;
-  MonthlyVendorReport({this.sale});
+  MonthlyVendorReport({this.sale, this.name});
   factory MonthlyVendorReport.fromFireBase(DocumentSnapshot doc){
     Map data = doc.data;
     return MonthlyVendorReport(
       sale: double.tryParse(data['sale']),
-      //month: data['month']
+      name: data['name']
     );
   }
 }
