@@ -20,6 +20,20 @@ class OrderDBService {
     }).toList();
   }
 
+  List<String> _orderIdListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents
+        .where((DocumentSnapshot documentSnapshot) =>
+            documentSnapshot.data['customerID'] == customerID &&
+            documentSnapshot.data['inform'] == true)
+        .map((doc) {
+      return doc.data['vendorID'];
+    });
+  }
+
+  Stream<List<String>> get orderId {
+    return orderCollection.snapshots().map(_orderIdListFromSnapshot);
+  }
+
   Stream<List<Order>> get orders {
     return orderCollection.snapshots().map(_orderListFromSnapshot);
   }
@@ -35,7 +49,7 @@ class OrderDBService {
   }
 
   Future<List<OrderedDish>> _orderedDishesFromSnapshot(String orderId) async {
-    print(orderId);
+    //print(orderId);
     List<OrderedDish> orderedDish;
     int i;
     await orderCollection.getDocuments().then((snapshot) async {

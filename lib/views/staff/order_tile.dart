@@ -33,9 +33,9 @@ class OrderTile extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: -20.0,
+            left: 20.0,
             bottom: 0.0,
-            right: 10.0,
+            right: 0.0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[

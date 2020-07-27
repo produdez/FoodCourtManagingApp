@@ -23,6 +23,7 @@ class _OrderPageState extends State<OrderPage> {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Color(0xffff8a84),
           title: Text(
             "ORDER LIST",
