@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:fcfoodcourt/models/vendor.dart';
 //import 'package:fcfoodcourt/services/vendor_db_service.dart';
 import 'package:fcfoodcourt/views/customer/Menu/vendor_view.dart';
@@ -9,6 +11,8 @@ import 'package:provider/provider.dart';
  */
 
 class VendorListView extends StatefulWidget {
+  final Function(String, String) onVendorSelected;
+  const VendorListView({Key key, this.onVendorSelected}) : super(key: key);
   @override
   _VendorListViewState createState() => _VendorListViewState();
 }
@@ -22,6 +26,7 @@ class _VendorListViewState extends State<VendorListView> {
       itemBuilder: (context, index) {
         return VendorView(
           vendor: vendorList[index],
+          onVendorSelected: widget.onVendorSelected,
           /*onRemoveSelected: () {
             //Remove chosen, ask user for confirmation and remove in DB if confirmed
             createConfirmationView(context).then((onValue) {

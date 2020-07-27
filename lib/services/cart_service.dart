@@ -1,16 +1,20 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/models/order.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
-import 'package:fcfoodcourt/services/dish_db_service.dart';
+import 'package:fcfoodcourt/models/user.dart';
+
 class CartService {
   //Collection reference for DishDB
   final CollectionReference dishDB = Firestore.instance.collection("orderDB");
 
   //the dish db only response the correct menu according to the user's id (vendor's id)
   //this field is static and set when we first go to home page (menu,... in this case)
+  static List<Order> cart = [];
+  static List<Order> initCart = [];
   static String orderID;
+  static double totalPrice = 0;
+  static double initTotal = 0;
 
   //add dish as a new document to db, id is randomize by Firebase
   /*Future addOrder(Order order) async {
@@ -20,77 +24,91 @@ class CartService {
       "totalPrice": order.totalPrice,
     });
   }*/
-
-  Future addDish(Dish dish) async {
-    DocumentReference _dishRef = dishDB.document();
-    ImageUploadService().uploadPic(dish.imageFile,_dishRef.documentID);
-    return await _dishRef.setData({
-      "name": dish.name,
-      "id": _dishRef.documentID,
-      "originPrice": dish.originPrice,
-      "realPrice": dish.realPrice,
-      "discountPercentage": dish.discountPercentage,
-      "hasImage" : dish.hasImage,
-      "isOutOfOrder": dish.isOutOfOrder,
-    });
+  void addFromCart(OrderedDish dish) {
+    dish.quantity++;
+    dish.revenue += dish.price;
+    for (int i = 0; i < cart.length; i++) {
+      if (cart[i].vendorID == dish.vendorID) {
+        cart[i].totalPrice += dish.price;
+      }
+    }
+    totalPrice += dish.price;
   }
 
-  //update dish, changing name, original price and reset it's discount state
-  /*Future editDish(Dish dish, Dish newDish) async {
-    DocumentReference _dishRef = dishDB.document(dish.id);
-    ImageUploadService().uploadPic(newDish.imageFile,_dishRef.documentID);
-    return await _dishRef.updateData({
-      "name": newDish.name,
-      "originPrice": newDish.originPrice,
-      "realPrice": newDish.originPrice, //reset on edit
-      "discountPercentage": 0.0, //reset on edit
-      "hasImage" : dish.hasImage==true?true:newDish.hasImage==true?true:false,
-      "isOutOfOrder" : false, // reset on edit
-      //no update vendor ID
-    });
-  }*/
-
-  //update discount prices
-  /*Future discountDish(Dish dish, Dish newDish) async {
-    DocumentReference _dishRef = dishDB.document(dish.id);
-    return await _dishRef.updateData({
-      "realPrice": newDish.realPrice,
-      "discountPercentage": newDish.discountPercentage,
-    });
-  }*/
-
-  //remove document from database collection
-  Future removeDish(Dish dish) async {
-    DocumentReference _orderRef = dishDB.document(dish.id);
-    return await _orderRef.delete();
+  void addDish(Dish dish, String vendorName) {
+    for (int i = 0; i < cart.length; i++) {
+      if (cart[i].vendorID == dish.vendorID) {
+        for (int j = 0; j < cart[i].detail.length; j++) {
+          if (cart[i].detail[j].dishID == dish.id) {
+            cart[i].detail[j].quantity++;
+            cart[i].detail[j].revenue += dish.realPrice;
+            cart[i].totalPrice += dish.realPrice;
+            totalPrice += dish.realPrice;
+            return;
+          }
+        }
+        OrderedDish addedDish = OrderedDish(
+            name: dish.name,
+            price: dish.realPrice,
+            quantity: 1,
+            revenue: dish.realPrice,
+            dishID: dish.id,
+            vendorID: dish.vendorID);
+        cart[i].detail.add(addedDish);
+        cart[i].totalPrice += dish.realPrice;
+        totalPrice += dish.realPrice;
+        return;
+      }
+    }
+    Order newOrder = Order(
+        totalPrice: dish.realPrice,
+        vendorID: dish.vendorID,
+        vendorName: vendorName);
+    OrderedDish addedDish = OrderedDish(
+        name: dish.name,
+        price: dish.realPrice,
+        quantity: 1,
+        revenue: dish.realPrice,
+        dishID: dish.id,
+        vendorID: dish.vendorID);
+    newOrder.detail.add(addedDish);
+    cart.add(newOrder);
+    totalPrice += dish.realPrice;
   }
 
-  //set Dish out of order
-  /*Future setOutOfOrder(Dish dish) async {
-    DocumentReference _dishRef = dishDB.document(dish.id);
-    return await _dishRef.updateData({
-      "isOutOfOrder" : dish.isOutOfOrder, //this data is set in the dish above
-      //no update vendor ID
-    });
-  }*/
-
-  Stream<List<Dish>> get allOrderDishes {
-    return dishDB.snapshots().map(_dishListFromSnapshot);
-  }
-  //get DishDB snapshot stream, this stream will auto-update if DB have change and notify any listener
-  List<Dish> _dishListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents
-        .map((doc) {
-      return Dish(
-        doc.data['name'] ?? '', doc.data['originPrice'] ?? 0.0,
-        discountPercentage: doc.data['discountPercentage'] ?? 0.0,
-        realPrice: doc.data['realPrice'] ?? 0.0,
-        id: doc.data['id'] ?? '',
-        hasImage: doc.data['hasImage'] ?? false,
-        isOutOfOrder: doc.data ['isOutOfOrder'] ?? false,
-      );
-    }).toList();
+  void removeDish(OrderedDish dish) {
+    for (int j = 0; j < cart.length; j++) {
+      if (cart[j].vendorID == dish.vendorID) {
+        for (int i = 0; i < cart[j].detail.length; i++) {
+          if (cart[j].detail[i].dishID == dish.dishID) {
+            totalPrice -= dish.revenue;
+            cart[j].totalPrice -= dish.revenue;
+            cart[j].detail.removeAt(i);
+            if (cart[j].totalPrice == 0) cart.removeAt(j);
+            return;
+          }
+        }
+      }
+    }
   }
 
+  void reduceDish(OrderedDish dish) {
+    for (int j = 0; j < cart.length; j++) {
+      if (cart[j].vendorID == dish.vendorID) {
+        cart[j].totalPrice -= dish.price;
+        totalPrice -= dish.price;
+        dish.quantity--;
+        dish.revenue -= dish.price;
+        // for (int i = 0; i < order.detail.length; i++) {
+        //   if (order.detail[i].dishID == dish.dishID) {
+
+        //     order.detail[i].revenue -= dish.price;
+        //     order.totalPrice -= dish.price;
+        //     totalPrice -= dish.price;
+        //     return;
+        //   }
+        // }
+      }
+    }
+  }
 }
-

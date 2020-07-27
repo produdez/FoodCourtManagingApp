@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcfoodcourt/models/dish.dart';
+import 'package:fcfoodcourt/models/user.dart';
+import 'package:fcfoodcourt/services/view_logic_helper.dart';
 import 'package:fcfoodcourt/views/customer/Search/search_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fcfoodcourt/views/customer/Menu/customer_dish_list_view.dart';
+import 'package:fcfoodcourt/views/customer/Menu/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fcfoodcourt/views/customer/Menu/dishes_of_vendor.dart';
 
 bool firstFilter = false;
 bool secondFilter = false;
@@ -15,7 +19,7 @@ String vendorID = "";
 class SearchService extends SearchDelegate<String> {
   CollectionReference dishDB = Firestore.instance.collection("dishDB");
   CollectionReference vendorDB = Firestore.instance.collection("vendorDB");
-
+  String vendorName = "";
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -41,7 +45,7 @@ class SearchService extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    if (vendorID == "") {
+    if (currentIndex == 0) {
       if (query.isEmpty == true) {
         final suggestionList = SearchHelper.history.reversed.toSet().toList();
         return ListView.builder(
@@ -181,6 +185,11 @@ class SearchService extends SearchDelegate<String> {
         });
       }
     } else {
+      for (int i = 0; i < SearchHelper.searchHelper.length; i++) {
+        if (vendorID == SearchHelper.searchHelper[i].vendorID) {
+          vendorName = SearchHelper.searchHelper[i].vendorName;
+        }
+      }
       return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
         return StreamProvider<List<Dish>>.value(
@@ -295,7 +304,7 @@ class SearchService extends SearchDelegate<String> {
                       SizedBox(
                         height: 10,
                       ),
-                      Expanded(child: CustomerDishListView()),
+                      Expanded(child: CustomerDishListView(vendorName)),
                     ],
                   ),
                 )));
@@ -305,7 +314,7 @@ class SearchService extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    if (vendorID == "") {
+    if (currentIndex == 0) {
       if (query.isEmpty == true) {
         final suggestionList = SearchHelper.history.reversed.toSet().toList();
         return ListView.builder(
@@ -446,6 +455,11 @@ class SearchService extends SearchDelegate<String> {
         });
       }
     } else {
+      for (int i = 0; i < SearchHelper.searchHelper.length; i++) {
+        if (vendorID == SearchHelper.searchHelper[i].vendorID) {
+          vendorName = SearchHelper.searchHelper[i].vendorName;
+        }
+      }
       return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
         return StreamProvider<List<Dish>>.value(
@@ -559,7 +573,7 @@ class SearchService extends SearchDelegate<String> {
                       SizedBox(
                         height: 10,
                       ),
-                      Expanded(child: CustomerDishListView()),
+                      Expanded(child: CustomerDishListView(vendorName)),
                     ],
                   ),
                 )));
@@ -750,21 +764,30 @@ class SearchService extends SearchDelegate<String> {
 class SearchHelper {
   String vendorName;
   String vendorID;
+  static String cusID;
   SearchHelper(this.vendorID, this.vendorName);
   static List<SearchHelper> searchHelper = [];
   static List<String> history = [];
 
-  //static Future<String> setListString(history)
+  static Future<List<String>> getHistory() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList(cusID);
+  }
+
+  static Future<bool> setHistory() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setStringList(cusID, history);
+  }
 }
 
-setListString(List<String> list, String cusID) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  List<String> listt;
-  await prefs.setStringList(cusID, list);
-  listt = prefs.getStringList(cusID);
-  return listt;
-}
+// setListString(List<String> list, String cusID) async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   List<String> listt;
+//   await prefs.setStringList(cusID, list);
+//   listt = prefs.getStringList(cusID);
+//   return listt;
+// }
 
-getListString(String cusID) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-}
+// getListString(String cusID) async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+// }

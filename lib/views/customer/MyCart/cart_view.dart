@@ -1,7 +1,9 @@
 import 'package:fcfoodcourt/models/order.dart';
+import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/services/dish_db_service.dart';
 import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/views/customer/Menu/home.dart';
+import 'package:fcfoodcourt/views/customer/MyCart/pop_order.dart';
 
 //import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_dish_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fcfoodcourt/services/cart_service.dart';
 import 'cart_dish_list_view.dart';
+import 'vendor_list_view.dart';
 
 /*
 This is the menu view that holds the frame for the whole menu
@@ -20,105 +23,109 @@ class CartView extends StatefulWidget {
 }
 
 class _CartViewState extends State<CartView> {
-  //@override
-  /*void initState() {
-    // TODO:random populate database only when needed
-    //VendorDBService().populateDatabaseRandom();
+  @override
+  void initState() {
+    CartService.initCart = CartService.cart; /////////////////////////
     super.initState();
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<List<Dish>>.value(
-        value: CartService().allOrderDishes,
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            backgroundColor: Color(0xffff8a84),
-            title: Text(
-              "FOOD COURT",
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+    var totalPrice = CartService.totalPrice;
+    return //StreamProvider<List<Dish>>.value(
+        //value: CartService().allOrderDishes,
+        //child:
+        Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Color(0xffff8a84),
+        title: Text(
+          "MY CART",
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        actions: <Widget>[
+          FlatButton.icon(
+            icon: Icon(Icons.person),
+            label: Text('logout'),
+            onPressed: () async {
+              await AuthenticationService().signOut();
+            },
+          )
+        ],
+      ),
+      body: //tabs[currentIdx],
+          Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            SizedBox(
+              height: 10,
             ),
-            centerTitle: true,
-          ),
-          bottomNavigationBar: Container(
-            height: 75,
-            decoration: BoxDecoration(
-                border: Border(
-              top: BorderSide(width: 4, color: Colors.black),
-            )),
-            child: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              iconSize: 25,
-              backgroundColor: Color(0xffff8a84),
-              selectedFontSize: 20,
-              unselectedFontSize: 20,
-              currentIndex: 1, //
-              selectedIconTheme: IconThemeData(color: Colors.white, size: 25),
-              items: [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.restaurant),
-                    title: Text(
-                      "Menu",
-                    )),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_cart),
-                  title: Text("MyCart"),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  title: Text("Profile"),
-                ),
-              ],
-              onTap: (idx) {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CustomerView()));
-                /* setState(() {
-                  currentIdx = idx;
-                });*/
+            Expanded(child: VendorListView(
+              onChangeConfirm: () {
+                setState(() {});
               },
-            ),
-          ),
-          body: //tabs[currentIdx],
-              Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  // try to centre the search box without relying much on it width
-                  children: <Widget>[
-                    SizedBox(
-                      width: 15,
+            )),
+            Row(mainAxisAlignment: MainAxisAlignment.center,
+                // try to centre the search box without relying much on it width
+                children: <Widget>[
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    height: 65,
+                    width: 280, //400
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xfff85f6a), width: 4),
                     ),
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      height: 50,
-                      width: 320, //400
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xffff8a84), width: 4),
-                      ),
 
-                      child: TextField(
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.all(10),
-                            hintText: '   Search....'),
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                            child: Text(totalPrice.toString(),
+                                style: TextStyle(
+                                  fontSize: 20,
+                                )))
+                      ],
                     ),
-                    Icon(Icons.search, size: 50, color: Color(0xffff8a84)),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Expanded(child: CartDishListView()),
-              ],
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    height: 65,
+                    width: 80, //400
+                    decoration: BoxDecoration(
+                      color: Color(0xfff85f6a),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        GestureDetector(
+                            onTap: () {
+                              createConfirmationView(context)
+                                  .then((onValue) {});
+                            },
+                            child: Container(
+                                child: Text('ORDER',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white))))
+                      ],
+                    ),
+                  )
+                ]),
+            SizedBox(
+              height: 10,
             ),
-          ),
-        ));
+          ],
+        ),
+      ),
+    );
   }
 }

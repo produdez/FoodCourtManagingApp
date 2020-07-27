@@ -15,11 +15,9 @@ it's functionality.
  */
 class ItemDishView extends StatelessWidget {
   final Dish dish;
+  final String vendorName;
 
-  const ItemDishView({
-    Key key,
-    this.dish,
-  }) : super(key: key);
+  const ItemDishView({Key key, this.dish, this.vendorName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +113,7 @@ class ItemDishView extends StatelessWidget {
                                   ),
                             onPressed: () {
                               if (dish.isOutOfOrder == false) {
-                                CartService().addDish(dish);
+                                CartService().addDish(dish, vendorName);
                               } else {
                                 Fluttertoast.cancel();
                                 Fluttertoast.showToast(

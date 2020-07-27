@@ -1,7 +1,8 @@
 import 'package:fcfoodcourt/models/vendor.dart';
 import 'package:fcfoodcourt/services/dish_db_service.dart';
 import 'package:fcfoodcourt/models/dish.dart';
-import 'package:fcfoodcourt/views/customer/MyCart/cart_view.dart';
+import 'package:fcfoodcourt/views/customer/Menu/home.dart';
+import 'package:fcfoodcourt/services/authentication_service.dart';
 
 //import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_dish_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,24 +23,21 @@ It does holds the add Dish button
 // bool thirdFilter = false;
 
 class CustomerDishView extends StatefulWidget {
-  final String vendorId;
-  final String name;
-  //double filter;
-  const CustomerDishView(this.vendorId, this.name);
+  static String vendorId = "";
+  static String vendorName = "";
+  //const CustomerDishView(this.vendorId, this.vendorName);
   @override
-  _CustomerDishViewState createState() =>
-      _CustomerDishViewState(vendorId, name);
+  _MenuViewState createState() => _MenuViewState(vendorId, vendorName);
 }
 
-class _CustomerDishViewState extends State<CustomerDishView> {
+class _MenuViewState extends State<CustomerDishView> {
   String vendorId;
-  String name;
-
-  _CustomerDishViewState(this.vendorId, this.name);
-
+  String vendorName;
+  _MenuViewState(this.vendorId, this.vendorName);
   @override
   void initState() {
     DishDBService.vendorID = vendorId;
+    setState(() {});
     super.initState();
   }
 
@@ -50,55 +48,31 @@ class _CustomerDishViewState extends State<CustomerDishView> {
         //value: FilterService().filterByPrice,
         child: WillPopScope(
           onWillPop: () async {
+            vendorName = "";
             return true;
           },
           child: Scaffold(
             backgroundColor: Colors.white,
-            appBar: AppBar(
-              backgroundColor: Color(0xffff8a84),
-              title: Text(
-                name,
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-              ),
-              centerTitle: true,
-            ),
-            bottomNavigationBar: Container(
-              height: 75,
-              decoration: BoxDecoration(
-                  border: Border(
-                top: BorderSide(width: 4, color: Colors.black),
-              )),
-              child: BottomNavigationBar(
-                  type: BottomNavigationBarType.fixed,
-                  iconSize: 25,
-                  backgroundColor: Color(0xffff8a84),
-                  selectedFontSize: 20,
-                  unselectedFontSize: 20,
-                  selectedItemColor: Colors.white,
-                  currentIndex: 0,
-                  selectedIconTheme:
-                      IconThemeData(color: Colors.white, size: 25),
-                  items: [
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.restaurant),
-                        title: Text(
-                          "Menu",
-                        )),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.shopping_cart),
-                      title: Text("MyCart"),
+            appBar: (currentIndex == 0)
+                ? AppBar(
+                    backgroundColor: Color(0xffff8a84),
+                    title: Text(
+                      vendorName,
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     ),
-                    BottomNavigationBarItem(
-                      icon: Icon(Icons.person),
-                      title: Text("Profile"),
-                    ),
-                  ],
-                  onTap: (idx) {
-                    if (idx == 1)
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => CartView()));
-                  }),
-            ),
+                    centerTitle: true,
+                    actions: <Widget>[
+                      FlatButton.icon(
+                        icon: Icon(Icons.person),
+                        label: Text('logout'),
+                        onPressed: () async {
+                          await AuthenticationService().signOut();
+                        },
+                      )
+                    ],
+                  )
+                : null,
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -112,6 +86,7 @@ class _CustomerDishViewState extends State<CustomerDishView> {
                       GestureDetector(
                         onTap: () {
                           vendorID = vendorId;
+                          SearchService().passToSearchHelper();
                           setState(() {});
                           showSearch(
                                   context: context, delegate: SearchService())
@@ -238,7 +213,7 @@ class _CustomerDishViewState extends State<CustomerDishView> {
                   SizedBox(
                     height: 10,
                   ),
-                  Expanded(child: CustomerDishListView()),
+                  Expanded(child: CustomerDishListView(vendorName)),
                 ],
               ),
             ),

@@ -48,12 +48,12 @@ class SearchItemView extends StatelessWidget {
         onTap: () async {
           String name =
               await VendorDBService().nameOfVendor(dish.vendorID, vendorName);
+          CustomerDishView.vendorId = dish.vendorID;
+          CustomerDishView.vendorName = name;
           SearchHelper.history.add(dish.name);
           SearchHelper.history.toSet().toList();
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => CustomerDishView(dish.vendorID, name)));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => CustomerDishView()));
         },
         child: FittedBox(
           alignment: Alignment.centerLeft,
@@ -136,9 +136,11 @@ class SearchItemView extends StatelessWidget {
                                         fontSize: 9.3,
                                       ),
                                     ),
-                              onPressed: () {
+                              onPressed: () async {
                                 if (dish.isOutOfOrder == false) {
-                                  CartService().addDish(dish);
+                                  String name = await VendorDBService()
+                                      .nameOfVendor(dish.vendorID, vendorName);
+                                  CartService().addDish(dish, name);
                                   SearchHelper.history.add(dish.name);
                                   SearchHelper.history.toSet().toList();
                                 } else {
