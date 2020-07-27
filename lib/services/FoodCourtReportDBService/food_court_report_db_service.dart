@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcfoodcourt/models/vendor_report.dart';
 import 'package:intl/intl.dart';
-import 'package:fcfoodcourt/models/food_court_report.dart';
 
 class FoodCourtReportDBService{
   static String foodCourtId;
@@ -11,6 +10,7 @@ class FoodCourtReportDBService{
   String formattedMonth = DateFormat('MMyyyy').format(_dateTime);
   CollectionReference vendorReportDB = Firestore.instance.collection("vendorReportDB");
   CollectionReference foodCourtReportDB = Firestore.instance.collection("foodCourtReportDB");
+  CollectionReference vendorDB = Firestore.instance.collection("VendorDB");
   Future<List<MonthlyVendorReport>> checkAvailableMonthlyReport(String month)async{
     //monthlyReportList.clear();
     List<MonthlyVendorReport> foodCourtReport;
@@ -51,12 +51,17 @@ class FoodCourtReportDBService{
       "id": "$foodCourtId$month"
     });
     await vendorReportDB.getDocuments().then((querySnapshot)async{
+      String vendorName;
       var docs = querySnapshot.documents;
       for(DocumentSnapshot doc in docs){
         if(doc.data['month'] != null
         && doc.documentID.substring(doc.documentID.length - 6) == month){
+          await vendorDB.document("${doc.data['vendorId']}").get().then((snapshot){
+            vendorName = snapshot.data['name'];
+          });
           await foodCourtReportDB.document("$foodCourtId$month").collection("Vendors")
           .document(doc.data['vendorId'].toString()).setData({
+            "name": vendorName, 
             "sale": "${doc.data['sale']}"
           });
         }
