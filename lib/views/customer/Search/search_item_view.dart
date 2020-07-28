@@ -51,7 +51,7 @@ class SearchItemView extends StatelessWidget {
               await VendorDBService().nameOfVendor(dish.vendorID, vendorName);
           CustomerDishView.vendorId = dish.vendorID;
           CustomerDishView.vendorName = name;
-          SearchHelper.history.add(dish.name);
+          SearchHelper.history.add(dish);
           SearchHelper.history.toSet().toList();
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => CustomerDishView()));
@@ -142,7 +142,7 @@ class SearchItemView extends StatelessWidget {
                                   String name = await VendorDBService()
                                       .nameOfVendor(dish.vendorID, vendorName);
                                   CartService().addDish(dish, name);
-                                  SearchHelper.history.add(dish.name);
+                                  SearchHelper.history.add(dish);
                                   SearchHelper.history.toSet().toList();
                                 } else {
                                   Fluttertoast.cancel();

@@ -8,8 +8,8 @@ import 'package:fcfoodcourt/views/customer/Menu/vendor_list_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:fcfoodcourt/services/view_logic_helper.dart';
-import '../MyCart/cart_view.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/views/customer/Menu/dishes_of_vendor.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -62,6 +62,7 @@ class _CustomerViewState extends State<CustomerView> {
                         IconButton(
                             icon: Icon(Icons.arrow_back),
                             onPressed: () {
+                              //inVendor = false;
                               setState(() {
                                 CustomerDishView.vendorName = "";
                                 currentIndex = 0;
@@ -75,22 +76,29 @@ class _CustomerViewState extends State<CustomerView> {
                   ? Text(
                       "FOOD COURT",
                       style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                     )
                   : Text(
                       CustomerDishView.vendorName,
                       style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                     ),
               centerTitle: true,
               actions: <Widget>[
                 FlatButton.icon(
-                  icon: Icon(Icons.person),
-                  label: Text('logout'),
-                  onPressed: () async {
-                    await AuthenticationService().signOut();
-                  },
-                )
+                    icon: Icon(
+                      Icons.exit_to_app,
+                      size: 30,
+                    ),
+                    label: Text(
+                      "",
+                    ),
+                    onPressed: () async {
+                      await AuthenticationService().signOut();
+                    },
+                    onLongPress: () {
+                      Fluttertoast.showToast(msg: "Logout");
+                    })
               ],
             ),
             body: WillPopScope(
@@ -107,13 +115,13 @@ class _CustomerViewState extends State<CustomerView> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 GestureDetector(
-                                  onTap: () {
+                                  onTap: () async {
                                     if (currentIndex == 0) {
                                       vendorID = "";
                                     } else {
                                       vendorID = CustomerDishView.vendorId;
                                     }
-                                    SearchService().passToSearchHelper();
+                                    passToSearchHelper();
                                     setState(() {});
                                     showSearch(
                                             context: context,
@@ -177,6 +185,7 @@ class _CustomerViewState extends State<CustomerView> {
       return Future.value(true);
     } else {
       setState(() {
+        //inVendor = false;
         CustomerDishView.vendorName = "";
         currentIndex = 0;
       });

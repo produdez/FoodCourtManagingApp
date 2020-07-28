@@ -21,6 +21,7 @@ It does holds the add Dish button
 // bool firstFilter = false;
 // bool secondFilter = false;
 // bool thirdFilter = false;
+//bool inVendor = false;
 
 class CustomerDishView extends StatefulWidget {
   static String vendorId = "";
@@ -49,6 +50,7 @@ class _MenuViewState extends State<CustomerDishView> {
         child: WillPopScope(
           onWillPop: () async {
             vendorName = "";
+            //inVendor = false;
             return true;
           },
           child: Scaffold(
@@ -85,11 +87,12 @@ class _MenuViewState extends State<CustomerDishView> {
                     children: <Widget>[
                       GestureDetector(
                         onTap: () {
+                          //inVendor = true;
                           vendorID = vendorId;
-                          SearchService().passToSearchHelper();
+                          passToSearchHelper();
                           setState(() {});
                           showSearch(
-                                  context: context, delegate: SearchService())
+                                  context: context, delegate: SearchInVendor())
                               .then((filter) {
                             setState(() {});
                           });
