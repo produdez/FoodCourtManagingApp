@@ -119,7 +119,9 @@ class _CustomerViewState extends State<CustomerView> {
                                             context: context,
                                             delegate: SearchService())
                                         .then((filter) {
-                                      setState(() {});
+                                      setState(() {
+                                        CustomerDishView.vendorName = "";
+                                      });
                                     });
                                   },
                                   child: Container(
