@@ -1,30 +1,31 @@
-  import 'package:cloud_firestore/cloud_firestore.dart';
-  import 'package:fcfoodcourt/models/vendor.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcfoodcourt/models/vendor.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'image_upload_service.dart';
-  
-class VendorDBService{
 
-  final CollectionReference vendorDB = Firestore.instance.collection("vendorDB");
+class VendorDBService {
+  final CollectionReference vendorDB =
+      Firestore.instance.collection("vendorDB");
 
   Future addVendor(Vendor vendor) async {
     DocumentReference _vendorRef = vendorDB.document();
-    ImageUploadService().uploadPic(vendor.imageFile,_vendorRef);
+    ImageUploadService().uploadPic(vendor.imageFile, _vendorRef);
     return await _vendorRef.setData({
       "id": _vendorRef.documentID,
       "name": vendor.name,
       "phone": vendor.phone,
-      "hasImage" : vendor.hasImage,
+      "hasImage": vendor.hasImage,
     });
   }
+
   Future editVendor(Vendor vendor, Vendor newVendor) async {
     DocumentReference _staffRef = vendorDB.document(vendor.id);
-    ImageUploadService().uploadPic(newVendor.imageFile,_staffRef);
+    ImageUploadService().uploadPic(newVendor.imageFile, _staffRef);
     return await _staffRef.updateData({
       "name": newVendor.name,
-      "phone":newVendor.phone,
-      "hasImage" : newVendor.hasImage ? newVendor.hasImage : vendor.hasImage,
+      "phone": newVendor.phone,
+      "hasImage": newVendor.hasImage ? newVendor.hasImage : vendor.hasImage,
       //no update vendor ID
     });
   }
@@ -35,7 +36,7 @@ class VendorDBService{
     return await _staffRef.delete();
   }
 
-  void callVendor(Vendor vendor){
+  void callVendor(Vendor vendor) {
     launch("tel://${vendor.phone}");
     print('Calling: ${vendor.phone}');
   }
@@ -59,8 +60,7 @@ class VendorDBService{
 
   //Mapping a database snapshot into a vendorList
   List<Vendor> _vendorListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents
-        .map((doc) {
+    return snapshot.documents.map((doc) {
       return Vendor(
         doc.data['name'] ?? '',
         doc.data['phone'] ?? '',
@@ -71,12 +71,29 @@ class VendorDBService{
     }).toList();
   }
 
+  Future<String> nameOfVendor(String vendorID, String vendorName) async {
+    await vendorDB.getDocuments().then((snapshot) async {
+      for (int i = 0; i < snapshot.documents.length; i++) {
+        if (snapshot.documents[i].data['id'] == vendorID) {
+          vendorName = snapshot.documents[i].data['name'];
+        }
+      }
+    });
+    print('hi $vendorName');
+    return vendorName.toString();
+  }
+
+  void vname(String vendorID, String vname) async {
+    vname = await nameOfVendor(vendorID, vname);
+    print('hello $vname');
+  }
+
   Future<bool> canCreateVendorAccount(String id) async {
     bool available = false;
     try {
       DocumentSnapshot staffSnapshot = await vendorDB.document(id).get();
-      if(staffSnapshot.exists){
-        bool hasAccount = staffSnapshot.data['hasAccount']??false;
+      if (staffSnapshot.exists) {
+        bool hasAccount = staffSnapshot.data['hasAccount'] ?? false;
         available = !hasAccount;
       }
       return available;
@@ -89,15 +106,18 @@ class VendorDBService{
   Future linkAccount(String vendorID, String userId) async {
     DocumentReference _vendorRef = vendorDB.document(vendorID);
     return await _vendorRef.updateData({
-      'hasAccount' : true,
-      'accountID' : userId,
+      'hasAccount': true,
+      'accountID': userId,
       //no update vendor ID
     });
   }
 
-  Future<Vendor> vendorInfoFromAccountId(String accountID) async{
+  Future<Vendor> vendorInfoFromAccountId(String accountID) async {
     Vendor vendorInfo;
-    await vendorDB.where("accountID", isEqualTo: accountID).getDocuments().then((value){
+    await vendorDB
+        .where("accountID", isEqualTo: accountID)
+        .getDocuments()
+        .then((value) {
       value.documents.forEach((doc) {
         vendorInfo = Vendor(
           doc.data['name'] ?? '',
