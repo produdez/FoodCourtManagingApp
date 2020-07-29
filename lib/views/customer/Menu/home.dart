@@ -72,7 +72,7 @@ class _CustomerViewState extends State<CustomerView> {
                     )
                   : SizedBox(),
               backgroundColor: Color(0xffff8a84),
-              title: CustomerDishView.vendorName.isEmpty
+              title: (currentIndex == 0)
                   ? Text(
                       "FOOD COURT",
                       style:

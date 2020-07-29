@@ -66,8 +66,11 @@ class _MenuViewState extends State<CustomerDishView> {
                     centerTitle: true,
                     actions: <Widget>[
                       FlatButton.icon(
-                        icon: Icon(Icons.person),
-                        label: Text('logout'),
+                        icon: Icon(
+                          Icons.exit_to_app,
+                          size: 30,
+                        ),
+                        label: Text(''),
                         onPressed: () async {
                           await AuthenticationService().signOut();
                         },

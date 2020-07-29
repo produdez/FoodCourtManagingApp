@@ -53,11 +53,11 @@ class SearchService extends SearchDelegate<String> {
       return ListView.builder(
         itemBuilder: (context, index) => ListTile(
           onTap: () async {
-            query = suggestionList[index].name;
+            query = suggestionList[index];
             showResults(context);
           },
           leading: Icon(Icons.history),
-          title: Text(suggestionList[index].name),
+          title: Text(suggestionList[index]),
         ),
         itemCount: suggestionList.length,
       );
@@ -189,11 +189,11 @@ class SearchService extends SearchDelegate<String> {
       return ListView.builder(
         itemBuilder: (context, index) => ListTile(
           onTap: () {
-            query = suggestionList[index].name;
+            query = suggestionList[index];
             showResults(context);
           },
           leading: Icon(Icons.history),
-          title: Text(suggestionList[index].name),
+          title: Text(suggestionList[index]),
         ),
         itemCount: suggestionList.length,
       );
@@ -792,7 +792,7 @@ class SearchHelper {
   static String cusID;
   SearchHelper(this.vendorID, this.vendorName);
   static List<SearchHelper> searchHelper = [];
-  static List<Dish> history = [];
+  static List<String> history = [];
 }
 
 // setListString(List<String> list, String cusID) async {
