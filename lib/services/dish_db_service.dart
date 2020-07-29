@@ -14,7 +14,7 @@ class DishDBService {
   //add dish as a new document to db, id is randomize by Firebase
   Future addDish(Dish dish) async {
     DocumentReference _dishRef = dishDB.document();
-    ImageUploadService().uploadPic(dish.imageFile, _dishRef.documentID);
+    ImageUploadService().uploadPic(dish.imageFile, _dishRef);
     return await _dishRef.setData({
       "name": dish.name,
       "id": _dishRef.documentID,
@@ -30,15 +30,13 @@ class DishDBService {
   //update dish, changing name, original price and reset it's discount state
   Future editDish(Dish dish, Dish newDish) async {
     DocumentReference _dishRef = dishDB.document(dish.id);
-    ImageUploadService().uploadPic(newDish.imageFile, _dishRef.documentID);
+    ImageUploadService().uploadPic(newDish.imageFile, _dishRef);
     return await _dishRef.updateData({
       "name": newDish.name,
       "originPrice": newDish.originPrice,
       "realPrice": newDish.originPrice, //reset on edit
       "discountPercentage": 0.0, //reset on edit
-      "hasImage": dish.hasImage == true
-          ? true
-          : newDish.hasImage == true ? true : false,
+      "hasImage": newDish.hasImage ? newDish.hasImage : dish.hasImage,
       "isOutOfOrder": false, // reset on edit
       //no update vendor ID
     });

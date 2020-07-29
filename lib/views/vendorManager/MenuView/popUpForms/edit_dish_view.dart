@@ -3,12 +3,12 @@ import 'dart:io';
 
 import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
+import 'package:fcfoodcourt/services/input_field_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:getflutter/components/avatar/gf_avatar.dart';
 import 'package:getflutter/shape/gf_avatar_shape.dart';
 
-import 'confirmation_view.dart';
-//TODO: find a way to notify view and update when storage is updated
+import '../../../../shared/confirmation_view.dart';
 /*
 A form that shows edit.
 The function createEditView returns a Future<Dish>
@@ -25,24 +25,26 @@ class EditDishForm extends StatefulWidget {
 
 class _EditDishFormState extends State<EditDishForm> {
   String name;
-  double price;
+  String price;
   String imageName;
   ImageUploadService _imageUploadService = ImageUploadService();
   File _image;
   bool hasImage;
-
+  final _formKey = GlobalKey<FormState>();
+  static final TextEditingController _initTextController = TextEditingController();
   @override
   void initState() {
     name = widget.dish.name;
-    price = widget.dish.originPrice;
+    price = widget.dish.originPrice.toString();
     imageName = widget.dish.id;
     hasImage = widget.dish.hasImage;
+    _initTextController.text="";
     super.initState();
   }
-//TODO: add image picker,... after implementing better way to use image
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Form(
+      key: _formKey,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -54,7 +56,7 @@ class _EditDishFormState extends State<EditDishForm> {
               GFAvatar(
                 shape: GFAvatarShape.square,
                 radius: 50,
-                backgroundColor: Colors.white,
+                backgroundColor: Colors.transparent,
                 child: ClipRect(
                   child: new SizedBox(
                     width: 100.0,
@@ -117,9 +119,11 @@ class _EditDishFormState extends State<EditDishForm> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.black, width: 2)),
-            child: TextField(
+            child: TextFormField(
+              controller: _initTextController,
+              validator: InputFieldValidator.priceValidator,
               onChanged: (String price) {
-                this.price = double.parse(price);
+                this.price = price;
               },
               decoration: InputDecoration(
                 border: InputBorder.none,
@@ -163,12 +167,14 @@ class _EditDishFormState extends State<EditDishForm> {
                   ),
                 ),
                 onPressed: () {
-                  createConfirmationView(context).then((onValue) {
-                    if (onValue == true) {
-                      hasImage = _image !=null? true : false;
-                      Navigator.of(context).pop(new Dish(name, price,imageFile: _image,hasImage: hasImage));
-                    }
-                  });
+                  if(_formKey.currentState.validate()){
+                    createConfirmationView(context).then((onValue) {
+                        if (onValue == true) {
+                          hasImage = _image !=null? true : false;
+                          Navigator.of(context).pop(new Dish(name, double.parse(price),imageFile: _image,hasImage: hasImage));
+                        }
+                    });
+                  }
                 },
               ),
             ],
@@ -178,38 +184,27 @@ class _EditDishFormState extends State<EditDishForm> {
     );
   }
   Widget showImage(BuildContext context){
-    return  FutureBuilder(
-      future: ImageUploadService().getImageFromCloud(context, imageName),
-      builder: (context, snapshot) {
-        if(_image != null){
-          return Container(
-              height: MediaQuery.of(context).size.height /
-                  1.25,
-              width: MediaQuery.of(context).size.width /
-                  1.25,
-              child: Image.file(_image, fit: BoxFit.fill,));
-        }
-        if(hasImage==false || snapshot.connectionState == ConnectionState.waiting){
-          return Container(
-              height: MediaQuery.of(context).size.height /
-                  1.25,
-              width: MediaQuery.of(context).size.width /
-                  1.25,
-              child: Image.asset("assets/bowl.png", fit: BoxFit.fill,));
-        }
-        if (snapshot.connectionState == ConnectionState.done) //image is found
-          return Container(
-            height:
-            MediaQuery.of(context).size.height,
-            width:
-            MediaQuery.of(context).size.width,
-            child: snapshot.data,
-            //TODO: future builder will keep refreshing while scrolling, find a way to keep data offline and use a stream to watch changes instead.
-          );
-        return Container();
-
-      },
-    );
+    if(widget.dish.hasImage==false){
+      return Container(
+          height: MediaQuery.of(context).size.height /
+              1.25,
+          width: MediaQuery.of(context).size.width /
+              1.25,
+          child: Image.asset("assets/bowl.png", fit: BoxFit.fill,));
+    }else if(widget.dish.imageURL==null){
+      return CircularProgressIndicator();
+    }else{
+      return Container(
+        height:
+        MediaQuery.of(context).size.height,
+        width:
+        MediaQuery.of(context).size.width,
+        child: Image.network(
+          widget.dish.imageURL,
+          fit: BoxFit.fill,
+        ),
+      );
+    }
   }
 }
 
@@ -217,21 +212,25 @@ Future<Dish> createPopUpEditDish(BuildContext context, Dish dish) {
   return showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text(
-            'Edit Dish Form',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 30,
-              color: Color(0xffff6624),
+        return Center(
+          child: SingleChildScrollView(
+            child: AlertDialog(
+              title: Text(
+                'Edit Dish Form',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                  color: Color(0xffff6624),
+                ),
+              ),
+              content: SizedBox(
+                  height: 390,
+                  width: 300,
+                  child: EditDishForm(
+                    dish: dish,
+                  )),
             ),
           ),
-          content: SizedBox(
-              height: 350,
-              width: 300,
-              child: EditDishForm(
-                dish: dish,
-              )),
         );
       });
 }

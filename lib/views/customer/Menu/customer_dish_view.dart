@@ -57,6 +57,7 @@ class ItemDishView extends StatelessWidget {
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: showImage(context)),
+                    backgroundImage: AssetImage('assets/${dish.id}.jpg'),
                     shape: GFAvatarShape.square,
                     radius: 25,
                     borderRadius: BorderRadius.circular(10),

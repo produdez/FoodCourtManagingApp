@@ -4,13 +4,14 @@ import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/views/customer/Menu/home.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 
-//import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_dish_view.dart';
+//import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_vendor_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'customer_dish_list_view.dart';
 import 'package:fcfoodcourt/services/search_service.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 /*
 This is the menu view that holds the frame for the whole menu
@@ -49,9 +50,11 @@ class _MenuViewState extends State<CustomerDishView> {
         //value: FilterService().filterByPrice,
         child: WillPopScope(
           onWillPop: () async {
-            vendorName = "";
-            //inVendor = false;
-            return true;
+            setState(() {
+              CustomerDishView.vendorName = "";
+              currentIndex = 0;
+            });
+            return Future.value(false);
           },
           child: Scaffold(
             backgroundColor: Colors.white,
@@ -71,6 +74,9 @@ class _MenuViewState extends State<CustomerDishView> {
                           size: 30,
                         ),
                         label: Text(''),
+                        onLongPress: () {
+                          Fluttertoast.showToast(msg: "Logout");
+                        },
                         onPressed: () async {
                           await AuthenticationService().signOut();
                         },
