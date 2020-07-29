@@ -1,10 +1,12 @@
 import 'package:fcfoodcourt/services/authentication_service.dart';
+import 'package:fcfoodcourt/services/vendor_db_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'order_db_service.dart';
 import 'package:provider/provider.dart';
 import 'order_list.dart';
 import 'order.dart';
+import 'package:fcfoodcourt/services/VendorReportDBService/vendor_report_db_service.dart';
 
 /*
 This is the Staff view that holds the frame for the whole Staff
@@ -17,7 +19,16 @@ class OrderPage extends StatefulWidget {
 
 class _OrderPageState extends State<OrderPage> {
   @override
+  void initState() {
+    //OrderDBService.vendorID =
+    super.initState();
+    //VendorReportDBService().createDailyReport(null);
+    //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
+  }
+
+  @override
   Widget build(BuildContext context) {
+    //print(OrderDBService.vendorID);
     return StreamProvider<List<Order>>.value(
       value: OrderDBService().orders,
       child: Scaffold(
@@ -30,15 +41,6 @@ class _OrderPageState extends State<OrderPage> {
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
-          actions: <Widget>[
-            FlatButton.icon(
-              icon: Icon(Icons.person),
-              label: Text('logout'),
-              onPressed: () async {
-                await AuthenticationService().signOut();
-              },
-            )
-          ],
         ),
         body: OrderList(),
       ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'coming_food.dart';
-import 'order_data.dart';
+import 'package:provider/provider.dart';
+import 'dish_db_services.dart';
+import 'dish.dart';
+import 'dish_list.dart';
 
 class MenuPage extends StatefulWidget {
   @override
@@ -8,49 +10,30 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
-  List<Order> _orders = orders;
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Color(0xffff8a84),
-        title: Text(
-          "VENDOR MENU",
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-      ),
-      body: ListView(
-        padding: EdgeInsets.only(left: 20.0, right: 20.0),
-        children: <Widget>[
-          SizedBox(height: 20.0),
-          Text(
-            "Available Dish",
-            style: TextStyle(
-              fontSize: 30.0,
-              fontWeight: FontWeight.bold,
-              color: Color(0xffff8a84),
-            ),
-          ),
-          SizedBox(height: 20.0),
-          Column(
-            children: _orders.map(_buildOrderItems).toList(),
-          ),
-        ],
-      ),
-    );
+  void initState() {
+    //OrderDBService.vendorID =
+    super.initState();
+    //VendorReportDBService().createDailyReport(null);
+    //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
   }
 
-  Widget _buildOrderItems(Order order) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 20.0),
-      child: ComingOrder(
-        id: order.id,
-        phoneNumber: order.phoneNumber,
-        imagePath: order.imagePath,
-        totalPrice: order.totalPrice,
+  @override
+  Widget build(BuildContext context) {
+    return StreamProvider<List<Dish>>.value(
+      value: DishDBServices().dishes,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Color(0xffff8a84),
+          title: Text(
+            "VENDOR MENU",
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+        ),
+        body: DishList(),
       ),
     );
   }

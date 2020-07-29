@@ -54,9 +54,7 @@ class LoggedInUserRouter extends StatelessWidget {
 
                 //Staff Home UI Here
                 if (currentUser.role == "Staff") {
-                  return StaffView(
-                    userData: currentUser,
-                  );
+                  return StaffView();
                 }
               }
 

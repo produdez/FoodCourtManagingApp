@@ -11,7 +11,6 @@ This class can create/get user data from DB, just remember to use this by:
  */
 
 class UserDBService {
-
   final String id; //should be static but it's too late for that :D
   String role;
   UserDBService(this.id);
@@ -19,7 +18,8 @@ class UserDBService {
   // collection reference
   final CollectionReference userDB = Firestore.instance.collection('users');
 
-  Future<void> setUserData({String name, String email, String role, String password}) async {
+  Future<void> setUserData(
+      {String name, String email, String role, String password}) async {
     return await userDB.document(this.id).setData({
       'id': this.id,
       'name': name,
@@ -38,23 +38,23 @@ class UserDBService {
 
   Future uploadProfileImage(File image) async {
     DocumentReference userInstance = userDB.document(id);
-     ImageUploadService().uploadPic(image,userInstance);
-     return await userInstance.updateData({
-       'hasImage' : true,
-     });
+    ImageUploadService().uploadPic(image, userInstance);
+    return await userInstance.updateData({
+      'hasImage': true,
+    });
   }
 
   // user data from snapshots
   User _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return User(
-        id :snapshot.data['id'] ?? null,
-        name: snapshot.data['name'] ?? null,
-        email: snapshot.data['email'] ?? null,
-        role: snapshot.data['role'] ?? null,
+      id: snapshot.data['id'] ?? null,
+      name: snapshot.data['name'] ?? null,
+      email: snapshot.data['email'] ?? null,
+      role: snapshot.data['role'] ?? null,
       password: snapshot.data['password'] ?? null,
       hasImage: snapshot.data['hasImage'] ?? false,
       imageURL: snapshot.data['imageURL'] ?? null,
-      databaseID: snapshot.data['manageID'] ?? null,
+      databaseID: snapshot.data['databaseID'] ?? null,
     );
   }
 
@@ -65,16 +65,16 @@ class UserDBService {
 
   //Mapping a database snapshot into a staffList, but only staffs of the user (vendor) that's currently logged in
   User _singleUserdataFromSnapshot(QuerySnapshot snapshot) {
-    DocumentSnapshot snap = snapshot.documents
-        .firstWhere((DocumentSnapshot documentSnapshot) =>
-    documentSnapshot.data['id'] == id);
-      return _userDataFromSnapshot(snap);
+    DocumentSnapshot snap = snapshot.documents.firstWhere(
+        (DocumentSnapshot documentSnapshot) =>
+            documentSnapshot.data['id'] == id);
+    return _userDataFromSnapshot(snap);
   }
 
   //Use this to fetch user data from DB
   Future<User> getUserData() async {
     User user;
-    await userDB.document(id).get().then((onValue){
+    await userDB.document(id).get().then((onValue) {
       user = _userDataFromSnapshot(onValue);
     });
     return user;
@@ -83,8 +83,7 @@ class UserDBService {
   Future setDatabaseID(String databaseID) async {
     DocumentReference _userRef = userDB.document(id);
     return await _userRef.updateData({
-      'databaseID' : databaseID,
+      'databaseID': databaseID,
     });
   }
-
 }

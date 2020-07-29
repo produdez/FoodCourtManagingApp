@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcfoodcourt/models/orderedDish.dart';
 import 'order.dart';
 
 class OrderDBService {
@@ -8,30 +9,19 @@ class OrderDBService {
       Firestore.instance.collection('orderDB');
 
   List<Order> _orderListFromSnapshot(QuerySnapshot snapshot) {
+    //print(vendorID);
     return snapshot.documents
-        // .where((DocumentSnapshot documentSnapshot) =>
-        //     documentSnapshot.data['vendorID'] == vendorID)
+        .where((DocumentSnapshot documentSnapshot) =>
+            documentSnapshot.data['vendorID'] == vendorID)
         .map((doc) {
       return Order(
         customerID: doc.data['customerID'] ?? '',
         totalPrice: double.tryParse(doc.data['totalPrice']) ?? 0.0,
         id: doc.data['id'] ?? '',
+        vendorID: doc.data['vendorID'] ?? '',
+        inform: doc.data['inform'] ?? '',
       );
     }).toList();
-  }
-
-  List<String> _orderIdListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents
-        .where((DocumentSnapshot documentSnapshot) =>
-            documentSnapshot.data['customerID'] == customerID &&
-            documentSnapshot.data['inform'] == true)
-        .map((doc) {
-      return doc.data['vendorID'];
-    });
-  }
-
-  Stream<List<String>> get orderId {
-    return orderCollection.snapshots().map(_orderIdListFromSnapshot);
   }
 
   Stream<List<Order>> get orders {

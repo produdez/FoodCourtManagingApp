@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcfoodcourt/views/staff/order_db_service.dart';
 import 'package:fcfoodcourt/views/staff/ordered_dish_detail.dart';
 import 'package:flutter/material.dart';
+import 'package:fcfoodcourt/services/VendorReportDBService/vendor_report_db_service.dart';
+
 import 'order.dart';
 
 class OrderTile extends StatelessWidget {
@@ -33,7 +35,7 @@ class OrderTile extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: 20.0,
+            left: -20.0,
             bottom: 0.0,
             right: 0.0,
             child: Row(
@@ -43,7 +45,7 @@ class OrderTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      order.customerID,
+                      'order.vendorName',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18.0,
@@ -85,6 +87,21 @@ class OrderTile extends StatelessWidget {
                                           builder: (context) =>
                                               OrderDetail(onValue)));
                                 });
+                              },
+                            ),
+                            FlatButton(
+                              child: Text(
+                                'Inform',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              color: Color(0xffff8a84),
+                              onPressed: () async {
+                                await Firestore.instance
+                                    .collection('orderDB')
+                                    .document(order.id)
+                                    .updateData({'inform': true});
                               },
                             ),
                           ],
@@ -134,6 +151,11 @@ class OrderTile extends StatelessWidget {
               FlatButton(
                 color: Colors.red,
                 onPressed: () async {
+                  await OrderDBService()
+                      .viewOrderedDish(order.id)
+                      .then((value) async {
+                    await VendorReportDBService().updateDailyReport(value);
+                  });
                   Navigator.pop(context);
                   Firestore.instance
                       .collection('orderDB')
