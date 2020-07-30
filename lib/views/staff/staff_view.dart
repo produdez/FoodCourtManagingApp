@@ -1,8 +1,10 @@
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/dish_db_service.dart';
+import 'package:fcfoodcourt/services/staff_db_service.dart';
 import 'package:fcfoodcourt/views/staff/order_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'menu_page.dart';
 import 'profile_page.dart';
 
@@ -36,13 +38,19 @@ class _StaffViewState extends State<StaffView> {
     currentPage = orderPage;
     super.initState();
     //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
-    DishDBService.vendorID = widget.userData.id;
+    //DishDBService.vendorID = widget.userData.id;
+    
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    final User userData =  Provider.of<User>(context);
+    return FutureBuilder<bool>(
+      future: StaffDBService().setStaffVendorId(userData.databaseID),
+      builder:(context, AsyncSnapshot<bool> snapshot){
+        if(snapshot.hasData)
+        {print(StaffDBService.vendorID);return SafeArea(
+        child: Scaffold(
         resizeToAvoidBottomPadding: false,
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: Color(0xffff8a84),
@@ -78,6 +86,9 @@ class _StaffViewState extends State<StaffView> {
         ),
         body: currentPage,
       ),
-    );
+    );}
+    else
+      return CircularProgressIndicator(); 
+      });
   }
 }

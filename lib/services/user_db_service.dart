@@ -54,7 +54,7 @@ class UserDBService {
       password: snapshot.data['password'] ?? null,
       hasImage: snapshot.data['hasImage'] ?? false,
       imageURL: snapshot.data['imageURL'] ?? null,
-      databaseID: snapshot.data['manageID'] ?? null,
+      databaseID: snapshot.data['databaseID'] ?? null,
     );
   }
 

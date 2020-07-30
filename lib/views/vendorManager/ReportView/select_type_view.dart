@@ -45,10 +45,12 @@ class _SelectTypeViewState extends State<SelectTypeView> {
     print(VendorReportDBService.vendorId);
     return Scaffold(
       //child: Scaffold(
+
         resizeToAvoidBottomInset: false, // address bottom overflow error
         //resizeToAvoidBottomPadding: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Color(0xffff8a84),
           title: Text(
             "VIEW REPORT",
@@ -111,68 +113,68 @@ class _SelectTypeViewState extends State<SelectTypeView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-          FloatingActionButton(
-          heroTag: "FAB1",
-          backgroundColor: Color(0xffff8a84),
-          onPressed: () {
-                List<OrderedDish> emptyList;
-                //print(VendorReportDBService.vendorId.toString());
-                print("Create Daily Report");
-                VendorReportDBService().createDailyReport(emptyList);
-                //]);
+          // FloatingActionButton(
+          // heroTag: "FAB1",
+          // backgroundColor: Color(0xffff8a84),
+          // onPressed: () {
+          //       List<OrderedDish> emptyList;
+          //       //print(VendorReportDBService.vendorId.toString());
+          //       print("Create Daily Report");
+          //       VendorReportDBService().createDailyReport(emptyList);
+          //       //]);
 
-            }, //This request the pop-up new dish form
-          child: Icon(
-            Icons.add,
-            size: 50,
-          ),
-          ),
-          FloatingActionButton(
-          heroTag: "FAB2",
-          backgroundColor: Color(0xffff8a84),
-          onPressed: () {
-            //On newDish chosen, show newDish popUp and process information
-            //The return value is a Dish with name, price (every other fields are defaulted)
-              print("Update Daily Report");
-                VendorReportDBService().updateDailyReport(<OrderedDish>[OrderedDish(name: "pho", price: 400 , quantity: 1, revenue: 400 ),
-                OrderedDish(name: "Hu tieu", price: 40, quantity: 2, revenue: 80 ), OrderedDish(name: "Bun Rieu", price: 40, quantity: 2, revenue: 80 )
-                ]);
+          //   }, //This request the pop-up new dish form
+          // child: Icon(
+          //   Icons.add,
+          //   size: 50,
+          // ),
+          // ),
+          // FloatingActionButton(
+          // heroTag: "FAB2",
+          // backgroundColor: Color(0xffff8a84),
+          // onPressed: () {
+          //   //On newDish chosen, show newDish popUp and process information
+          //   //The return value is a Dish with name, price (every other fields are defaulted)
+          //     print("Update Daily Report");
+          //       VendorReportDBService().updateDailyReport(<OrderedDish>[OrderedDish(name: "pho", price: 400 , quantity: 1, revenue: 400 ),
+          //       OrderedDish(name: "Hu tieu", price: 40, quantity: 2, revenue: 80 ), OrderedDish(name: "Bun Rieu", price: 40, quantity: 2, revenue: 80 )
+          //       ]);
 
-            }, //This request the pop-up new dish form
-          child: Icon(
-            Icons.add,
-            size: 50,
-          ),
-          ),
-          FloatingActionButton(
-          heroTag: "FAB3",
-          backgroundColor: Color(0xffff8a84),
-          onPressed: () {
-            //On newDish chosen, show newDish popUp and process information
-            //The return value is a Dish with name, price (every other fields are defaulted)
-              print("Create Monthly Report");
-                VendorReportDBService().createMonthlyReport("072020");
+          //   }, //This request the pop-up new dish form
+          // child: Icon(
+          //   Icons.add,
+          //   size: 50,
+          // ),
+          // ),
+          // FloatingActionButton(
+          // heroTag: "FAB3",
+          // backgroundColor: Color(0xffff8a84),
+          // onPressed: () {
+          //   //On newDish chosen, show newDish popUp and process information
+          //   //The return value is a Dish with name, price (every other fields are defaulted)
+          //     print("Create Monthly Report");
+          //       VendorReportDBService().createMonthlyReport("072020");
 
-            },
-          child: Icon(
-            Icons.add,
-            size: 50,
-          ),
-          ),
-          FloatingActionButton(
-          heroTag: "FAB4",
-          backgroundColor: Color(0xffff8a84),
-          onPressed: () async{
-              print("cancel task");
-                //VendorReportDBService().createMonthlyReport("072020");
-            await Workmanager.cancelAll();
-            },
-          child: Icon(
-            Icons.add,
-            size: 50,
-          ),
-          ),
-          ],)
+          //   },
+          // child: Icon(
+          //   Icons.add,
+          //   size: 50,
+          // ),
+          // ),
+          // FloatingActionButton(
+          // heroTag: "FAB4",
+          // backgroundColor: Color(0xffff8a84),
+          // onPressed: () async{
+          //     print("cancel task");
+          //       //VendorReportDBService().createMonthlyReport("072020");
+          //   await Workmanager.cancelAll();
+          //   },
+          // child: Icon(
+          //   Icons.add,
+          //   size: 50,
+          // ),
+          // ),
+           ],)
           ]
         ),
         ],

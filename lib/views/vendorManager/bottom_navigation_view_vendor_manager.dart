@@ -55,7 +55,7 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
                 "auto-generating vendor monthly report",
                 frequency: Duration(minutes: 15),
                 inputData: <String, dynamic>{
-                  'databaseID': userData.databaseID
+                  'databaseID': "${userData.databaseID}"
                 }
               );
             }
