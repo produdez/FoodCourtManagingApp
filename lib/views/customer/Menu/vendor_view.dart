@@ -1,9 +1,12 @@
+//import 'package:fcfoodcourt/services/view_logic_helper.dart';
+import 'package:fcfoodcourt/views/customer/Menu/customer_dish_list_view.dart';
 import 'package:fcfoodcourt/views/customer/Menu/dishes_of_vendor.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getflutter/getflutter.dart';
 
 import '../../../models/vendor.dart';
+import 'home.dart';
 
 /*
 This is the vendor element in the list view
@@ -12,10 +15,11 @@ it's functionality.
  */
 class VendorView extends StatelessWidget {
   final Vendor vendor;
-
+  final Function(String, String) onVendorSelected;
   const VendorView({
     Key key,
     this.vendor,
+    this.onVendorSelected,
   }) : super(key: key);
 
   @override
@@ -33,8 +37,8 @@ class VendorView extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => CustomerDishView()));
+          onVendorSelected(
+              vendor.id, vendor.name); //Pass vendor name for cart work
         },
         child: FittedBox(
           alignment: Alignment.centerLeft,
@@ -46,12 +50,6 @@ class VendorView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 InkWell(
-                  onTap: () {
-                    Fluttertoast.cancel();
-                    Fluttertoast.showToast(
-                      msg: "ID: ${vendor.id}",
-                    );
-                  },
                   child: Container(
                     margin: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
                     decoration: BoxDecoration(
@@ -61,7 +59,10 @@ class VendorView extends StatelessWidget {
                           width: 2,
                         )),
                     child: GFAvatar(
-                      backgroundImage: AssetImage('assets/${vendor.id}.jpg'),
+                      backgroundImage: AssetImage(
+                          //TODO: Find a way to store cloud image and load that also
+                          //TODO: And then implement image choosing for vendor profile when newvendor or editvendor
+                          'assets/${vendor.id}.jpg'),
                       shape: GFAvatarShape.square,
                       radius: 25,
                       borderRadius: BorderRadius.circular(10),

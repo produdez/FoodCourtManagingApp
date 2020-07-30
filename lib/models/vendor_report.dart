@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fcfoodcourt/views/staff/order.dart';
-
-import 'orderedDish.dart';
+import 'package:fcfoodcourt/models/orderedDish.dart';
 
 class DailyVendorReport {
   static double previousDateSale = 0;
