@@ -1,16 +1,16 @@
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/dish_db_service.dart';
-import 'package:fcfoodcourt/views/staff/dish_db_services.dart';
-import 'package:fcfoodcourt/views/staff/order_page.dart';
+import 'package:fcfoodcourt/services/StaffDBService/dish_db_services.dart';
+import 'package:fcfoodcourt/views/staff/Pages/order_page.dart';
 import 'package:fcfoodcourt/services/VendorReportDBService/vendor_report_db_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'menu_page.dart';
 import 'profile_page.dart';
-import 'order_db_service.dart';
+import '../../../services/StaffDBService/order_db_service.dart';
 import 'package:provider/provider.dart';
-import 'dish_db_services.dart';
+import '../../../services/StaffDBService/dish_db_services.dart';
 
 /*
 This is the Staff view that holds the frame for the whole Staff

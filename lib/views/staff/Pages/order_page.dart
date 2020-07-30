@@ -2,10 +2,10 @@ import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/services/vendor_db_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'order_db_service.dart';
+import '../../../services/StaffDBService/order_db_service.dart';
 import 'package:provider/provider.dart';
-import 'order_list.dart';
-import 'order.dart';
+import '../Order/order_list.dart';
+import '../Order/order.dart';
 import 'package:fcfoodcourt/services/VendorReportDBService/vendor_report_db_service.dart';
 
 /*

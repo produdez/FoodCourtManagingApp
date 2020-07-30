@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcfoodcourt/models/orderedDish.dart';
-import 'order.dart';
+import '../../views/staff/Order/order.dart';
 
 class OrderDBService {
   static String vendorID;

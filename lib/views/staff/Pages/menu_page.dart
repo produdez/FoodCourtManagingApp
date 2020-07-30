@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'dish_db_services.dart';
-import 'dish.dart';
-import 'dish_list.dart';
+import '../../../services/StaffDBService/dish_db_services.dart';
+import '../Dish/dish.dart';
+import '../Dish/dish_list.dart';
 
 class MenuPage extends StatefulWidget {
   @override

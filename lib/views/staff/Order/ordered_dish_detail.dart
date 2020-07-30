@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcfoodcourt/models/orderedDish.dart';
-import 'package:fcfoodcourt/views/staff/ordered_dish_list.dart';
+import 'package:fcfoodcourt/views/staff/Order/ordered_dish_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'order_db_service.dart';
+import '../../../services/StaffDBService/order_db_service.dart';
 import 'order.dart';
 
 class OrderDetail extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dish.dart';
+import '../../views/staff/Dish/dish.dart';
 
 class DishDBServices {
   static String vendorID;

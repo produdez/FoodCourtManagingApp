@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fcfoodcourt/views/staff/order_db_service.dart';
-import 'package:fcfoodcourt/views/staff/ordered_dish_detail.dart';
+import 'package:fcfoodcourt/services/StaffDBService/order_db_service.dart';
+import 'package:fcfoodcourt/views/staff/Order/ordered_dish_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:fcfoodcourt/services/VendorReportDBService/vendor_report_db_service.dart';
 
