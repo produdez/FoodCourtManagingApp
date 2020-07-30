@@ -38,7 +38,7 @@ class _CartDishListViewState extends State<CartDishListView> {
   Widget build(BuildContext context) {
     //CartService.order = new Order();
     return ListView.builder(
-      itemCount: dishList.length,
+      itemCount: dishList == null ? 0 : dishList.length,
       itemBuilder: (context, index) {
         return ItemDishView(
           dish: dishList[index],

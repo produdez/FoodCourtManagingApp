@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 import 'customer_dish_list_view.dart';
 import 'package:fcfoodcourt/services/search_service.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:marquee_widget/marquee_widget.dart';
 
 /*
 This is the menu view that holds the frame for the whole menu
@@ -22,12 +22,11 @@ It does holds the add Dish button
 // bool firstFilter = false;
 // bool secondFilter = false;
 // bool thirdFilter = false;
-//bool inVendor = false;
+bool inVendor = false;
 
 class CustomerDishView extends StatefulWidget {
   static String vendorId = "";
   static String vendorName = "";
-  //const CustomerDishView(this.vendorId, this.vendorName);
   @override
   _MenuViewState createState() => _MenuViewState(vendorId, vendorName);
 }
@@ -47,36 +46,46 @@ class _MenuViewState extends State<CustomerDishView> {
   Widget build(BuildContext context) {
     return StreamProvider<List<Dish>>.value(
         value: DishDBService().allVendorDishes,
-        //value: FilterService().filterByPrice,
         child: WillPopScope(
           onWillPop: () async {
-            setState(() {
-              CustomerDishView.vendorName = "";
-              currentIndex = 0;
-            });
-            return Future.value(false);
+            if (inVendor == false) {
+              setState(() {
+                CustomerDishView.vendorName = "";
+                currentIndex = 0;
+              });
+              return Future.value(false);
+            } else {
+              inVendor = false;
+              return Future.value(true);
+            }
           },
           child: Scaffold(
             backgroundColor: Colors.white,
             appBar: (currentIndex == 0)
                 ? AppBar(
                     backgroundColor: Color(0xffff8a84),
-                    title: Text(
-                      vendorName,
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    title: Marquee(
+                      child: Text(
+                        vendorName,
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      direction: Axis.horizontal,
+                      textDirection: TextDirection.ltr,
+                      animationDuration: Duration(seconds: 1),
+                      backDuration: Duration(milliseconds: 1800),
+                      pauseDuration: Duration(milliseconds: 1800),
+                      directionMarguee: DirectionMarguee.oneDirection,
                     ),
                     centerTitle: true,
                     actions: <Widget>[
                       FlatButton.icon(
                         icon: Icon(
-                          Icons.exit_to_app,
-                          size: 30,
+                          Icons.person,
                         ),
-                        label: Text(''),
-                        onLongPress: () {
-                          Fluttertoast.showToast(msg: "Logout");
-                        },
+                        label: Text('logout'),
                         onPressed: () async {
                           await AuthenticationService().signOut();
                         },

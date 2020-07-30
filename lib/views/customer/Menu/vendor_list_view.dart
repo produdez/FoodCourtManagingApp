@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'package:fcfoodcourt/services/search_service.dart';
 import 'package:fcfoodcourt/models/vendor.dart';
 //import 'package:fcfoodcourt/services/vendor_db_service.dart';
 import 'package:fcfoodcourt/views/customer/Menu/vendor_view.dart';
@@ -21,8 +21,9 @@ class _VendorListViewState extends State<VendorListView> {
   @override
   Widget build(BuildContext context) {
     final List<Vendor> vendorList = Provider.of<List<Vendor>>(context);
+    //SearchService.listVendor = vendorList;
     return ListView.builder(
-      itemCount: vendorList.length,
+      itemCount: vendorList == null ? 0 : vendorList.length,
       itemBuilder: (context, index) {
         return VendorView(
           vendor: vendorList[index],

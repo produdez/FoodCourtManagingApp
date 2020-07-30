@@ -3,7 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcfoodcourt/models/orderedDish.dart';
 import 'package:fcfoodcourt/models/vendor_report.dart';
-import 'package:fcfoodcourt/views/staff/order.dart';
+import 'package:fcfoodcourt/views/staff/Order/order.dart';
 import 'package:intl/intl.dart';
 
 class VendorReportDBService {

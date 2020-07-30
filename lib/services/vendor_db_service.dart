@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'image_upload_service.dart';
 
 class VendorDBService {
-  final CollectionReference vendorDB =
+  static final CollectionReference vendorDB =
       Firestore.instance.collection("vendorDB");
 
   Future addVendor(Vendor vendor) async {

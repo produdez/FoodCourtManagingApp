@@ -5,10 +5,9 @@ import 'package:fcfoodcourt/services/user_db_service.dart';
 import 'package:fcfoodcourt/shared/loading_view.dart';
 import 'package:fcfoodcourt/views/customer/Menu/home.dart';
 import 'package:fcfoodcourt/views/customer/customer_nav_bar.dart';
-import 'package:fcfoodcourt/views/vendorManager/MenuView/menu_view.dart';
+import 'package:fcfoodcourt/views/staff/Pages/staff_view.dart';
 import 'package:fcfoodcourt/views/FCManager/bottom_navigation_view_fc_manager.dart';
-import 'package:fcfoodcourt/views/customer/Menu/home.dart';
-import 'package:fcfoodcourt/views/staff/staff_view.dart';
+//import 'package:fcfoodcourt/views/staff/staff_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/bottom_navigation_view_vendor_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +39,7 @@ class LoggedInUserRouter extends StatelessWidget {
 
                 //Customer Home UI Here
                 if (currentUser.role == "Customer") {
-                  return CustomerView(
+                  return CustomerNavBar(
                     userData: currentUser,
                   );
                 }

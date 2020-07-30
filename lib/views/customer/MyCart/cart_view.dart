@@ -10,7 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fcfoodcourt/services/cart_service.dart';
-import 'cart_dish_list_view.dart';
+import 'package:fcfoodcourt/views/customer/customer_nav_bar.dart';
 import 'vendor_list_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -34,8 +34,7 @@ class _CartViewState extends State<CartView> {
   Widget build(BuildContext context) {
     var totalPrice = CartService.totalPrice;
     return WillPopScope(
-        onWillPop: () async {
-          setState(() {});
+        onWillPop: () {
           return Future.value(false);
         },
         child: Scaffold(
@@ -50,14 +49,8 @@ class _CartViewState extends State<CartView> {
             centerTitle: true,
             actions: <Widget>[
               FlatButton.icon(
-                icon: Icon(
-                  Icons.exit_to_app,
-                  size: 30,
-                ),
-                onLongPress: () {
-                  Fluttertoast.showToast(msg: "Logout");
-                },
-                label: Text(''),
+                icon: Icon(Icons.person),
+                label: Text('logout'),
                 onPressed: () async {
                   await AuthenticationService().signOut();
                 },

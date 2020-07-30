@@ -20,7 +20,7 @@ class _SearchListViewState extends State<SearchListView> {
     final List<Dish> dishList = Provider.of<List<Dish>>(context);
 
     return ListView.builder(
-      itemCount: dishList.length,
+      itemCount: dishList == null ? 0 : dishList.length,
       itemBuilder: (context, index) {
         return SearchItemView(
           dish: dishList[index],

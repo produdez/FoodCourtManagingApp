@@ -92,13 +92,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.3"
-  fading_edge_scrollview:
-    dependency: transitive
-    description:
-      name: fading_edge_scrollview
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.4"
   file:
     dependency: transitive
     description:
@@ -266,13 +259,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.2"
-  marquee:
+  marquee_widget:
     dependency: "direct main"
     description:
-      name: marquee
+      name: marquee_widget
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.5.2"
+    version: "0.8.0"
   matcher:
     dependency: transitive
     description:
