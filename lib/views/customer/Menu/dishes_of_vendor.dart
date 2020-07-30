@@ -27,7 +27,6 @@ bool inVendor = false;
 class CustomerDishView extends StatefulWidget {
   static String vendorId = "";
   static String vendorName = "";
-  //const CustomerDishView(this.vendorId, this.vendorName);
   @override
   _MenuViewState createState() => _MenuViewState(vendorId, vendorName);
 }
@@ -47,7 +46,6 @@ class _MenuViewState extends State<CustomerDishView> {
   Widget build(BuildContext context) {
     return StreamProvider<List<Dish>>.value(
         value: DishDBService().allVendorDishes,
-        //value: FilterService().filterByPrice,
         child: WillPopScope(
           onWillPop: () async {
             if (inVendor == false) {

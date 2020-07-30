@@ -1,18 +1,24 @@
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/dish_db_service.dart';
-import 'package:fcfoodcourt/views/staff/order_page.dart';
+import 'package:fcfoodcourt/services/StaffDBService/dish_db_services.dart';
+import 'package:fcfoodcourt/views/staff/Pages/order_page.dart';
+import 'package:fcfoodcourt/services/VendorReportDBService/vendor_report_db_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'menu_page.dart';
 import 'profile_page.dart';
+import '../../../services/StaffDBService/order_db_service.dart';
+import 'package:provider/provider.dart';
+import '../../../services/StaffDBService/dish_db_services.dart';
 
 /*
 This is the Staff view that holds the frame for the whole Staff
 It does holds the add Dish button
  */
 class StaffView extends StatefulWidget {
-  final User userData; // userData passed down by the userRouter
-  const StaffView({Key key, this.userData}) : super(key: key);
+  //final User userData; // userData passed down by the userRouter
+  const StaffView({Key key}) : super(key: key);
   @override
   _StaffViewState createState() => _StaffViewState();
 }
@@ -34,13 +40,19 @@ class _StaffViewState extends State<StaffView> {
     profilePage = ProfilePage();
     pages = [orderPage, menuPage, profilePage];
     currentPage = orderPage;
+    //OrderDBService.vendorID =
     super.initState();
     //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
-    DishDBService.vendorID = widget.userData.id;
   }
 
   @override
   Widget build(BuildContext context) {
+    final User userData = Provider.of<User>(context);
+    DishDBServices.vendorID = 'wKrl2m0MXlkpRhiJoBK4';
+    OrderDBService.vendorID = 'wKrl2m0MXlkpRhiJoBK4';
+    VendorReportDBService.vendorId = 'wKrl2m0MXlkpRhiJoBK4';
+    //print(userData.databaseID);
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomPadding: false,
@@ -48,7 +60,16 @@ class _StaffViewState extends State<StaffView> {
           backgroundColor: Color(0xffff8a84),
           selectedItemColor: Colors.white,
           currentIndex: currentTab,
-          onTap: (index) {
+          onTap: (index) async {
+            String currentDate = DateFormat('ddMMyyyy').format(DateTime.now());
+            VendorReportDBService()
+                .checkAvailableDailyReport(currentDate)
+                .then((value) {
+              if (value == null) {
+                VendorReportDBService().createDailyReport(null);
+              }
+            });
+
             setState(() {
               currentTab = index;
               currentPage = pages[index];

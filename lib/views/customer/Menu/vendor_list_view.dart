@@ -21,7 +21,7 @@ class _VendorListViewState extends State<VendorListView> {
   @override
   Widget build(BuildContext context) {
     final List<Vendor> vendorList = Provider.of<List<Vendor>>(context);
-    SearchService.listVendor = vendorList;
+    //SearchService.listVendor = vendorList;
     return ListView.builder(
       itemCount: vendorList == null ? 0 : vendorList.length,
       itemBuilder: (context, index) {
