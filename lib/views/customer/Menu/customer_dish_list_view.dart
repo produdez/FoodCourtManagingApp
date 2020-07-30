@@ -23,7 +23,7 @@ class _CustomerDishListViewState extends State<CustomerDishListView> {
   Widget build(BuildContext context) {
     final List<Dish> dishList = Provider.of<List<Dish>>(context);
     return ListView.builder(
-      itemCount: dishList.length,
+      itemCount: dishList == null ? 0 : dishList.length,
       itemBuilder: (context, index) {
         return ItemDishView(
           dish: dishList[index],

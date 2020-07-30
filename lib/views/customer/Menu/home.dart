@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:fcfoodcourt/models/dish.dart';
+import 'package:marquee_widget/marquee_widget.dart';
 import 'package:fcfoodcourt/views/customer/Menu/dishes_of_vendor.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -78,27 +78,30 @@ class _CustomerViewState extends State<CustomerView> {
                       style:
                           TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                     )
-                  : Text(
-                      CustomerDishView.vendorName,
-                      style:
-                          TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  : Marquee(
+                      child: Text(
+                        CustomerDishView.vendorName,
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      direction: Axis.horizontal,
+                      textDirection: TextDirection.ltr,
+                      animationDuration: Duration(seconds: 1),
+                      backDuration: Duration(milliseconds: 1800),
+                      pauseDuration: Duration(milliseconds: 1800),
+                      directionMarguee: DirectionMarguee.oneDirection,
                     ),
               centerTitle: true,
               actions: <Widget>[
                 FlatButton.icon(
-                    icon: Icon(
-                      Icons.exit_to_app,
-                      size: 30,
-                    ),
-                    label: Text(
-                      "",
-                    ),
-                    onPressed: () async {
-                      await AuthenticationService().signOut();
-                    },
-                    onLongPress: () {
-                      Fluttertoast.showToast(msg: "Logout");
-                    })
+                  icon: Icon(Icons.person),
+                  label: Text('logout'),
+                  onPressed: () async {
+                    await AuthenticationService().signOut();
+                  },
+                )
               ],
             ),
             body: WillPopScope(

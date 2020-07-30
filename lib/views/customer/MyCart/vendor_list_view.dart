@@ -29,7 +29,7 @@ class _VendorListViewState extends State<VendorListView> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: vendorList.length,
+      itemCount: vendorList == null ? 0 : vendorList.length,
       itemBuilder: (context, index) {
         return VendorView(
             vendor: vendorList[index], onChangeConfirm: widget.onChangeConfirm);

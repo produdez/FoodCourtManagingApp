@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:fcfoodcourt/models/user.dart';
+import 'package:fcfoodcourt/views/profileViews/profile_view.dart';
 import 'package:fcfoodcourt/views/vendorManager/MenuView/menu_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ class _CustomerNavBarState extends State<CustomerNavBar> {
       userData: widget.userData,
     ));
     children.add(CartView());
-    children.add(Container());
+    children.add(ProfileView());
     //children.add(ManageStaffView(userData: widget.userData,));
     //TODO: Add report route here
   }

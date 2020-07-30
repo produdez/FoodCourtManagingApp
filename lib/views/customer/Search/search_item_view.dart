@@ -51,6 +51,7 @@ class SearchItemView extends StatelessWidget {
               await VendorDBService().nameOfVendor(dish.vendorID, vendorName);
           CustomerDishView.vendorId = dish.vendorID;
           CustomerDishView.vendorName = name;
+          inVendor = true;
           SearchHelper.history.add(dish.name);
           SearchHelper.history.toSet().toList();
           Navigator.push(context,

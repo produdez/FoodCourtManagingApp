@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcfoodcourt/models/dish.dart';
-import 'package:fcfoodcourt/models/user.dart';
-import 'package:fcfoodcourt/services/view_logic_helper.dart';
+import 'package:fcfoodcourt/models/vendor.dart';
+import 'package:fcfoodcourt/services/dish_db_service.dart';
 import 'package:fcfoodcourt/views/customer/Search/search_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fcfoodcourt/views/customer/Menu/customer_dish_list_view.dart';
-import 'package:fcfoodcourt/views/customer/Menu/home.dart';
+import 'package:fcfoodcourt/services/vendor_db_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fcfoodcourt/views/customer/Menu/dishes_of_vendor.dart';
 import 'package:fcfoodcourt/views/customer/Search/search_item_view.dart';
@@ -19,8 +19,8 @@ String vendorID = "";
 // List<Dish> dishList = [];
 
 class SearchService extends SearchDelegate<String> {
-  CollectionReference dishDB = Firestore.instance.collection("dishDB");
-
+  //CollectionReference dishDB = Firestore.instance.collection("dishDB");
+  //static List<Vendor> listVendor = [];
   String vendorName = "";
 
   @override
@@ -320,7 +320,7 @@ class SearchService extends SearchDelegate<String> {
   }
 
   Stream<List<Dish>> get searchByName {
-    return dishDB.snapshots().map(_dishListFromSnapshot);
+    return DishDBService.dishDB.snapshots().map(_dishListFromSnapshot);
   }
 
   List<Dish> _dishListFromSnapshot(QuerySnapshot snapshot) {
@@ -407,8 +407,8 @@ class SearchService extends SearchDelegate<String> {
 }
 
 class SearchInVendor extends SearchDelegate {
-  CollectionReference dishDB = Firestore.instance.collection("dishDB");
-  CollectionReference vendorDB = Firestore.instance.collection("vendorDB");
+  //CollectionReference dishDB = Firestore.instance.collection("dishDB");
+  //CollectionReference vendorDB = Firestore.instance.collection("vendorDB");
   String vendorName = "";
 
   @override
@@ -686,7 +686,7 @@ class SearchInVendor extends SearchDelegate {
   }
 
   Stream<List<Dish>> get searchByName {
-    return dishDB.snapshots().map(_dishListFromSnapshot);
+    return DishDBService.dishDB.snapshots().map(_dishListFromSnapshot);
   }
 
   List<Dish> _dishListFromSnapshot(QuerySnapshot snapshot) {
@@ -774,9 +774,9 @@ class SearchInVendor extends SearchDelegate {
   }
 }
 
-CollectionReference vendorDB = Firestore.instance.collection("vendorDB");
+//CollectionReference vendorDB = Firestore.instance.collection("vendorDB");
 Future<void> passToSearchHelper() async {
-  await vendorDB.getDocuments().then((snapshot) async {
+  await VendorDBService.vendorDB.getDocuments().then((snapshot) async {
     for (int i = 0; i < snapshot.documents.length; i++) {
       SearchHelper.searchHelper.add(SearchHelper(
           snapshot.documents[i].data['id'],
