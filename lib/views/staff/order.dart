@@ -22,9 +22,10 @@ class Order {
   final String customerID;
   String vendorID;
   String vendorName;
-  //String customerPhone;
+  String phoneNumber;
   double totalPrice;
   bool inform;
+  //String imagePath;
   List<OrderedDish> detail = [];
   Order({
     this.customerID,
@@ -33,6 +34,8 @@ class Order {
     this.vendorID,
     this.vendorName,
     this.inform,
+    this.phoneNumber,
+    //this.imagePath = 'assets/breakfast.jpeg',
   });
 }
 

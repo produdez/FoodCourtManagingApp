@@ -36,7 +36,7 @@ class _DishTileState extends State<DishTile> {
           Container(
             height: 200.0,
             width: 400.0,
-            //child: Image.asset(widget.imagePath, fit: BoxFit.cover),
+            //child: Image.asset('assets/breakfast.jpeg', fit: BoxFit.cover),
           ),
           Positioned(
             left: 0.0,

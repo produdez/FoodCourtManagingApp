@@ -13,13 +13,13 @@ class OrderTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(10.0),
+      borderRadius: BorderRadius.circular(15.0),
       child: Stack(
         children: <Widget>[
           Container(
             height: 200.0,
             width: 400.0,
-            //child: Image.asset(widget.imagePath, fit: BoxFit.cover),
+            //child: Image.asset('assets/lunch.jpeg', fit: BoxFit.cover),
           ),
           Positioned(
             left: 0.0,
@@ -35,7 +35,7 @@ class OrderTile extends StatelessWidget {
             ),
           ),
           Positioned(
-            left: -20.0,
+            left: 5.0,
             bottom: 0.0,
             right: 0.0,
             child: Row(
@@ -45,7 +45,7 @@ class OrderTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'order.vendorName',
+                      order.phoneNumber,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18.0,
@@ -90,43 +90,45 @@ class OrderTile extends StatelessWidget {
                               },
                             ),
                             FlatButton(
-                              child: Text(
-                                'Inform',
-                                style: TextStyle(
-                                  color: Colors.white,
+                                child: Text(
+                                  'Inform',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ),
-                              color: Color(0xffff8a84),
-                              onPressed: () async {
-                                await Firestore.instance
-                                    .collection('orderDB')
-                                    .document(order.id)
-                                    .updateData({'inform': true});
-                              },
-                            ),
+                                color: Color(0xffff8a84),
+                                onPressed: () {
+                                  informCustomer(context);
+                                }),
                           ],
                         )
                       ],
                     ),
                   ],
                 ),
-                Column(
-                  children: <Widget>[
-                    Text(
-                      order.totalPrice.toString(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.orangeAccent,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    Text(
-                      "Total Price",
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
+              ],
+            ),
+          ),
+          Positioned(
+            left: 0.0,
+            bottom: 10.0,
+            right: 20.0,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Text(
+                  order.totalPrice.toString(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orangeAccent,
+                    fontSize: 18.0,
+                  ),
+                ),
+                Text(
+                  "Total Price",
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
                 ),
               ],
             ),
@@ -144,12 +146,12 @@ class OrderTile extends StatelessWidget {
           return AlertDialog(
             actions: <Widget>[
               FlatButton(
-                color: Colors.green,
+                color: Colors.red[300],
                 onPressed: () => Navigator.pop(context),
                 child: Text('Cancel'),
               ),
               FlatButton(
-                color: Colors.red,
+                color: Color(0xffff8a84),
                 onPressed: () async {
                   await OrderDBService()
                       .viewOrderedDish(order.id)
@@ -162,11 +164,54 @@ class OrderTile extends StatelessWidget {
                       .document(order.id)
                       .delete();
                 },
-                child: Text('Finish'),
+                child: Text(
+                  'Finish',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               )
             ],
             title: Text('Finish order?'),
           );
         });
+  }
+
+  Future<void> informCustomer(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Customer Informed'),
+          content: SingleChildScrollView(
+              // child: ListBody(
+              //   children: <Widget>[
+              //     Text('This is a demo alert dialog.'),
+              //     Text('Would you like to approve of this message?'),
+              //   ],
+              // ),
+              ),
+          actions: <Widget>[
+            FlatButton(
+              color: Color(0xffff8a84),
+              child: Text(
+                'OK',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await Firestore.instance
+                    .collection('orderDB')
+                    .document(order.id)
+                    .updateData({'inform': true});
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

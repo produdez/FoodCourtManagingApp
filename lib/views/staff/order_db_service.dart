@@ -20,6 +20,7 @@ class OrderDBService {
         id: doc.data['id'] ?? '',
         vendorID: doc.data['vendorID'] ?? '',
         inform: doc.data['inform'] ?? '',
+        phoneNumber: doc.data['phoneNumber'] ?? '',
       );
     }).toList();
   }
