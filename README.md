@@ -9,7 +9,8 @@ The university is currently has one food court located in its Ly Thuong Kiet cam
 
 In 2020, the university wish to build a smart food court system (SFCS) to make the university more smart. The system is for customers to order foods from the tip of their fingers - their mobile device.
 
-The mobile app allows users to order food anywhere, before they come to the food court. Notification will be pushed to the app to notify order ready to be picked up.\\
+The mobile app allows users to order food anywhere, before they come to the food court. Notification will be pushed to the app to notify order ready to be picked up.
+
 Payment can be made on-site or through other online methods like Pay-pal, Momo,...
 
 Of course, the application have other features and interfaces for the managers and staffs of the store:
