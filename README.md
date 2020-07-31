@@ -5,11 +5,13 @@ Sotfware Engineering Project
 ## Motivation:
 
 
-The university is currently has one food court located in its Ly Thuong Kiet campus and is going to build another one in Di An campus. All food courts consist of a number of vendors at food vendors or service counters. Meals are ordered at one of the vendors and then carried to a common area for consumption. The food may also be ordered to take-away. All food are self serviced and there's no food delivering system (maybe in the future).\\
+The university is currently has one food court located in its Ly Thuong Kiet campus and is going to build another one in Di An campus. All food courts consist of a number of vendors at food vendors or service counters. Meals are ordered at one of the vendors and then carried to a common area for consumption. The food may also be ordered to take-away. All food are self serviced and there's no food delivering system (maybe in the future).
+
 In 2020, the university wish to build a smart food court system (SFCS) to make the university more smart. The system is for customers to order foods from the tip of their fingers - their mobile device.
 
 The mobile app allows users to order food anywhere, before they come to the food court. Notification will be pushed to the app to notify order ready to be picked up.\\
-Payment can be made on-site or through other online methods like Pay-pal, Momo,...\\\\
+Payment can be made on-site or through other online methods like Pay-pal, Momo,...
+
 Of course, the application have other features and interfaces for the managers and staffs of the store:
 
 * For employees: Order queueing, stock management,..
