@@ -1,18 +1,11 @@
+import 'package:fcfoodcourt/models/orderedDish.dart';
 import 'package:flutter/material.dart';
+import 'order.dart';
 
-class ComingOrder extends StatefulWidget {
-  final String id;
-  final String phoneNumber;
-  final String imagePath;
-  final double totalPrice;
+class OrderedDishTile extends StatelessWidget {
+  final OrderedDish orderedDish;
+  OrderedDishTile({this.orderedDish});
 
-  ComingOrder({this.id, this.phoneNumber, this.imagePath, this.totalPrice});
-
-  @override
-  _ComingOrderState createState() => _ComingOrderState();
-}
-
-class _ComingOrderState extends State<ComingOrder> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -22,7 +15,7 @@ class _ComingOrderState extends State<ComingOrder> {
           Container(
             height: 200.0,
             width: 400.0,
-            child: Image.asset(widget.imagePath, fit: BoxFit.cover),
+            //child: Image.asset(widget.imagePath, fit: BoxFit.cover),
           ),
           Positioned(
             left: 0.0,
@@ -39,7 +32,7 @@ class _ComingOrderState extends State<ComingOrder> {
           ),
           Positioned(
             left: 10.0,
-            bottom: 0.0,
+            bottom: 20.0,
             right: 10.0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -47,40 +40,20 @@ class _ComingOrderState extends State<ComingOrder> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    /*Text(
-                      widget.phoneNumber,
+                    Text(
+                      orderedDish.name,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
                       ),
-                    ),*/
-                    Row(
-                      children: <Widget>[
-                        ButtonBar(
-                          children: <Widget>[
-                            ToggleButtons(
-                              children: [Icon(Icons.check_circle_outline)],
-                              isSelected: _selections,
-                              onPressed: (int index) {
-                                setState(() {
-                                  _selections[index] = !_selections[index];
-                                });
-                              },
-                              color: Colors.white, //Color(0xffff8a84),
-                              fillColor: Color(0xffff8a84),
-                              selectedColor: Colors.white,
-                            )
-                          ],
-                        )
-                      ],
                     ),
                   ],
                 ),
                 Column(
                   children: <Widget>[
                     Text(
-                      widget.totalPrice.toString(),
+                      orderedDish.quantity.toString(),
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.orangeAccent,
@@ -88,7 +61,7 @@ class _ComingOrderState extends State<ComingOrder> {
                       ),
                     ),
                     Text(
-                      "Total Price",
+                      "Quantity",
                       style: TextStyle(
                         color: Colors.grey,
                       ),
@@ -102,6 +75,4 @@ class _ComingOrderState extends State<ComingOrder> {
       ),
     );
   }
-
-  List<bool> _selections = List.generate(1, (_) => true);
 }

@@ -14,9 +14,25 @@ class User {
   bool hasImage;
   File imageFile;
 
-  User({this.id, this.name, this.email, this.role,this.hasImage=false,this.imageURL,this.imageFile, this.password,this.databaseID});
+  User(
+      {this.id,
+      this.name,
+      this.email,
+      this.role,
+      this.hasImage = false,
+      this.imageURL,
+      this.imageFile,
+      this.password,
+      this.databaseID});
 
-  User.clone({User user, this.id, this.name, this.email, this.role, this.password,this.databaseID}) {
+  User.clone(
+      {User user,
+      this.id,
+      this.name,
+      this.email,
+      this.role,
+      this.password,
+      this.databaseID}) {
     // password //debug only
     this.hasImage = user.hasImage;
     this.imageURL = user.imageURL;
@@ -32,7 +48,7 @@ class User {
         name = data['fullName'],
         email = data['email'],
         role = data['userRole'],
-        databaseID = data['manageID'],
+        databaseID = data['databaseID'],
         password = data['password']; //debug only
   Map<String, dynamic> toJson() {
     return {

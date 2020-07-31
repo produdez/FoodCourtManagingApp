@@ -22,7 +22,7 @@ void callbackDispatcher(){
           FoodCourtReportDBService.foodCourtId = await _getFirstUserId(inputData['databaseID']);
           print("get in background task for food court");
           print("${FoodCourtReportDBService.foodCourtId}");
-          if(day == 1 && hour >= 21)
+          if(day == 1 && hour >= 22)
             await FoodCourtReportDBService().createMonthlyReport(DateFormat('MMyyyy').format(prevMonth));
           break;
         case "auto-generating vendor monthly report":
@@ -38,7 +38,7 @@ void callbackDispatcher(){
           VendorReportDBService.vendorId = await _getFirstUserId(inputData['databaseID']);
           print("get in background task for vendor");
           print("${VendorReportDBService.vendorId}");
-          if(nextDate.day == 1 && hour >= 21)
+          if(nextDate.day == 1 && hour >= 19 && hour < 22)
             await VendorReportDBService().createMonthlyReport(DateFormat('MMyyyy').format(DateTime.now()));
           break;
       }
