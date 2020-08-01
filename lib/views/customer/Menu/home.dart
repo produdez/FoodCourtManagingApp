@@ -74,7 +74,7 @@ class _CustomerViewState extends State<CustomerView> {
               backgroundColor: Color(0xffff8a84),
               title: (currentIndex == 0)
                   ? Text(
-                      "FOOD COURT",
+                      "Food Court",
                       style:
                           TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                     )
