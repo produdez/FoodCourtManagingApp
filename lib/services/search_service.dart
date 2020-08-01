@@ -1013,6 +1013,17 @@ class SearchHelper {
   static List<String> history = [];
 }
 
+String cusID = "";
+void storeStringList(List<String> list) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setStringList(cusID, list);
+}
+
+Future<List<String>> getStringList() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return await prefs.getStringList(cusID);
+}
+
 // setListString(List<String> list, String cusID) async {
 //   SharedPreferences prefs = await SharedPreferences.getInstance();
 //   List<String> listt;

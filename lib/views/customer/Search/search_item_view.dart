@@ -10,7 +10,7 @@ import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:fcfoodcourt/services/view_logic_helper.dart';
 import 'package:fcfoodcourt/services/cart_service.dart';
 import 'package:fcfoodcourt/services/search_service.dart';
-import 'package:fcfoodcourt/views/customer/Menu/home.dart';
+import 'package:fcfoodcourt/services/search_service.dart';
 
 /*
 This is the vendor element in the list view
@@ -54,6 +54,7 @@ class SearchItemView extends StatelessWidget {
           inVendor = true;
           SearchHelper.history.add(dish.name);
           SearchHelper.history.toSet().toList();
+          storeStringList(SearchHelper.history);
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => CustomerDishView()));
         },
