@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fcfoodcourt/models/dish.dart';
+import 'package:fcfoodcourt/models/staff.dart';
 import 'package:fcfoodcourt/models/vendor.dart';
 import 'package:fcfoodcourt/services/dish_db_service.dart';
 import 'package:fcfoodcourt/views/customer/Search/search_list_view.dart';
@@ -8,8 +9,12 @@ import 'package:provider/provider.dart';
 import 'package:fcfoodcourt/views/customer/Menu/customer_dish_list_view.dart';
 import 'package:fcfoodcourt/services/vendor_db_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fcfoodcourt/views/customer/Menu/dishes_of_vendor.dart';
-import 'package:fcfoodcourt/views/customer/Search/search_item_view.dart';
+import 'package:fcfoodcourt/views/FCManager/VendorsView/item_vendor_view.dart';
+import 'package:fcfoodcourt/views/FCManager/VendorsView/vendor_management_view_controller.dart';
+import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/item_staff_view.dart';
+import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/manage_staff_view_controller.dart';
+import 'package:fcfoodcourt/views/vendorManager/MenuView/item_dish_view.dart';
+import 'package:fcfoodcourt/views/vendorManager/MenuView/menu_view_controller.dart';
 
 bool firstFilter = false;
 bool secondFilter = false;
@@ -771,6 +776,219 @@ class SearchInVendor extends SearchDelegate {
         );
       }).toList();
     }
+  }
+}
+
+class SearchForVendor extends SearchDelegate {
+  static List<Vendor> vendorList = [];
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+          icon: Icon(Icons.clear),
+          color: Color(0xffff8a84),
+          onPressed: () {
+            query = "";
+          })
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+        icon: Icon(Icons.arrow_back),
+        color: Color(0xffff8a84),
+        onPressed: () {
+          close(context, null);
+        });
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    final suggestionList = query.isEmpty
+        ? vendorList
+        : vendorList
+            .where((e) => e.name.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+    return ListView.builder(
+      itemCount: suggestionList == null ? 0 : suggestionList.length,
+      itemBuilder: (context, index) {
+        return ItemVendorView(
+          vendor: suggestionList[index],
+          onRemoveSelected: () => VendorManagementViewController.removeVendor(
+              context, suggestionList[index]),
+          onEditSelected: () => VendorManagementViewController.editVendor(
+              context, suggestionList[index]),
+          onCallSelected: () => VendorManagementViewController.callVendor(
+              context, suggestionList[index]),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final suggestionList = query.isEmpty
+        ? vendorList
+        : vendorList
+            .where((e) => e.name.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+    return ListView.builder(
+      itemCount: suggestionList == null ? 0 : suggestionList.length,
+      itemBuilder: (context, index) {
+        return ItemVendorView(
+          vendor: suggestionList[index],
+          onRemoveSelected: () => VendorManagementViewController.removeVendor(
+              context, suggestionList[index]),
+          onEditSelected: () => VendorManagementViewController.editVendor(
+              context, suggestionList[index]),
+          onCallSelected: () => VendorManagementViewController.callVendor(
+              context, suggestionList[index]),
+        );
+      },
+    );
+  }
+}
+
+class SearchForStaff extends SearchDelegate {
+  static List<Staff> staffList = [];
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+          icon: Icon(Icons.clear),
+          color: Color(0xffff8a84),
+          onPressed: () {
+            query = "";
+          })
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+        icon: Icon(Icons.arrow_back),
+        color: Color(0xffff8a84),
+        onPressed: () {
+          close(context, null);
+        });
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    final suggestionList = query.isEmpty
+        ? staffList
+        : staffList
+            .where((e) => e.name.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+    return ListView.builder(
+      itemCount: suggestionList == null ? 0 : suggestionList.length,
+      itemBuilder: (context, index) {
+        return ItemStaffView(
+          staff: suggestionList[index],
+          onRemoveSelected: () => ManageStaffViewController.removeStaff(
+              context, suggestionList[index]),
+          onEditSelected: () => ManageStaffViewController.editStaff(
+              context, suggestionList[index]),
+          onCallSelected: () => ManageStaffViewController.callStaff(
+              context, suggestionList[index]),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final suggestionList = query.isEmpty
+        ? staffList
+        : staffList
+            .where((e) => e.name.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+    return ListView.builder(
+      itemCount: suggestionList == null ? 0 : suggestionList.length,
+      itemBuilder: (context, index) {
+        return ItemStaffView(
+          staff: suggestionList[index],
+          onRemoveSelected: () => ManageStaffViewController.removeStaff(
+              context, suggestionList[index]),
+          onEditSelected: () => ManageStaffViewController.editStaff(
+              context, suggestionList[index]),
+          onCallSelected: () => ManageStaffViewController.callStaff(
+              context, suggestionList[index]),
+        );
+      },
+    );
+  }
+}
+
+class SearchForDish extends SearchDelegate {
+  static List<Dish> dishList = [];
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+          icon: Icon(Icons.clear),
+          color: Color(0xffff8a84),
+          onPressed: () {
+            query = "";
+          })
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+        icon: Icon(Icons.arrow_back),
+        color: Color(0xffff8a84),
+        onPressed: () {
+          close(context, null);
+        });
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    final suggestionList = query.isEmpty
+        ? dishList
+        : dishList
+            .where((e) => e.name.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+    return ListView.builder(
+      itemCount: suggestionList == null ? 0 : suggestionList.length,
+      itemBuilder: (context, index) {
+        return ItemDishView(
+          dish: suggestionList[index],
+          onRemoveSelected: () =>
+              MenuViewController.removeDish(context, suggestionList[index]),
+          onEditSelected: () =>
+              MenuViewController.editDish(context, suggestionList[index]),
+          onDiscountSelected: () =>
+              MenuViewController.discountDish(context, suggestionList[index]),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final suggestionList = query.isEmpty
+        ? dishList
+        : dishList
+            .where((e) => e.name.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+    return ListView.builder(
+      itemCount: suggestionList == null ? 0 : suggestionList.length,
+      itemBuilder: (context, index) {
+        return ItemDishView(
+          dish: suggestionList[index],
+          onRemoveSelected: () =>
+              MenuViewController.removeDish(context, suggestionList[index]),
+          onEditSelected: () =>
+              MenuViewController.editDish(context, suggestionList[index]),
+          onDiscountSelected: () =>
+              MenuViewController.discountDish(context, suggestionList[index]),
+        );
+      },
+    );
   }
 }
 
