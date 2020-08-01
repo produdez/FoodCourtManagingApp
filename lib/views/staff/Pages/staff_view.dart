@@ -1,5 +1,10 @@
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/dish_db_service.dart';
+import 'package:fcfoodcourt/services/staff_db_service.dart';
+import 'package:fcfoodcourt/views/staff/Pages/order_page.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:fcfoodcourt/services/StaffDBService/dish_db_services.dart';
 import 'package:fcfoodcourt/views/staff/Pages/order_page.dart';
 import 'package:fcfoodcourt/services/VendorReportDBService/vendor_report_db_service.dart';
@@ -43,18 +48,31 @@ class _StaffViewState extends State<StaffView> {
     //OrderDBService.vendorID =
     super.initState();
     //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
+    //DishDBService.vendorID = widget.userData.id;
+    
   }
 
   @override
   Widget build(BuildContext context) {
-    final User userData = Provider.of<User>(context);
-    DishDBServices.vendorID = 'wKrl2m0MXlkpRhiJoBK4';
-    OrderDBService.vendorID = 'wKrl2m0MXlkpRhiJoBK4';
-    VendorReportDBService.vendorId = 'wKrl2m0MXlkpRhiJoBK4';
-    //print(userData.databaseID);
+    final User userData =  Provider.of<User>(context);
+    return FutureBuilder<bool>(
+      future: StaffDBService().setStaffVendorId(userData.databaseID),
+      builder:(context, AsyncSnapshot<bool> snapshot){
+        if(snapshot.hasData)
+        {print(StaffDBService.vendorID);
+        DishDBService.vendorID = StaffDBService.vendorID;
+        VendorReportDBService.vendorId = StaffDBService.vendorID;
+        return SafeArea(
+        child: Scaffold(
 
-    return SafeArea(
-      child: Scaffold(
+    // final User userData = Provider.of<User>(context);
+    // DishDBServices.vendorID = 'wKrl2m0MXlkpRhiJoBK4';
+    // OrderDBService.vendorID = 'wKrl2m0MXlkpRhiJoBK4';
+    // VendorReportDBService.vendorId = 'wKrl2m0MXlkpRhiJoBK4';
+    // //print(userData.databaseID);
+
+    // return SafeArea(
+    //   child: Scaffold(
         resizeToAvoidBottomPadding: false,
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor: Color(0xffff8a84),
@@ -99,6 +117,9 @@ class _StaffViewState extends State<StaffView> {
         ),
         body: currentPage,
       ),
-    );
+    );}
+    // else
+    //   return CircularProgressIndicator(); 
+    });
   }
 }

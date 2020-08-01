@@ -25,6 +25,9 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   String reportType;
   String formattedMonth;
   String formatId;
+  int sortMonthlyIndex;
+  bool sortMonthlyAsc = true;
+  bool monthlySort = true;
   List<MonthlyVendorReport> monthlyVendorReportList;
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   _ReportViewState(this.month, this.monthlyVendorReportList);
@@ -82,6 +85,8 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
   }
   Widget monthlyTable(){
     return DataTable(
+      sortColumnIndex: sortMonthlyIndex,
+      sortAscending: sortMonthlyAsc,
       columns: <DataColumn>[
         DataColumn(
           label: Text(
@@ -90,6 +95,19 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
           ),
         ),
         DataColumn(
+          onSort: (columnIndex, sortAscending){
+            setState(() {
+              if(columnIndex == sortMonthlyIndex){sortMonthlyAsc = monthlySort = sortAscending;}
+              else{
+                sortMonthlyIndex = columnIndex;
+                sortMonthlyAsc = monthlySort;
+              }
+              monthlyVendorReportList.sort((a, b) => a.sale.compareTo(b.sale));
+              if(!sortMonthlyAsc){
+                monthlyVendorReportList.sort((b, a) => a.sale.compareTo(b.sale));
+              }
+            });
+          },
           label: Text(
             "Sale",
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -109,7 +127,7 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
         ),
         DataColumn(
           label: Text(
-            "Total Paid",
+            "Total Paid\n(Rent + Commissions)",
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           )
         ),
@@ -118,19 +136,19 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
         .map(
           (report) => DataRow(cells: [
             DataCell(
-              Text("LOL"),
+              Text(report.name),
             ),
             DataCell(
               Text("${report.sale}"),
             ),
             DataCell(
-              Text("${report.sale * 0.04}"),
+              Text("${(report.sale * 0.04).toStringAsFixed(2)}"),
             ),
             DataCell(
-              Text("5m VND"),
+               Text("5000000 VND"),
             ),
             DataCell(
-              Text("${report.sale * 0.04 + 5000000}"),
+              Text("${double.tryParse((report.sale * 0.04).toStringAsFixed(2)) + 5000000}"),
             ),
           ]))
         .toList()

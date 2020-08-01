@@ -1,17 +1,12 @@
-import 'dart:async';
-
-import 'package:fcfoodcourt/models/orderedDish.dart';
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:intl/intl.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/PopUpForms/invalid_view.dart';
 import 'package:fcfoodcourt/services/VendorReportDBService/vendor_report_db_service.dart';
 import 'package:fcfoodcourt/views/vendorManager/ReportView/report_view.dart';
-import 'package:fcfoodcourt/models/vendor_report.dart';
 import 'package:fcfoodcourt/shared/dialog_loading_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:workmanager/workmanager.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 
@@ -45,7 +40,7 @@ class _SelectTypeViewState extends State<SelectTypeView> {
     VendorReportDBService.vendorId = userData.databaseID;
     print(VendorReportDBService.vendorId);
     return Scaffold(
-        //child: Scaffold(
+      //child: Scaffold(
 
         resizeToAvoidBottomInset: false, // address bottom overflow error
         //resizeToAvoidBottomPadding: false,
@@ -72,7 +67,8 @@ class _SelectTypeViewState extends State<SelectTypeView> {
           mainAxisAlignment: MainAxisAlignment.center,
           //mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+            Column(mainAxisAlignment: MainAxisAlignment.start, 
+            children: [
               Row(
                 children: <Widget>[
                   Container(
@@ -109,75 +105,77 @@ class _SelectTypeViewState extends State<SelectTypeView> {
                   child: reportType("Monthly"),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  // FloatingActionButton(
-                  // heroTag: "FAB1",
-                  // backgroundColor: Color(0xffff8a84),
-                  // onPressed: () {
-                  //       List<OrderedDish> emptyList;
-                  //       //print(VendorReportDBService.vendorId.toString());
-                  //       print("Create Daily Report");
-                  //       VendorReportDBService().createDailyReport(emptyList);
-                  //       //]);
+            ]
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+          // FloatingActionButton(
+          // heroTag: "FAB1",
+          // backgroundColor: Color(0xffff8a84),
+          // onPressed: () {
+          //       List<OrderedDish> emptyList;
+          //       //print(VendorReportDBService.vendorId.toString());
+          //       print("Create Daily Report");
+          //       VendorReportDBService().createDailyReport(emptyList);
+          //       //]);
 
-                  //   }, //This request the pop-up new dish form
-                  // child: Icon(
-                  //   Icons.add,
-                  //   size: 50,
-                  // ),
-                  // ),
-                  // FloatingActionButton(
-                  // heroTag: "FAB2",
-                  // backgroundColor: Color(0xffff8a84),
-                  // onPressed: () {
-                  //   //On newDish chosen, show newDish popUp and process information
-                  //   //The return value is a Dish with name, price (every other fields are defaulted)
-                  //     print("Update Daily Report");
-                  //       VendorReportDBService().updateDailyReport(<OrderedDish>[OrderedDish(name: "pho", price: 400 , quantity: 1, revenue: 400 ),
-                  //       OrderedDish(name: "Hu tieu", price: 40, quantity: 2, revenue: 80 ), OrderedDish(name: "Bun Rieu", price: 40, quantity: 2, revenue: 80 )
-                  //       ]);
+          //   }, //This request the pop-up new dish form
+          // child: Icon(
+          //   Icons.add,
+          //   size: 50,
+          // ),
+          // ),
+          // FloatingActionButton(
+          // heroTag: "FAB2",
+          // backgroundColor: Color(0xffff8a84),
+          // onPressed: () {
+          //   //On newDish chosen, show newDish popUp and process information
+          //   //The return value is a Dish with name, price (every other fields are defaulted)
+          //     print("Update Daily Report");
+          //       VendorReportDBService().updateDailyReport(<OrderedDish>[OrderedDish(name: "pho", price: 400 , quantity: 1, revenue: 400 ),
+          //       OrderedDish(name: "Hu tieu", price: 40, quantity: 2, revenue: 80 ), OrderedDish(name: "Bun Rieu", price: 40, quantity: 2, revenue: 80 )
+          //       ]);
 
-                  //   }, //This request the pop-up new dish form
-                  // child: Icon(
-                  //   Icons.add,
-                  //   size: 50,
-                  // ),
-                  // ),
-                  // FloatingActionButton(
-                  // heroTag: "FAB3",
-                  // backgroundColor: Color(0xffff8a84),
-                  // onPressed: () {
-                  //   //On newDish chosen, show newDish popUp and process information
-                  //   //The return value is a Dish with name, price (every other fields are defaulted)
-                  //     print("Create Monthly Report");
-                  //       VendorReportDBService().createMonthlyReport("072020");
+          //   }, //This request the pop-up new dish form
+          // child: Icon(
+          //   Icons.add,
+          //   size: 50,
+          // ),
+          // ),
+          // FloatingActionButton(
+          // heroTag: "FAB3",
+          // backgroundColor: Color(0xffff8a84),
+          // onPressed: () {
+          //   //On newDish chosen, show newDish popUp and process information
+          //   //The return value is a Dish with name, price (every other fields are defaulted)
+          //     print("Create Monthly Report");
+          //       VendorReportDBService().createMonthlyReport("072020");
 
-                  //   },
-                  // child: Icon(
-                  //   Icons.add,
-                  //   size: 50,
-                  // ),
-                  // ),
-                  // FloatingActionButton(
-                  // heroTag: "FAB4",
-                  // backgroundColor: Color(0xffff8a84),
-                  // onPressed: () async{
-                  //     print("cancel task");
-                  //       //VendorReportDBService().createMonthlyReport("072020");
-                  //   await Workmanager.cancelAll();
-                  //   },
-                  // child: Icon(
-                  //   Icons.add,
-                  //   size: 50,
-                  // ),
-                  // ),
-                ],
-              )
-            ]),
-          ],
-        ));
+          //   },
+          // child: Icon(
+          //   Icons.add,
+          //   size: 50,
+          // ),
+          // ),
+          // FloatingActionButton(
+          // heroTag: "FAB4",
+          // backgroundColor: Color(0xffff8a84),
+          // onPressed: () async{
+          //     print("cancel task");
+          //       //VendorReportDBService().createMonthlyReport("072020");
+          //   await Workmanager.cancelAll();
+          //   },
+          // child: Icon(
+          //   Icons.add,
+          //   size: 50,
+          // ),
+          // ),
+           ],)
+          ]
+        ),
+
+    );
     //  ),
   }
 
