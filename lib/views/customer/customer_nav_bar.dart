@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/views/profileViews/profile_view.dart';
-import 'package:fcfoodcourt/views/vendorManager/MenuView/menu_view.dart';
+import 'package:fcfoodcourt/services/search_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -16,13 +16,15 @@ class CustomerNavBar extends StatefulWidget {
     this.userData,
   }) : super(key: key);
   @override
-  _CustomerNavBarState createState() => _CustomerNavBarState();
+  _CustomerNavBarState createState() => _CustomerNavBarState(userData);
 }
 
 class _CustomerNavBarState extends State<CustomerNavBar> {
+  User userData;
   int currentIndex = 0;
   final List<Widget> children = [];
-  _CustomerNavBarState();
+  _CustomerNavBarState(this.userData);
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +39,7 @@ class _CustomerNavBarState extends State<CustomerNavBar> {
 
   @override
   Widget build(BuildContext context) {
+    cusID = userData.id;
     return Scaffold(
       resizeToAvoidBottomInset: false, // address bottom overflow error
       //resizeToAvoidBottomPadding: false,
