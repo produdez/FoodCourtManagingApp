@@ -8,7 +8,7 @@ import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:fcfoodcourt/services/user_db_service.dart';
-import 'package:fcfoodcourt/services/search_service.dart';
+
 import 'package:fcfoodcourt/views/profileViews/change_password_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,6 @@ class _MenuViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     final User userData = Provider.of<User>(context);
-    cusID = userData.id;
     return WillPopScope(
         onWillPop: () {
           return Future.value(false);
