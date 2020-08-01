@@ -10,7 +10,7 @@ class FoodCourtReportDBService{
   String formattedMonth = DateFormat('MMyyyy').format(_dateTime);
   CollectionReference vendorReportDB = Firestore.instance.collection("vendorReportDB");
   CollectionReference foodCourtReportDB = Firestore.instance.collection("foodCourtReportDB");
-  CollectionReference vendorDB = Firestore.instance.collection("VendorDB");
+  CollectionReference vendorDB = Firestore.instance.collection("vendorDB");
   Future<List<MonthlyVendorReport>> checkAvailableMonthlyReport(String month)async{
     //monthlyReportList.clear();
     List<MonthlyVendorReport> foodCourtReport;
@@ -56,6 +56,7 @@ class FoodCourtReportDBService{
       for(DocumentSnapshot doc in docs){
         if(doc.data['month'] != null
         && doc.documentID.substring(doc.documentID.length - 6) == month){
+          print(doc.data['vendorId']);
           await vendorDB.document("${doc.data['vendorId']}").get().then((snapshot){
             vendorName = snapshot.data['name'];
           });
@@ -71,7 +72,7 @@ class FoodCourtReportDBService{
   double calculateTotalProceed(List<MonthlyVendorReport> monthlyReports){
     double totalReturn = 0;
     for(int i = 0; i < monthlyReports.length; i++)
-      totalReturn += monthlyReports[i].sale;
+      totalReturn += 5000000 + double.tryParse((monthlyReports[i].sale*0.04).toStringAsFixed(2));
     return totalReturn;
   }
 }

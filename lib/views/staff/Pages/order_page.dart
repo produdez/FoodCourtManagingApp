@@ -36,6 +36,15 @@ class _OrderPageState extends State<OrderPage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Color(0xffff8a84),
+          actions: <Widget>[
+            FlatButton.icon(
+              icon: Icon(Icons.person),
+              label: Text('logout'),
+              onPressed: () async {
+                await AuthenticationService().signOut();
+              },
+            )
+          ],
           title: Text(
             "ORDER LIST",
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),

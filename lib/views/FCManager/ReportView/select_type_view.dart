@@ -45,6 +45,7 @@ class _SelectTypeViewState extends State<SelectTypeView> {
     final User userData =  Provider.of<User>(context);
     //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
     FoodCourtReportDBService.foodCourtId = userData.id;
+    print(FoodCourtReportDBService.foodCourtId);
     return Scaffold(
       //child: Scaffold(
         resizeToAvoidBottomInset: false, // address bottom overflow error
@@ -102,21 +103,36 @@ class _SelectTypeViewState extends State<SelectTypeView> {
                 child: reportType("Monthly"),
               ),
           ),
-          FloatingActionButton(
-          heroTag: "FAB4",
-          backgroundColor: Color(0xffff8a84),
-          onPressed: () async{
-            //On newDish chosen, show newDish popUp and process information
-            //The return value is a Dish with name, price (every other fields are defaulted)
-              print("cancel task");
-                //VendorReportDBService().createMonthlyReport("072020");
-            await Workmanager.cancelAll();
-            }, //This request the pop-up new dish form
-          child: Icon(
-            Icons.add,
-            size: 50,
-          ),
-          ),       
+          // FloatingActionButton(
+          // heroTag: "FAB4",
+          // backgroundColor: Color(0xffff8a84),
+          // onPressed: () async{
+          //   //On newDish chosen, show newDish popUp and process information
+          //   //The return value is a Dish with name, price (every other fields are defaulted)
+          //     print("cancel task");
+          //       //VendorReportDBService().createMonthlyReport("072020");
+          //   await Workmanager.cancelAll();
+          //   }, //This request the pop-up new dish form
+          // child: Icon(
+          //   Icons.add,
+          //   size: 50,
+          // ),
+          // ),       
+          // FloatingActionButton(
+          // heroTag: "FAB3",
+          // backgroundColor: Color(0xffff8a84),
+          // onPressed: () async{
+          //   //On newDish chosen, show newDish popUp and process information
+          //   //The return value is a Dish with name, price (every other fields are defaulted)
+          //     print("generate food court report");
+          //       //VendorReportDBService().createMonthlyReport("072020");
+          //   await FoodCourtReportDBService().createMonthlyReport("072020");
+          //   }, //This request the pop-up new dish form
+          // child: Icon(
+          //   Icons.add,
+          //   size: 50,
+          // ),
+          // ),    
           ]
         ),
         ],

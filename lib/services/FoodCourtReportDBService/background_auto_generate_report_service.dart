@@ -10,8 +10,8 @@ void callbackDispatcher(){
       // VendorReportDBService.vendorId = _getFirstUserId(widget.userData.id);
       switch (taskName) {
         case "auto-generating food court monthly report":
-          /*if(_getFirstUserId(inputData['vendorId']) != "uuLXke0DcITuQ10F5eCnEGqSzK62")
-            break;*/
+          if(_getFirstUserId(inputData['databaseID']) != "uuLXke0DcITuQ10F5eCnEGqSzK62")
+            break;
           int day = int.parse(DateFormat('d').format(DateTime.now()));
           int month = int.parse(DateFormat('M').format(DateTime.now()));
           int year = int.parse(DateFormat('y').format(DateTime.now()));
@@ -22,13 +22,13 @@ void callbackDispatcher(){
           FoodCourtReportDBService.foodCourtId = await _getFirstUserId(inputData['databaseID']);
           print("get in background task for food court");
           print(inputData['databaseID']);
-          if(day == 1 && hour >= 21)
+          if(day == 1 && hour >= 22)
             await FoodCourtReportDBService().createMonthlyReport(DateFormat('MMyyyy').format(prevMonth));
           break;
         case "auto-generating vendor monthly report":
           //TODO: if first user id is food court id => break
-          /*if(_getFirstUserId(inputData['vendorId']) == "uuLXke0DcITuQ10F5eCnEGqSzK62")
-            break;*/
+          if(_getFirstUserId(inputData['databaseID']) == "uuLXke0DcITuQ10F5eCnEGqSzK62")
+            break;
           int day = int.parse(DateFormat('d').format(DateTime.now()));
           int month = int.parse(DateFormat('M').format(DateTime.now()));
           int year = int.parse(DateFormat('y').format(DateTime.now()));
@@ -38,7 +38,7 @@ void callbackDispatcher(){
           VendorReportDBService.vendorId = await _getFirstUserId(inputData['databaseID']);
           print("get in background task for vendor");
           print("${VendorReportDBService.vendorId}");
-          if(nextDate.day == 1 && hour >= 21)
+          if(nextDate.day == 1 && hour >= 19 && hour < 22)
             await VendorReportDBService().createMonthlyReport(DateFormat('MMyyyy').format(DateTime.now()));
           break;
       }

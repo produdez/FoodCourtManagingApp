@@ -10,7 +10,7 @@ class StaffDBService {
   //the staff db only response the correct menu according to the user's id (vendor's id)
   //this field is static and set when we first go to home page (menu,... in this case)
   static String ownerID;
-
+  static String vendorID;
   //add staff as a new document to db, id is randomize by Firebase
   Future addStaff(Staff staff) async {
     DocumentReference _staffRef = staffDB.document();
@@ -114,4 +114,14 @@ class StaffDBService {
     });
     return staffInfo;
   }
+// return vendorId of staff
+  Future<bool> setStaffVendorId(String databaseID) async{
+    //String vendorId;
+    await staffDB.document(databaseID).get().then((value){
+      vendorID = value.data['vendorID'];
+    });
+    return true;
+  }
 }
+
+
