@@ -346,6 +346,7 @@ class SearchService extends SearchDelegate<String> {
             vendorID: doc.data['vendorID'] ?? '',
             hasImage: doc.data['hasImage'] ?? false,
             isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+            imageURL: doc.data['imageURL'] ?? null,
           );
         }).toList();
       } else if (filter == 1) {
@@ -365,6 +366,7 @@ class SearchService extends SearchDelegate<String> {
             vendorID: doc.data['vendorID'] ?? '',
             hasImage: doc.data['hasImage'] ?? false,
             isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+            imageURL: doc.data['imageURL'] ?? null,
           );
         }).toList();
       } else if (filter == 2) {
@@ -385,6 +387,7 @@ class SearchService extends SearchDelegate<String> {
             vendorID: doc.data['vendorID'] ?? '',
             hasImage: doc.data['hasImage'] ?? false,
             isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+            imageURL: doc.data['imageURL'] ?? null,
           );
         }).toList();
       } else if (filter == 3) {
@@ -404,6 +407,7 @@ class SearchService extends SearchDelegate<String> {
             vendorID: doc.data['vendorID'] ?? '',
             hasImage: doc.data['hasImage'] ?? false,
             isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+            imageURL: doc.data['imageURL'] ?? null,
           );
         }).toList();
       }
@@ -712,6 +716,7 @@ class SearchInVendor extends SearchDelegate {
           vendorID: doc.data['vendorID'] ?? '',
           hasImage: doc.data['hasImage'] ?? false,
           isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+          imageURL: doc.data['imageURL'] ?? null,
         );
       }).toList();
     } else if (filter == 1) {
@@ -732,6 +737,7 @@ class SearchInVendor extends SearchDelegate {
           vendorID: doc.data['vendorID'] ?? '',
           hasImage: doc.data['hasImage'] ?? false,
           isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+          imageURL: doc.data['imageURL'] ?? null,
         );
       }).toList();
     } else if (filter == 2) {
@@ -753,6 +759,7 @@ class SearchInVendor extends SearchDelegate {
           vendorID: doc.data['vendorID'] ?? '',
           hasImage: doc.data['hasImage'] ?? false,
           isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+          imageURL: doc.data['imageURL'] ?? null,
         );
       }).toList();
     } else if (filter == 3) {
@@ -773,6 +780,7 @@ class SearchInVendor extends SearchDelegate {
           vendorID: doc.data['vendorID'] ?? '',
           hasImage: doc.data['hasImage'] ?? false,
           isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+          imageURL: doc.data['imageURL'] ?? null,
         );
       }).toList();
     }
@@ -1023,15 +1031,3 @@ Future<List<String>> getStringList() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   return await prefs.getStringList(cusID);
 }
-
-// setListString(List<String> list, String cusID) async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   List<String> listt;
-//   await prefs.setStringList(cusID, list);
-//   listt = prefs.getStringList(cusID);
-//   return listt;
-// }
-
-// getListString(String cusID) async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-// }

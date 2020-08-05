@@ -59,13 +59,10 @@ class VendorView extends StatelessWidget {
                           width: 2,
                         )),
                     child: GFAvatar(
-                      backgroundImage: AssetImage(
-                          //TODO: Find a way to store cloud image and load that also
-                          //TODO: And then implement image choosing for vendor profile when newvendor or editvendor
-                          'assets/${vendor.id}.jpg'),
-                      shape: GFAvatarShape.square,
-                      radius: 25,
-                      borderRadius: BorderRadius.circular(10),
+                      backgroundColor: Colors.transparent,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: showImage(context)),
                     ),
                   ),
                 ),
@@ -112,5 +109,28 @@ class VendorView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget showImage(BuildContext context) {
+    if (vendor.hasImage == false) {
+      return Container(
+          height: MediaQuery.of(context).size.height / 1.25,
+          width: MediaQuery.of(context).size.width / 1.25,
+          child: Image.asset(
+            "assets/vendor.png",
+            fit: BoxFit.fill,
+          ));
+    } else if (vendor.imageURL == null) {
+      return CircularProgressIndicator();
+    } else {
+      return Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Image.network(
+          vendor.imageURL,
+          fit: BoxFit.fill,
+        ),
+      );
+    }
   }
 }
