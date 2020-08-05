@@ -89,6 +89,7 @@ class DishDBService {
           vendorID: doc.data['vendorID'] ?? '',
           hasImage: doc.data['hasImage'] ?? false,
           isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+          imageURL: doc.data['imageURL'] ?? null,
         );
       }).toList();
     } else if (filter == 1) {
@@ -106,6 +107,7 @@ class DishDBService {
           vendorID: doc.data['vendorID'] ?? '',
           hasImage: doc.data['hasImage'] ?? false,
           isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+          imageURL: doc.data['imageURL'] ?? null,
         );
       }).toList();
     } else if (filter == 2) {
@@ -124,6 +126,7 @@ class DishDBService {
           vendorID: doc.data['vendorID'] ?? '',
           hasImage: doc.data['hasImage'] ?? false,
           isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+          imageURL: doc.data['imageURL'] ?? null,
         );
       }).toList();
     } else if (filter == 3) {
@@ -141,6 +144,7 @@ class DishDBService {
           vendorID: doc.data['vendorID'] ?? '',
           hasImage: doc.data['hasImage'] ?? false,
           isOutOfOrder: doc.data['isOutOfOrder'] ?? false,
+          imageURL: doc.data['imageURL'] ?? null,
         );
       }).toList();
     }

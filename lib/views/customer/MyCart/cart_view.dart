@@ -43,7 +43,7 @@ class _CartViewState extends State<CartView> {
             automaticallyImplyLeading: false,
             backgroundColor: Color(0xffff8a84),
             title: Text(
-              "MY CART",
+              "My Cart",
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             centerTitle: true,
