@@ -55,7 +55,7 @@ class _StaffViewState extends State<StaffView> {
   @override
   Widget build(BuildContext context) {
     final User userData =  Provider.of<User>(context);
-    return FutureBuilder<bool>(
+    return FutureBuilder<bool> (
       future: StaffDBService().setStaffVendorId(userData.databaseID),
       builder:(context, AsyncSnapshot<bool> snapshot){
         if(snapshot.hasData)

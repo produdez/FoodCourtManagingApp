@@ -107,7 +107,7 @@ class _SelectTypeViewState extends State<SelectTypeView> {
               ),
             ]
           ),
-          Row(
+          /*Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
           // FloatingActionButton(
@@ -171,12 +171,10 @@ class _SelectTypeViewState extends State<SelectTypeView> {
           //   size: 50,
           // ),
           // ),
-           ],)
+           ],)*/
           ]
         ),
-
     );
-    //  ),
   }
 
   Positioned reportType(String type) {
