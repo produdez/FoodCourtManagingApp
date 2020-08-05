@@ -6,7 +6,7 @@ import 'package:fcfoodcourt/views/vendorManager/MenuView/menu_view_controller.da
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:fcfoodcourt/services/search_service.dart';
 import 'dish_list_view.dart';
 
 /*
@@ -57,6 +57,38 @@ class _MenuViewState extends State<MenuView> {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () async {
+                    showSearch(context: context, delegate: SearchForDish());
+                  },
+                  child: Container(
+                      padding: EdgeInsets.all(5),
+                      height: 50,
+                      width: 400,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Color(0xffff8a84), width: 3),
+                      ),
+                      child: IgnorePointer(
+                        child: TextField(
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.search,
+                                  size: 30, color: Colors.grey),
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.only(bottom: 10),
+                              hintText: '   Search....',
+                              hintStyle:
+                                  TextStyle(fontSize: 20, color: Colors.grey)),
+                        ),
+                      )),
+                ),
+              ],
+            ),
             SizedBox(
               height: 10,
             ),

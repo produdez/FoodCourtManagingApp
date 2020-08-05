@@ -9,7 +9,7 @@ import 'package:fcfoodcourt/views/customer/Menu/vendor_list_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:marquee_widget/marquee_widget.dart';
 import 'package:fcfoodcourt/views/customer/Menu/dishes_of_vendor.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -32,6 +32,7 @@ class CustomerView extends StatefulWidget {
 
 class _CustomerViewState extends State<CustomerView> {
   final List<Widget> children = [];
+  List<String> localHis = [];
   @override
   void initState() {
     super.initState();
@@ -76,7 +77,7 @@ class _CustomerViewState extends State<CustomerView> {
               backgroundColor: Color(0xffff8a84),
               title: (currentIndex == 0)
                   ? Text(
-                      "FOOD COURT",
+                      "Food Court",
                       style:
                           TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                     )
@@ -126,8 +127,18 @@ class _CustomerViewState extends State<CustomerView> {
                                     } else {
                                       vendorID = CustomerDishView.vendorId;
                                     }
+                                    localHis = await getStringList();
                                     passToSearchHelper();
-                                    setState(() {});
+                                    setState(() {
+                                      if (localHis != null) {
+                                        SearchHelper.history = localHis;
+                                      } else {
+                                        SearchHelper.history = [];
+                                      }
+                                    });
+                                    // SharedPreferences preferences =
+                                    //     await SharedPreferences.getInstance();
+                                    // preferences.clear();
                                     showSearch(
                                             context: context,
                                             delegate: SearchService())

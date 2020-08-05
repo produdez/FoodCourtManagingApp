@@ -8,7 +8,7 @@ import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:fcfoodcourt/services/user_db_service.dart';
-import 'package:fcfoodcourt/views/customer/customer_nav_bar.dart';
+
 import 'package:fcfoodcourt/views/profileViews/change_password_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
