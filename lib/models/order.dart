@@ -18,17 +18,6 @@ class OrderedDish {
       this.revenue,
       this.dishID,
       this.vendorID});
-  /*
-  factory OrderedDish.fromFireBase(DocumentSnapshot doc) {
-    Map data = doc.data;
-    return OrderedDish(
-        name: data['name'],
-        price: double.tryParse(data['price']),
-        quantity: data['quantity'],
-        revenue: double.tryParse(data['revenue']),
-        orderID: data['id'],
-        vendorID: data['vendorID']);
-  }*/
 }
 
 // this class is not for the whole order of the customer
@@ -42,20 +31,11 @@ class Order {
   double initRev = 0;
   List<OrderedDish> detail = [];
   List<OrderedDish> initDetail = [];
-  Order({
-    this.totalPrice,
-    this.id,
-    this.vendorID,
-    this.vendorName,
-  });
-  /*factory Order.fromFireBase(DocumentSnapshot doc) {
-    Map data = doc.data;
-
-    return Order(
-        id: data['id'],
-        totalPrice: double.tryParse(data['price']),
-        
-        vendorID: data['vendorID']
-        );
-  }*/
+  bool inform;
+  Order(
+      {this.totalPrice,
+      this.id,
+      this.vendorID,
+      this.vendorName,
+      this.inform = false});
 }
