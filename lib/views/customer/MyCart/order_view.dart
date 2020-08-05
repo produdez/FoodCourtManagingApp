@@ -12,37 +12,18 @@ This is the dish element in the list view
 it has call back fields so that the parent that contains this can specify
 it's functionality.
  */
-class ItemDishView extends StatefulWidget {
-  final OrderedDish dish;
-  final Function(OrderedDish) onRemoveSelected;
+class OrderView extends StatelessWidget {
+  final Order order;
 
-  const ItemDishView({
+  const OrderView({
     Key key,
-    this.dish,
-    this.onRemoveSelected,
+    this.order,
   }) : super(key: key);
-  @override
-  _ItemDishViewState createState() => new _ItemDishViewState(dish);
-}
-
-class _ItemDishViewState extends State<ItemDishView> {
-  OrderedDish dish;
-  _ItemDishViewState(OrderedDish _dish) {
-    this.dish = _dish;
-  }
-  @override
-  void initState() {
-    // TODO: implement initState
-    dish.initQuan = dish.quantity;
-    dish.initRev = dish.revenue;
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 130,
-      width: 400,
+      height: 80,
+      width: 465,
       margin: EdgeInsets.fromLTRB(5, 10, 5, 0),
       decoration: BoxDecoration(
         border: Border.all(
@@ -68,9 +49,9 @@ class _ItemDishViewState extends State<ItemDishView> {
                     Container(
                         margin: EdgeInsets.fromLTRB(5, 0, 0, 0),
                         child: Text(
-                          dish.name,
+                          order.vendorName,
                           style: TextStyle(
-                              color: Color(0xbb000000),
+                              color: Color(0xfff85f6a),
                               fontSize: 18.0,
                               fontWeight: FontWeight.bold),
                         )),
@@ -83,7 +64,7 @@ class _ItemDishViewState extends State<ItemDishView> {
                               height: 20,
                               width: 100,
                               child: Text(
-                                "Price: ${dish.revenue}\ Đ",
+                                "Price: ${order.totalPrice}\ Đ",
                                 style: TextStyle(
                                   color: Colors.black87,
                                   fontWeight: FontWeight.bold,
@@ -94,56 +75,26 @@ class _ItemDishViewState extends State<ItemDishView> {
                       ],
                     ),
                     SizedBox(height: 2),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(5, 0, 0, 3),
-                      child: FlatButton(
-                        //TODO: check whether dish is out of stock to fade the button
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        color: Color(0xfff85f6a),
-                        child: Text(
-                          'Remove',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                          ),
-                        ),
-                        onPressed: () => widget.onRemoveSelected(dish),
-
-                        ///
-                      ),
-                    )
                   ],
                 ),
-                //The price is displayed dynamically by view logic
               ),
               Container(
-                child: Row(
+                  child: Column(children: <Widget>[
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
                   children: <Widget>[
-                    dish.quantity != 1
-                        ? new IconButton(
-                            icon: new Icon(Icons.remove),
-                            onPressed: () =>
-                                setState(() => CartService().reduceDish(dish)))
-                        : new IgnorePointer(
-                            child: IconButton(
-                                icon: new Icon(
-                                  Icons.remove,
-                                  color: Colors.grey,
-                                ),
-                                onPressed: () => setState(
-                                    () => CartService().reduceDish(dish)))),
-                    new Text(dish.quantity.toString()),
-                    new IconButton(
-                        icon: new Icon(Icons.add),
-                        onPressed: () =>
-                            setState(() => CartService().addFromCart(dish)))
+                    Text((order.inform == true) ? "Ready" : "Processing  ",
+                        style: TextStyle(
+                            color: (order.inform == true)
+                                ? Colors.green
+                                : Colors.red,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10))
                   ],
                 ),
-              ),
+              ])),
             ],
           ),
         ),

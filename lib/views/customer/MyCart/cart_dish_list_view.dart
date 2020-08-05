@@ -24,11 +24,7 @@ class _CartDishListViewState extends State<CartDishListView> {
   void initState() {
     for (int i = 0; i < CartService.cart.length; i++) {
       if (CartService.cart[i].vendorID == vendorId) {
-        // CartService.initCart = CartService.cart;
-        // CartService.cart[i].initDetail = CartService.cart[i].detail;
         dishList = CartService.cart[i].detail;
-        // CartService.cart[i].initRev = CartService.cart[i].totalPrice;
-        // CartService.initTotal = CartService.totalPrice;
       }
     }
     super.initState();
@@ -47,32 +43,6 @@ class _CartDishListViewState extends State<CartDishListView> {
               CartService().removeDish(dish);
             });
           },
-          /*onRemoveSelected: () {
-            //Remove chosen, ask user for confirmation and remove in DB if confirmed
-            createConfirmationView(context).then((onValue) {
-              if (onValue == true) {
-                DishDBService().removeDish(dishList[index]);
-              }
-            });
-          },
-          onEditSelected: () {
-            //Edit chosen, show edit form and process returned information
-            //The return value is Dish with name and price (no realPrice,...)
-            createPopUpEditDish(context, dishList[index]).then((onValue) {
-              if (onValue != null) {
-                DishDBService().editDish(dishList[index], onValue);
-              }
-            });
-          },
-          onDiscountSelected: () {
-            //Discount chosen, show discount form and process returned information
-            //The return value is Dish with discounted price and percentage (no name,...)
-            createPopUpDiscountDish(context, dishList[index]).then((onValue) {
-              if (onValue != null) {
-                DishDBService().discountDish(dishList[index], onValue);
-              }
-            });
-          },*/
         );
       },
     );

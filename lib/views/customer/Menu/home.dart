@@ -1,5 +1,6 @@
 import 'package:fcfoodcourt/models/order.dart';
 import 'package:fcfoodcourt/models/vendor.dart';
+import 'package:fcfoodcourt/services/order_db_service.dart';
 import 'package:fcfoodcourt/services/search_service.dart';
 import 'package:fcfoodcourt/services/vendor_db_service.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
@@ -46,6 +47,7 @@ class _CustomerViewState extends State<CustomerView> {
     ));
     children.add(CustomerDishView());
     Order.customerID = widget.userData.id;
+    OrderDBService.customerID = widget.userData.name;
   }
 
   @override

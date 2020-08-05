@@ -1,4 +1,3 @@
-
 import 'package:fcfoodcourt/models/dish.dart';
 import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/dish_db_service.dart';
@@ -24,15 +23,13 @@ class _MenuViewState extends State<MenuView> {
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
   Widget build(BuildContext context) {
-    final User userData =  Provider.of<User>(context);
+    final User userData = Provider.of<User>(context);
     //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
-    DishDBService.vendorID = userData == null? null : userData.databaseID;
-
+    DishDBService.vendorID = userData == null ? null : userData.databaseID;
 
     return StreamProvider<List<Dish>>.value(
       value: DishDBService().allVendorDishes,
@@ -48,12 +45,13 @@ class _MenuViewState extends State<MenuView> {
           ),
           centerTitle: true,
           actions: <Widget>[
-              FlatButton.icon(
-                icon: Icon(Icons.person),
-                label: Text('logout'),
+            FlatButton.icon(
+              icon: Icon(Icons.person),
+              label: Text('logout'),
               onPressed: () async {
                 await AuthenticationService().signOut();
-              },)
+              },
+            )
           ],
         ),
         body: Column(
@@ -62,31 +60,6 @@ class _MenuViewState extends State<MenuView> {
             SizedBox(
               height: 10,
             ),
-//            Row(
-//              children: <Widget>[
-//                SizedBox(
-//                  width: 30,
-//                ),
-//                Container(
-//                  padding: EdgeInsets.all(5),
-//                  height: 50,
-//                  width: 400,
-//                  decoration: BoxDecoration(
-//                    border: Border.all(color: Color(0xffff8a84), width: 4),
-//                  ),
-//                  child: TextField(
-//                    decoration: InputDecoration(
-//                        border: InputBorder.none,
-//                        contentPadding: EdgeInsets.all(0),
-//                        hintText: '   Search....'),
-//                  ),
-//                ),
-//                Icon(Icons.search, size: 50, color: Color(0xffff8a84)),
-//              ],
-//            ),
-//            SizedBox(
-//              height: 10,
-//            ),
             Expanded(child: DishListView()),
           ],
         ),
@@ -102,9 +75,7 @@ class _MenuViewState extends State<MenuView> {
     );
   }
 
-
-  void onNewDishSelected(){
+  void onNewDishSelected() {
     MenuViewController.addDish(context);
   }
 }
-
