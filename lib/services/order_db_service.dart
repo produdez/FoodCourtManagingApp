@@ -13,6 +13,7 @@ class OrderDBService {
       DocumentReference _orderRef = orderDB.document();
       CartService.cart[i].id = _orderRef.documentID;
       await _orderRef.setData({
+        "id": _orderRef.documentID,
         "customerID": customerID,
         "totalPrice": '${CartService.cart[i].totalPrice}',
         "vendorID": CartService.cart[i].vendorID,

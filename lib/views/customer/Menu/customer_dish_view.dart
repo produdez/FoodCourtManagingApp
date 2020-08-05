@@ -7,6 +7,7 @@ import '../../../models/dish.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:fcfoodcourt/services/view_logic_helper.dart';
 import 'package:fcfoodcourt/services/cart_service.dart';
+import 'pop_add.dart';
 
 /*
 This is the vendor element in the list view
@@ -120,6 +121,7 @@ class ItemDishView extends StatelessWidget {
                                   msg: "Sorry, the dish is out of order",
                                 );
                               }
+                              createAddedView(context).then((onValue) {});
                             },
 
                             ///

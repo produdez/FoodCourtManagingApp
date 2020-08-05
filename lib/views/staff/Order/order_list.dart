@@ -13,7 +13,6 @@ class _OrderListState extends State<OrderList> {
   @override
   Widget build(BuildContext context) {
     final orders = Provider.of<List<Order>>(context) ?? [];
-
     return ListView.builder(
       padding: EdgeInsets.only(
         top: 20.0,

@@ -9,7 +9,7 @@ class OrderDBService {
       Firestore.instance.collection('orderDB');
 
   List<Order> _orderListFromSnapshot(QuerySnapshot snapshot) {
-    //print(vendorID);
+    print(vendorID);
     return snapshot.documents
         .where((DocumentSnapshot documentSnapshot) =>
             documentSnapshot.data['vendorID'] == vendorID)

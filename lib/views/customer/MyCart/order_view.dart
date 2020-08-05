@@ -84,14 +84,15 @@ class OrderView extends StatelessWidget {
                   height: 20,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    Text((order.inform == true) ? "Ready" : "Processing  ",
+                    Text((order.inform == true) ? "    Ready" : "Processing  ",
                         style: TextStyle(
                             color: (order.inform == true)
                                 ? Colors.green
                                 : Colors.red,
                             fontWeight: FontWeight.bold,
-                            fontSize: 10))
+                            fontSize: 12))
                   ],
                 ),
               ])),
