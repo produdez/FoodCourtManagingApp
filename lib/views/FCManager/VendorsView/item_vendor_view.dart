@@ -1,6 +1,6 @@
 import 'package:fcfoodcourt/models/vendor.dart';
-import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getflutter/getflutter.dart';
 
@@ -44,10 +44,12 @@ class ItemVendorView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               InkWell(
+                //TODO: remove after debug
                 onTap: () {
+                  print(vendor.toString());
                   Fluttertoast.cancel();
                   Fluttertoast.showToast(
-                    msg: "ID: ${vendor.id}, Image: ${vendor.hasImage}",
+                    msg: vendor.toString(),
                   );
                 },
                 child: Container(
@@ -59,6 +61,7 @@ class ItemVendorView extends StatelessWidget {
                         width: 2,
                       )),
                   child: GFAvatar(
+                    backgroundColor: Colors.transparent,
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: showImage(context)
@@ -74,14 +77,18 @@ class ItemVendorView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Container(
-                      child: Text(
-                    vendor.name,
-                    style: TextStyle(
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        vendor.name,
+                        style: TextStyle(
                         color: Color(0xffffa834),
                         fontSize: 15.0,
                         fontWeight: FontWeight.bold),
-                  )),
+                      ),
+
+                    ],
+                  ),
 
                   //The price is displayed dynamically by view logic
                   Container(
@@ -99,6 +106,54 @@ class ItemVendorView extends StatelessWidget {
                           style: TextStyle(
                             color: Colors.black54,
                             fontSize: 8,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                          width: 10,
+                          child: IconButton(
+                            padding: EdgeInsets.symmetric(horizontal: 5,vertical: 0),
+                            icon: Icon(Icons.info,
+                              size: 10,),
+                            onPressed: (){
+                              showDialog(context: context,
+                                  builder: (context){
+                                    return AlertDialog(
+                                      title: Center(
+                                        child: Text(
+                                          'Vendor ID',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                            color: Color(0xffff6624),
+                                          ),
+                                        ),
+                                      ),
+                                      content: SizedBox(height: 50, width: 200, child: Center(child: Column(
+                                        children: <Widget>[
+                                          SelectableText(vendor.id),
+                                          SizedBox(height: 10,),
+                                          FlatButton(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(5),
+                                            ),
+                                            color: Color(0xfff85f6a),
+                                            child: Text('Copy ID'),
+                                            onPressed: () {
+                                              Clipboard.setData(ClipboardData(text: vendor.id));
+                                              print("Copied id to clipboard: "+ vendor.id);
+                                              Fluttertoast.cancel();
+                                              Fluttertoast.showToast(
+                                                msg: "Copied id to clipboard!",
+                                              );
+                                            },
+                                          )
+                                        ],
+                                      ))),
+                                    );
+                                  }
+                              );
+                            },
                           ),
                         ),
                       ],
@@ -185,29 +240,26 @@ class ItemVendorView extends StatelessWidget {
     );
   }
   Widget showImage(BuildContext context){
-    return  FutureBuilder(
-      future: ImageUploadService().getImageFromCloud(context, vendor.id),
-      builder: (context, snapshot) {
-        if(vendor.hasImage==false || snapshot.connectionState == ConnectionState.waiting){
-          return Container(
-              height: MediaQuery.of(context).size.height /
-                  1.25,
-              width: MediaQuery.of(context).size.width /
-                  1.25,
-              child: Image.asset("assets/vendor.png", fit: BoxFit.fill,));
-        }
-        if (snapshot.connectionState == ConnectionState.done) //image is found
-          return Container(
-            height:
-            MediaQuery.of(context).size.height,
-            width:
-            MediaQuery.of(context).size.width,
-            child: snapshot.data,
-            //TODO: future builder will keep refreshing while scrolling, find a way to keep data offline and use a stream to watch changes instead.
-          );
-        return Container();
-
-      },
-    );
+    if(vendor.hasImage==false){
+      return Container(
+          height: MediaQuery.of(context).size.height /
+              1.25,
+          width: MediaQuery.of(context).size.width /
+              1.25,
+          child: Image.asset("assets/vendor.png", fit: BoxFit.fill,));
+    }else if(vendor.imageURL==null){
+      return CircularProgressIndicator();
+    }else{
+      return Container(
+        height:
+        MediaQuery.of(context).size.height,
+        width:
+        MediaQuery.of(context).size.width,
+        child: Image.network(
+          vendor.imageURL,
+          fit: BoxFit.fill,
+        ),
+      );
+    }
   }
 }
