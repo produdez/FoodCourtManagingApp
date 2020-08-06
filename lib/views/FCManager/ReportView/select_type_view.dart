@@ -95,13 +95,17 @@ class _SelectTypeViewState extends State<SelectTypeView> {
                 ),
             ],
           ),
-          Container(
+          Stack(
+            children: [
+              Container(
                 margin: EdgeInsets.only(top: 150),
                 child: SizedBox(
                 width: 200,
                 height: 100,
                 child: reportType("Monthly"),
               ),
+              )
+            ]
           ),
           // FloatingActionButton(
           // heroTag: "FAB4",

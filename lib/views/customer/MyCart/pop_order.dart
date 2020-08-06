@@ -3,12 +3,16 @@ import 'package:fcfoodcourt/services/order_db_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'pop_track_order.dart';
+
 /*
 A form that shows confirmation.
 The function createConfirmationView returns a Future<bool>
 which tells if user confirmed or not
  */
 class ConfirmationView extends StatelessWidget {
+  final Function() onConfirmPress;
+  const ConfirmationView({Key key, this.onConfirmPress}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -92,8 +96,13 @@ class ConfirmationView extends StatelessWidget {
                             ),
                           ),
                           onPressed: () => {
-                            OrderDBService().createOrder(CartService.cart),
+                            OrderDBService().createOrder(),
+
+                            // CartService.initCart.clear(),
+                            // CartService.initTotal = 0,
                             Navigator.of(context).pop(true),
+                            createTrackOrderView(context, onConfirmPress)
+                                .then((onValue) {})
                           },
                         )
                       : Container(),
@@ -107,10 +116,11 @@ class ConfirmationView extends StatelessWidget {
   }
 }
 
-Future<bool> createConfirmationView(BuildContext context) {
+Future<bool> createConfirmationView(
+    BuildContext context, Function() onConfirmPress) {
   return showDialog(
       context: context,
       builder: (context) {
-        return ConfirmationView();
+        return ConfirmationView(onConfirmPress: onConfirmPress);
       });
 }

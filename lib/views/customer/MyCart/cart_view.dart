@@ -1,18 +1,13 @@
 import 'package:fcfoodcourt/models/order.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
-import 'package:fcfoodcourt/services/dish_db_service.dart';
 import 'package:fcfoodcourt/models/dish.dart';
-import 'package:fcfoodcourt/views/customer/Menu/home.dart';
+import 'package:fcfoodcourt/services/order_db_service.dart';
 import 'package:fcfoodcourt/views/customer/MyCart/pop_order.dart';
-
-//import 'package:fcfoodcourt/views/vendorManager/MenuView/popUpForms/new_dish_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fcfoodcourt/services/cart_service.dart';
-import 'package:fcfoodcourt/views/customer/customer_nav_bar.dart';
 import 'vendor_list_view.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 /*
 This is the menu view that holds the frame for the whole menu
@@ -26,7 +21,7 @@ class CartView extends StatefulWidget {
 class _CartViewState extends State<CartView> {
   @override
   void initState() {
-    CartService.initCart = CartService.cart; /////////////////////////
+    // CartService().toInitCart();
     super.initState();
   }
 
@@ -43,7 +38,7 @@ class _CartViewState extends State<CartView> {
             automaticallyImplyLeading: false,
             backgroundColor: Color(0xffff8a84),
             title: Text(
-              "MY CART",
+              "My Cart",
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             centerTitle: true,
@@ -110,7 +105,8 @@ class _CartViewState extends State<CartView> {
                           children: <Widget>[
                             GestureDetector(
                                 onTap: () {
-                                  createConfirmationView(context)
+                                  createConfirmationView(
+                                          context, onConfirmPress)
                                       .then((onValue) {});
                                 },
                                 child: Container(
@@ -130,5 +126,9 @@ class _CartViewState extends State<CartView> {
             ),
           ),
         ));
+  }
+
+  onConfirmPress() {
+    setState(() {});
   }
 }

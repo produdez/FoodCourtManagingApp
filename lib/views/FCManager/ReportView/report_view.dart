@@ -248,13 +248,17 @@ class _ReportViewState extends State<ReportView> with SingleTickerProviderStateM
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      Container(
-                        margin: EdgeInsets.only(top: 20),
-                        padding: EdgeInsets.only(top: 20),
-                        height: 50,
-                        width: 270,
-                        alignment: Alignment.centerRight,
-                        child: changeTime("Choose Month")
+                      Stack(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(top: 20),
+                            padding: EdgeInsets.only(top: 20),
+                            height: 50,
+                            width: 270,
+                            alignment: Alignment.centerRight,
+                            child: changeTime("Choose Month")
+                          )
+                        ]
                       )
                     ]
                     ),

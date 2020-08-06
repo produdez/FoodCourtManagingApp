@@ -11,10 +11,8 @@ class CartService {
   //the dish db only response the correct menu according to the user's id (vendor's id)
   //this field is static and set when we first go to home page (menu,... in this case)
   static List<Order> cart = [];
-  static List<Order> initCart = [];
   static String orderID;
   static double totalPrice = 0;
-  static double initTotal = 0;
 
   //add dish as a new document to db, id is randomize by Firebase
   /*Future addOrder(Order order) async {
@@ -111,4 +109,25 @@ class CartService {
       }
     }
   }
+
+  // void toInitCart() {
+  //   CartService.initTotal = CartService.totalPrice;
+  //   for (int i = 0; i < CartService.cart.length; i++) {
+  //     Order initOrder = Order(
+  //         totalPrice: CartService.cart[i].totalPrice,
+  //         vendorID: CartService.cart[i].vendorID,
+  //         vendorName: CartService.cart[i].vendorName);
+  //     for (int j = 0; j < CartService.cart[i].detail.length; j++) {
+  //       OrderedDish initDish = OrderedDish(
+  //           name: CartService.cart[i].detail[j].name,
+  //           price: CartService.cart[i].detail[j].price,
+  //           quantity: CartService.cart[i].detail[j].quantity,
+  //           revenue: CartService.cart[i].detail[j].revenue,
+  //           dishID: CartService.cart[i].detail[j].dishID,
+  //           vendorID: CartService.cart[i].detail[j].vendorID);
+  //       initOrder.detail.add(initDish);
+  //     }
+  //     CartService.initCart.add(initOrder);
+  //   }
+  // }
 }

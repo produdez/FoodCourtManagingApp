@@ -3,12 +3,14 @@ import 'package:fcfoodcourt/services/order_db_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../MyCart/pop_track_order.dart';
+
 /*
 A form that shows confirmation.
 The function createConfirmationView returns a Future<bool>
 which tells if user confirmed or not
  */
-class ConfirmationView extends StatelessWidget {
+class AddedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -21,8 +23,8 @@ class ConfirmationView extends StatelessWidget {
             // borderRadius: BorderRadius.circular(40),
             //border: Border.all(color: Color(0xfff85f6a), width: 4)
           ),
-          height: 250,
-          width: 350,
+          height: 150,
+          width: 250,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -32,9 +34,7 @@ class ConfirmationView extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(width: 12),
                   Text(
-                    (CartService.cart.length != 0)
-                        ? "Do you want to order?"
-                        : "Failed to place order",
+                    "Added to cart",
                     style: TextStyle(
                       color: Color(0xffff6624),
                       fontWeight: FontWeight.bold,
@@ -42,15 +42,6 @@ class ConfirmationView extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
-              Text(
-                (CartService.cart.length != 0)
-                    ? "  Please confirm!"
-                    : "Your cart is empty!",
-                style: TextStyle(
-                  color: Color(0xfff85f6a),
-                  fontSize: 25,
-                ),
               ),
               SizedBox(
                 height: 5,
@@ -65,7 +56,7 @@ class ConfirmationView extends StatelessWidget {
                     ),
                     color: Colors.white,
                     child: Text(
-                      (CartService.cart.length != 0) ? 'CANCEL' : "BACK",
+                      "BACK",
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 20,
@@ -75,28 +66,6 @@ class ConfirmationView extends StatelessWidget {
                       Navigator.of(context).pop(false);
                     },
                   ),
-                  (CartService.cart.length != 0)
-                      ? FlatButton(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 30, vertical: 10),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          color: Color(0xfff85f6a),
-                          child: Text(
-                            'OK',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          onPressed: () => {
-                            OrderDBService().createOrder(CartService.cart),
-                            Navigator.of(context).pop(true),
-                          },
-                        )
-                      : Container(),
                 ],
               )
             ],
@@ -107,10 +76,10 @@ class ConfirmationView extends StatelessWidget {
   }
 }
 
-Future<bool> createConfirmationView(BuildContext context) {
+Future<bool> createAddedView(BuildContext context) {
   return showDialog(
       context: context,
       builder: (context) {
-        return ConfirmationView();
+        return AddedView();
       });
 }

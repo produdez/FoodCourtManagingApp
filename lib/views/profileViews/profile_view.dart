@@ -8,7 +8,7 @@ import 'package:fcfoodcourt/models/user.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:fcfoodcourt/services/image_upload_service.dart';
 import 'package:fcfoodcourt/services/user_db_service.dart';
-import 'package:fcfoodcourt/views/customer/customer_nav_bar.dart';
+
 import 'package:fcfoodcourt/views/profileViews/change_password_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -63,158 +63,160 @@ class _MenuViewState extends State<ProfileView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
-                child: Center(
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Spacer(),
-                          InkWell(
-                            //TODO: remove after debug
-                            onTap: () {
-                              print(userData.toString());
-                              Fluttertoast.cancel();
-                              Fluttertoast.showToast(
-                                msg: userData.toString(),
-                              );
-                            },
-                            child: Container(
-                              height: 200,
-                              width: 200,
-                              padding: EdgeInsets.all(10),
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: 3, vertical: 3),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.orange,
-                                    width: 5,
-                                  )),
-                              child: GFAvatar(
-                                backgroundColor: Colors.transparent,
-                                child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: showImage(context, userData)),
-                                shape: GFAvatarShape.circle,
-                                radius: 1000,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                padding: EdgeInsets.only(top: 20.0),
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.add_a_photo,
-                                    size: 30.0,
-                                  ),
-                                  onPressed: () async {
-                                    File returnImage =
-                                        await ImageUploadService()
-                                            .getImageFromImagePicker();
-                                    setState(() {
-                                      image = returnImage;
-                                      pickedImage = true;
-                                    });
-                                    //upload image here
-                                    UserDBService(userData.id)
-                                        .uploadProfileImage(userData.imageFile);
-                                  },
+                child: SingleChildScrollView(
+                  child: Center(
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Spacer(),
+                            InkWell(
+                              //TODO: remove after debug
+                              onTap: () {
+                                print(userData.toString());
+                                Fluttertoast.cancel();
+                                Fluttertoast.showToast(
+                                  msg: userData.toString(),
+                                );
+                              },
+                              child: Container(
+                                height: 200,
+                                width: 200,
+                                padding: EdgeInsets.all(10),
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 3, vertical: 3),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.orange,
+                                      width: 5,
+                                    )),
+                                child: GFAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: showImage(context, userData)),
+                                  shape: GFAvatarShape.circle,
+                                  radius: 1000,
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        "Name: ",
-                        style: TextStyle(
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 20.0),
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.add_a_photo,
+                                      size: 30.0,
+                                    ),
+                                    onPressed: () async {
+                                      File returnImage =
+                                          await ImageUploadService()
+                                              .getImageFromImagePicker();
+                                      setState(() {
+                                        image = returnImage;
+                                        pickedImage = true;
+                                      });
+                                      //upload image here
+                                      UserDBService(userData.id)
+                                          .uploadProfileImage(userData.imageFile);
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          "Name: ",
+                          style: TextStyle(
+                              color: Color(0xffffa834),
+                              fontSize: 40.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${userData.name}",
+                          style: TextStyle(
                             color: Color(0xffffa834),
                             fontSize: 40.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "${userData.name}",
-                        style: TextStyle(
-                          color: Color(0xffffa834),
-                          fontSize: 40.0,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Role:",
-                        style: TextStyle(
-                            color: Colors.deepOrange,
-                            fontSize: 30.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "${userData.role}",
-                        style: TextStyle(
-                          color: Colors.deepOrange,
-                          fontSize: 30.0,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Email:",
-                        style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 30.0,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "${userData.email}",
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 30.0,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "UID: ${userData.id}",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      FlatButton(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        color: Color(0xfff85f6a),
-                        child: Text(
-                          'Change Password',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        onPressed: () {
-                          createPopUpChangePassword(context, userData)
-                              .then((onValue) {
-                            if (onValue != null) {
-                              Fluttertoast.showToast(msg: onValue);
-                            }
-                          });
-                        },
-                      ),
-                    ],
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Role:",
+                          style: TextStyle(
+                              color: Colors.deepOrange,
+                              fontSize: 30.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${userData.role}",
+                          style: TextStyle(
+                            color: Colors.deepOrange,
+                            fontSize: 30.0,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "Email:",
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 30.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${userData.email}",
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 30.0,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "UID: ${userData.id}",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20.0,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        FlatButton(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          color: Color(0xfff85f6a),
+                          child: Text(
+                            'Change Password',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          onPressed: () {
+                            createPopUpChangePassword(context, userData)
+                                .then((onValue) {
+                              if (onValue != null) {
+                                Fluttertoast.showToast(msg: onValue);
+                              }
+                            });
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

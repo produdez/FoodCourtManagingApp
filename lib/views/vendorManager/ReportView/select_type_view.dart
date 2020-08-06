@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fcfoodcourt/services/authentication_service.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
+import 'package:workmanager/workmanager.dart';
 
 class SelectTypeView extends StatefulWidget {
   const SelectTypeView();
@@ -38,7 +39,18 @@ class _SelectTypeViewState extends State<SelectTypeView> {
     final User userData = Provider.of<User>(context);
     //IMPORTANT: HAVE TO SET THE SERVICE'S VENDOR ID FROM HERE
     VendorReportDBService.vendorId = userData.databaseID;
-    print(VendorReportDBService.vendorId);
+    //print(VendorReportDBService.vendorId);
+    return FutureBuilder<void>(
+      future: Workmanager.registerPeriodicTask(
+                "Create monthly report for vendor", 
+                "auto-generating vendor monthly report",
+                frequency: Duration(minutes: 15),
+                inputData: <String, dynamic>{
+                  'databaseID': "${userData.databaseID}"
+                }
+              ),
+      builder:  (context, AsyncSnapshot<void> snapshot){
+        if(snapshot.hasData){
     return Scaffold(
       //child: Scaffold(
 
@@ -90,20 +102,28 @@ class _SelectTypeViewState extends State<SelectTypeView> {
                   ),
                 ],
               ),
-              Container(
-                  margin: EdgeInsets.fromLTRB(0, 85, 0, 75),
-                  child: SizedBox(
-                    width: 200,
-                    height: 100,
-                    child: reportType("Daily"),
-                  )),
+              Stack(
+                children: [
+                  Container(
+                    margin: EdgeInsets.fromLTRB(0, 85, 0, 75),
+                    child: SizedBox(
+                      width: 200,
+                      height: 100,
+                      child: reportType("Daily"),
+                    )),
+                ]
+              ),
               //SizedBox(height: 50,),
-              Container(
-                child: SizedBox(
-                  width: 200,
-                  height: 100,
-                  child: reportType("Monthly"),
-                ),
+              Stack(
+                children: [
+                  Container(
+                    child: SizedBox(
+                      width: 200,
+                      height: 100,
+                      child: reportType("Monthly"),
+                    ),
+                  )
+                ]
               ),
             ]
           ),
@@ -158,23 +178,27 @@ class _SelectTypeViewState extends State<SelectTypeView> {
           //   size: 50,
           // ),
           // ),
-          // FloatingActionButton(
-          // heroTag: "FAB4",
-          // backgroundColor: Color(0xffff8a84),
-          // onPressed: () async{
-          //     print("cancel task");
-          //       //VendorReportDBService().createMonthlyReport("072020");
-          //   await Workmanager.cancelAll();
-          //   },
-          // child: Icon(
-          //   Icons.add,
-          //   size: 50,
-          // ),
-          // ),
+          FloatingActionButton(
+          heroTag: "FAB4",
+          backgroundColor: Color(0xffff8a84),
+          onPressed: () async{
+              print("cancel task");
+            await Workmanager.cancelAll();
+            },
+          child: Icon(
+            Icons.add,
+            size: 50,
+          ),
+          ),
            ],)*/
           ]
         ),
     );
+    }
+    else
+      return CircularProgressIndicator();
+    }
+  );
   }
 
   Positioned reportType(String type) {

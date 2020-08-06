@@ -45,7 +45,7 @@ class OrderTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      order.phoneNumber,
+                      order.customerID,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18.0,
@@ -77,6 +77,7 @@ class OrderTile extends StatelessWidget {
                               ),
                               color: Color(0xffff8a84),
                               onPressed: () async {
+                                print(order.id);
                                 await OrderDBService()
                                     .viewOrderedDish(order.id)
                                     .then((onValue) {

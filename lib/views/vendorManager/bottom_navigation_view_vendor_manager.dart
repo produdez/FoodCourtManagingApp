@@ -47,18 +47,18 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
         child: BottomNavigationBar(
           onTap: (index)async{
             await Workmanager.initialize(callbackDispatcher);
-            if(index == 2){
-              print("here");
-              //Workmanager.initialize(callbackDispatcher);
-              await Workmanager.registerPeriodicTask(
-                "Create monthly report for vendor", 
-                "auto-generating vendor monthly report",
-                frequency: Duration(minutes: 15),
-                inputData: <String, dynamic>{
-                  'databaseID': "${userData.databaseID}"
-                }
-              );
-            }
+            // if(index == 2){
+            //   print("here");
+            //   //Workmanager.initialize(callbackDispatcher);
+            //   await Workmanager.registerPeriodicTask(
+            //     "Create monthly report for vendor", 
+            //     "auto-generating vendor monthly report",
+            //     frequency: Duration(minutes: 15),
+            //     inputData: <String, dynamic>{
+            //       'databaseID': "${userData.databaseID}"
+            //     }
+            //   );
+            // }
             setState(() {
               currentIndex = index;
             });

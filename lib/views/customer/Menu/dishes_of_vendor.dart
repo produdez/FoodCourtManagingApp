@@ -87,7 +87,9 @@ class _MenuViewState extends State<CustomerDishView> {
                         ),
                         label: Text('logout'),
                         onPressed: () async {
+                          Navigator.pop(context);
                           await AuthenticationService().signOut();
+                          Navigator.pop(context);
                         },
                       )
                     ],
