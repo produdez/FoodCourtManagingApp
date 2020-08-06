@@ -338,9 +338,9 @@ class _ReportViewState extends State<ReportView>
 
   // Change date or month button
   Widget changeTime(String type) {
-    return Positioned(
-      bottom: 0.0,
-      right: 0.0,
+    return Container(
+      // bottom: 0.0,
+      // right: 0.0,
       child: Padding(
         padding: EdgeInsets.only(bottom: 0),
         child: RaisedButton(
@@ -496,7 +496,7 @@ class _ReportViewState extends State<ReportView>
                     alignment: Alignment.centerRight,
                     child: previousDate == "Please choose the date!!"
                         ? null
-                        : Stack(children: [changeTime("Choose Date")]))
+                        : changeTime("Choose Date"))
               ]),
               // if there is not any searched daily report
               Row(
@@ -518,10 +518,10 @@ class _ReportViewState extends State<ReportView>
                       alignment: Alignment.center,
                       child: previousDate != "Please choose the date!!"
                           ? null
-                          : Stack(children: [SizedBox(
+                          : SizedBox(
                               width: 200,
                               height: 100,
-                              child: changeTime("Choose Date"))]))
+                              child: changeTime("Choose Date")))
                 ],
               ),
               Expanded(
@@ -574,7 +574,7 @@ class _ReportViewState extends State<ReportView>
                     alignment: Alignment.centerRight,
                     child: previousMonth == "Please choose the month!!"
                         ? null
-                        : Stack(children: [changeTime("Choose Month")]))
+                        : changeTime("Choose Month"))
               ]),
               // if there is not any searched monthly report
               Row(
@@ -595,10 +595,10 @@ class _ReportViewState extends State<ReportView>
                         previousMonth != "Please choose the month!!" ? 0 : 200,
                     child: previousMonth != "Please choose the month!!"
                         ? null
-                        : Stack(children: [SizedBox(
+                        : SizedBox(
                             width: 200,
                             height: 100,
-                            child: changeTime("Choose Month"))]),
+                            child: changeTime("Choose Month")),
                     alignment: Alignment.center,
                   )
                 ],

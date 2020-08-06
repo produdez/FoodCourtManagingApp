@@ -55,7 +55,7 @@ class ViewLogic {
                   "Price: ",
                   style: TextStyle(
                     color: Colors.black87,
-                    fontSize: 9,
+                    fontSize: 8,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -63,19 +63,19 @@ class ViewLogic {
                   "${dish.originPrice}\ Đ",
                   style: TextStyle(
                     color: Colors.black87,
-                    fontSize: 9,
+                    fontSize: 7.5,
                     decoration: TextDecoration.lineThrough,
                   ),
                 ),
                 SizedBox(
                   height: 1,
-                  width: 5,
+                  width: 2,
                 ),
                 Text(
                   " ${dish.realPrice}\ Đ",
                   style: TextStyle(
                     color: dish.isOutOfOrder ? Colors.blue[800] : Colors.blue,
-                    fontSize: 9,
+                    fontSize: 8,
                     fontWeight: FontWeight.bold,
                   ),
                 )
@@ -83,7 +83,7 @@ class ViewLogic {
             ),
           ),
           Container(
-              margin: EdgeInsets.only(left: 5),
+              margin: EdgeInsets.only(left: 2),
               child: Text(
                 "- ${HelperService.formatDouble(dish.discountPercentage, decimalToKeep: 0)}%",
                 style: TextStyle(

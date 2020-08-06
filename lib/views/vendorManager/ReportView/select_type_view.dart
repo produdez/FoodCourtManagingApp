@@ -102,20 +102,15 @@ class _SelectTypeViewState extends State<SelectTypeView> {
                   ),
                 ],
               ),
-              Stack(
-                children: [
                   Container(
                     margin: EdgeInsets.fromLTRB(0, 85, 0, 75),
                     child: SizedBox(
                       width: 200,
                       height: 100,
                       child: reportType("Daily"),
-                    )),
-                ]
-              ),
+                    )
+                  ),
               //SizedBox(height: 50,),
-              Stack(
-                children: [
                   Container(
                     child: SizedBox(
                       width: 200,
@@ -123,8 +118,6 @@ class _SelectTypeViewState extends State<SelectTypeView> {
                       child: reportType("Monthly"),
                     ),
                   )
-                ]
-              ),
             ]
           ),
           /*Row(
@@ -201,10 +194,10 @@ class _SelectTypeViewState extends State<SelectTypeView> {
   );
   }
 
-  Positioned reportType(String type) {
-    return Positioned(
-      bottom: 0.0,
-      right: 0.0,
+  Widget reportType(String type) {
+    return Container(
+      // bottom: 0.0,
+      // right: 0.0,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 8.0),
         child: RaisedButton(

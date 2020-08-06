@@ -80,7 +80,7 @@ class ItemDishView extends StatelessWidget {
                     ViewLogic.displayPrice(context, dish),
                     SizedBox(
                       height: 4,
-                      //width: 10,
+                      //width: 20,
                     ),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -106,7 +106,7 @@ class ItemDishView extends StatelessWidget {
                                     ),
                                   )
                                 : Text(
-                                    'Add to card',
+                                    'Add to cart',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 10,
@@ -115,13 +115,13 @@ class ItemDishView extends StatelessWidget {
                             onPressed: () {
                               if (dish.isOutOfOrder == false) {
                                 CartService().addDish(dish, vendorName);
+                                createAddedView(context).then((onValue) {});
                               } else {
                                 Fluttertoast.cancel();
                                 Fluttertoast.showToast(
                                   msg: "Sorry, the dish is out of order",
                                 );
                               }
-                              createAddedView(context).then((onValue) {});
                             },
 
                             ///

@@ -71,6 +71,8 @@ class FoodCourtReportDBService{
   }
   double calculateTotalProceed(List<MonthlyVendorReport> monthlyReports){
     double totalReturn = 0;
+    if(monthlyReports == null)
+      return totalReturn;
     for(int i = 0; i < monthlyReports.length; i++)
       totalReturn += 5000000 + double.tryParse((monthlyReports[i].sale*0.04).toStringAsFixed(2));
     return totalReturn;

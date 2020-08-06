@@ -10,6 +10,7 @@ import 'package:fcfoodcourt/views/sharedView_Vendor_FC/StaffListView/manage_staf
 import 'package:fcfoodcourt/views/vendorManager/MenuView/menu_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 class VendorManagerNavBar extends StatefulWidget {
   const VendorManagerNavBar({Key key}) : super(key: key);
   @override
@@ -17,12 +18,11 @@ class VendorManagerNavBar extends StatefulWidget {
 }
 
 class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
-
-  int currentIndex;
+  int currentIndex = 0;
   final List<Widget> children = [];
   @override
   void initState() {
-    currentIndex = 0;
+    super.initState();
     children.add(MenuView());
     children.add(ManageStaffView());
 
@@ -31,27 +31,28 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
     children.add(ProfileView());
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    final User userData =  Provider.of<User>(context);
+    final User userData = Provider.of<User>(context);
     return Scaffold(
       resizeToAvoidBottomInset: false, // address bottom overflow error
       //resizeToAvoidBottomPadding: false,
       body: children[currentIndex],
-      bottomNavigationBar:Container(
+      bottomNavigationBar: Container(
         height: 75,
         decoration: BoxDecoration(
             border: Border(
-              top: BorderSide(width: 4, color: Colors.black),
-            )),
+          top: BorderSide(width: 4, color: Colors.black),
+        )),
         child: BottomNavigationBar(
-          onTap: (index)async{
+          onTap: (index) async {
             await Workmanager.initialize(callbackDispatcher);
             // if(index == 2){
             //   print("here");
             //   //Workmanager.initialize(callbackDispatcher);
             //   await Workmanager.registerPeriodicTask(
-            //     "Create monthly report for vendor", 
+            //     "Create monthly report for vendor",
             //     "auto-generating vendor monthly report",
             //     frequency: Duration(minutes: 15),
             //     inputData: <String, dynamic>{
@@ -70,13 +71,12 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
           unselectedFontSize: 20,
           currentIndex: currentIndex,
           selectedLabelStyle: TextStyle(
-            //color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 20
-          ),
+              //color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 20),
           //showSelectedLabels: true,
           showUnselectedLabels: true,
-         // selectedItemColor: Colors.black,
+          // selectedItemColor: Colors.black,
           unselectedItemColor: Colors.black,
           unselectedLabelStyle: TextStyle(
             color: Colors.black,
@@ -85,9 +85,9 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
           //selectedIconTheme: IconThemeData(color: Colors.white, size: 25),
           items: [
             BottomNavigationBarItem(
-                backgroundColor: Color(0xffff8a84),
-                icon: Icon(Icons.restaurant),
-                title: Text("Menu"),
+              backgroundColor: Color(0xffff8a84),
+              icon: Icon(Icons.restaurant),
+              title: Text("Menu"),
             ),
             BottomNavigationBarItem(
               backgroundColor: Color(0xffff8a84),
@@ -107,7 +107,6 @@ class _VendorManagerNavBarState extends State<VendorManagerNavBar> {
           ],
         ),
       ),
-
     );
   }
 }
