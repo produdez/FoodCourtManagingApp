@@ -38,7 +38,7 @@ void callbackDispatcher(){
           VendorReportDBService.vendorId = await _getFirstUserId(inputData['databaseID']);
           print("get in background task for vendor");
           print("${VendorReportDBService.vendorId}");
-          if(nextDate.day == 7 && hour > 12 && hour < 22)
+          if(nextDate.day == 1 && hour >= 19 && hour < 22)
             await VendorReportDBService().createMonthlyReport(DateFormat('MMyyyy').format(DateTime.now()));
           break;
       }
