@@ -98,52 +98,24 @@ class _SelectTypeViewState extends State<SelectTypeView> {
                       ),
                     ],
                   ),
-                  Container(
-                    margin: EdgeInsets.only(top: 150),
-                    child: SizedBox(
-                      width: 200,
-                      height: 100,
-                      child: Stack(children: [reportType("Monthly")]),
-                    ),
-                  ),
-                  // FloatingActionButton(
-                  // heroTag: "FAB4",
-                  // backgroundColor: Color(0xffff8a84),
-                  // onPressed: () async{
-                  //   //On newDish chosen, show newDish popUp and process information
-                  //   //The return value is a Dish with name, price (every other fields are defaulted)
-                  //     print("cancel task");
-                  //       //VendorReportDBService().createMonthlyReport("072020");
-                  //   await Workmanager.cancelAll();
-                  //   }, //This request the pop-up new dish form
-                  // child: Icon(
-                  //   Icons.add,
-                  //   size: 50,
-                  // ),
-                  // ),
-                  // FloatingActionButton(
-                  // heroTag: "FAB3",
-                  // backgroundColor: Color(0xffff8a84),
-                  // onPressed: () async{
-                  //   //On newDish chosen, show newDish popUp and process information
-                  //   //The return value is a Dish with name, price (every other fields are defaulted)
-                  //     print("generate food court report");
-                  //       //VendorReportDBService().createMonthlyReport("072020");
-                  //   await FoodCourtReportDBService().createMonthlyReport("072020");
-                  //   }, //This request the pop-up new dish form
-                  // child: Icon(
-                  //   Icons.add,
-                  //   size: 50,
-                  // ),
-                  // ),
-                ]),
-          ],
-        ));
+                      Container(
+                        margin: EdgeInsets.only(top: 150),
+                        child: SizedBox(
+                        width: 200,
+                        height: 100,
+                        child: reportType("Monthly"),
+                      ),
+                      )   
+                ]
+              ),
+            ],
+          )   
+    );
     //  ),
   }
 
-  Positioned reportType(String type) {
-    return Positioned.fill(
+  Widget reportType(String type) {
+    return Container(
       child: Padding(
         padding: const EdgeInsets.only(bottom: 8.0),
         child: RaisedButton(

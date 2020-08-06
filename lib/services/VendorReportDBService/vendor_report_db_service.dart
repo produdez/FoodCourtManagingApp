@@ -217,12 +217,16 @@ class VendorReportDBService {
   //calculate the total sale
   double calculateTotalSale(List<OrderedDish> orders) {
     double totalSale = 0;
+    if(orders == null)
+      return totalSale;
     for (int i = 0; i < orders.length; i++) totalSale += (orders[i].revenue);
     return totalSale;
   }
 
   double calculateTotalReturn(List<DailyVendorReport> dailyReports) {
     double totalReturn = 0;
+    if(dailyReports == null)
+      return totalReturn;
     for (int i = 0; i < dailyReports.length; i++)
       totalReturn += dailyReports[i].sale;
     return totalReturn;

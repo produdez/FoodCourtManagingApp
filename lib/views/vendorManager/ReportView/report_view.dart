@@ -338,9 +338,9 @@ class _ReportViewState extends State<ReportView>
 
   // Change date or month button
   Widget changeTime(String type) {
-    return Positioned(
-      bottom: 0.0,
-      right: 0.0,
+    return Container(
+      // bottom: 0.0,
+      // right: 0.0,
       child: Padding(
         padding: EdgeInsets.only(bottom: 0),
         child: RaisedButton(

@@ -41,84 +41,86 @@ class _SelectTypeViewState extends State<SelectTypeView> {
     VendorReportDBService.vendorId = userData.databaseID;
     //print(VendorReportDBService.vendorId);
     return FutureBuilder<void>(
-        future: Workmanager.registerPeriodicTask(
-            "Create monthly report for vendor",
-            "auto-generating vendor monthly report",
-            frequency: Duration(minutes: 15),
-            inputData: <String, dynamic>{
-              'databaseID': "${userData.databaseID}"
-            }),
-        builder: (context, AsyncSnapshot<void> snapshot) {
-          if (snapshot.hasData) {
-            return Scaffold(
-              //child: Scaffold(
+      future: Workmanager.registerPeriodicTask(
+                "Create monthly report for vendor", 
+                "auto-generating vendor monthly report",
+                frequency: Duration(minutes: 15),
+                inputData: <String, dynamic>{
+                  'databaseID': "${userData.databaseID}"
+                }
+              ),
+      builder:  (context, AsyncSnapshot<void> snapshot){
+        if(snapshot.hasData){
+    return Scaffold(
+      //child: Scaffold(
 
-              resizeToAvoidBottomInset: false, // address bottom overflow error
-              //resizeToAvoidBottomPadding: false,
-              backgroundColor: Colors.white,
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-                backgroundColor: Color(0xffff8a84),
-                title: Text(
-                  "VIEW REPORT",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                ),
-                centerTitle: true,
-                actions: <Widget>[
-                  FlatButton.icon(
-                    icon: Icon(Icons.person),
-                    label: Text('logout'),
-                    onPressed: () async {
-                      await AuthenticationService().signOut();
-                    },
-                  )
+        resizeToAvoidBottomInset: false, // address bottom overflow error
+        //resizeToAvoidBottomPadding: false,
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Color(0xffff8a84),
+          title: Text(
+            "VIEW REPORT",
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          actions: <Widget>[
+            FlatButton.icon(
+              icon: Icon(Icons.person),
+              label: Text('logout'),
+              onPressed: () async {
+                await AuthenticationService().signOut();
+              },
+            )
+          ],
+        ),
+        body: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          //mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Column(mainAxisAlignment: MainAxisAlignment.start, 
+            children: [
+              Row(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
+                    padding: EdgeInsets.only(top: 10),
+                    height: 50,
+                    width: 350,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xffff8a84), width: 4),
+                    ),
+                    child: Text(
+                      'PLEASE CHOOSE REPORT TYPE',
+                      style: TextStyle(
+                          color: Color(0xffff8a84),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ],
               ),
-              body: Row(mainAxisAlignment: MainAxisAlignment.center,
-                  //mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: <Widget>[
-                              Container(
-                                margin: EdgeInsets.fromLTRB(0, 50, 0, 0),
-                                padding: EdgeInsets.only(top: 10),
-                                height: 50,
-                                width: 350,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Color(0xffff8a84), width: 4),
-                                ),
-                                child: Text(
-                                  'PLEASE CHOOSE REPORT TYPE',
-                                  style: TextStyle(
-                                      color: Color(0xffff8a84),
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                              margin: EdgeInsets.fromLTRB(0, 85, 0, 75),
-                              child: SizedBox(
-                                width: 200,
-                                height: 100,
-                                child: Stack(children: [reportType("Daily")]),
-                              )),
-                          //SizedBox(height: 50,),
-                          Container(
-                            child: SizedBox(
-                              width: 200,
-                              height: 100,
-                              child: Stack(children: [reportType("Monthly")]),
-                            ),
-                          ),
-                        ]),
-                    /*Row(
+                  Container(
+                    margin: EdgeInsets.fromLTRB(0, 85, 0, 75),
+                    child: SizedBox(
+                      width: 200,
+                      height: 100,
+                      child: reportType("Daily"),
+                    )
+                  ),
+              //SizedBox(height: 50,),
+                  Container(
+                    child: SizedBox(
+                      width: 200,
+                      height: 100,
+                      child: reportType("Monthly"),
+                    ),
+                  )
+            ]
+          ),
+          /*Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
           // FloatingActionButton(
@@ -182,15 +184,20 @@ class _SelectTypeViewState extends State<SelectTypeView> {
           ),
           ),
            ],)*/
-                  ]),
-            );
-          } else
-            return CircularProgressIndicator();
-        });
+          ]
+        ),
+    );
+    }
+    else
+      return CircularProgressIndicator();
+    }
+  );
   }
 
-  Positioned reportType(String type) {
-    return Positioned.fill(
+  Widget reportType(String type) {
+    return Container(
+      // bottom: 0.0,
+      // right: 0.0,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 8.0),
         child: RaisedButton(
