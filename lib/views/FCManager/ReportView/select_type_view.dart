@@ -64,6 +64,7 @@ class _SelectTypeViewState extends State<SelectTypeView> {
               icon: Icon(Icons.person),
               label: Text('logout'),
               onPressed: () async {
+                await Workmanager.cancelAll();
                 await AuthenticationService().signOut();
               },
             )
