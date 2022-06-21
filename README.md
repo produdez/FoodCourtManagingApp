@@ -38,8 +38,6 @@ Full project report could be seen [Here](https://www.overleaf.com/read/xzpfstkwb
 
 ## Features
 
-List the ready features here:
-
 1. View stores, menu, place order
    |Vendor| Add | Place | Noti Ready |
    |---|---|---|---|
