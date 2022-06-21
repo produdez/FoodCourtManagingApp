@@ -1,43 +1,98 @@
-# foodcourtmanagerapp
+<!-- icons  -->
+[1.1]: https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white
+[2.1]: https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white
+[3.1]: https://img.shields.io/badge/Medium-12100E?style=for-the-badge&logo=medium&logoColor=white
+[4.1]: https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white
 
-Sotfware Engineering Project
+<!-- links to your social media accounts -->
+[1]: https://github.com/produdez
+[2]: https://www.linkedin.com/in/produdez/
+[3]: https://medium.com/@produde
+[4]: https://twitter.com/_Produde_
 
-Report: [GroupReport.pdf](GroupReport.pdf)
+# Smart Food Court Android Application System
 
-## Motivation:
+<p align="center">
+    <img src="./doc/logo.png" alt="Icon" width="200">
+</p>
 
+**Description:**
 
-The university is currently has one food court located in its Ly Thuong Kiet campus and is going to build another one in Di An campus. All food courts consist of a number of vendors at food vendors or service counters. Meals are ordered at one of the vendors and then carried to a common area for consumption. The food may also be ordered to take-away. All food are self serviced and there's no food delivering system (maybe in the future).
+An android application for user to buy food easily at food stalls and for manager and employees to manage their work flow as well as incoming orders.
 
-In 2020, the university wish to build a smart food court system (SFCS) to make the university more smart. The system is for customers to order foods from the tip of their fingers - their mobile device.
+Full project report could be seen [Here](https://www.overleaf.com/read/xzpfstkwbvym)
 
-The mobile app allows users to order food anywhere, before they come to the food court. Notification will be pushed to the app to notify order ready to be picked up.
+## General Information
 
-Payment can be made on-site or through other online methods like Pay-pal, Momo,...
+- Allow user to order food anywhere and go pickup onsite, with notification on order completion
+- Employees have info on queued orders, stock managements
+- Manager can edit stall's menu, manage old/new staffs, add discount events
+- The admin can manage authentication and add/remove store to the whole system, and also see many statistics on the whole site.
 
-Of course, the application have other features and interfaces for the managers and staffs of the store:
+## Technologies Used
 
-* For employees: Order queueing, stock management,..
-* For vendor: Menu editor, employee management, discount plans,..
-* For foodcourt manager: Authentication, Overall management and statistics,..
+- Firebase database
+- Firebase authentication
+- Flutter (Dart)
+- No backend
 
-## Features:
-We'll go in detail about the features in this document.
-## 1. Interactive: 
-* View list: After login customer can see a list of available vendors in the Food Court. The customer can also click on a vendor in the list to see the menu of that vendor.
-*  Searching: User can search for items in their current working tag, like searching food for customer, staffs for manager,... User can also choose a filter category to narrow down the search result.
-* Place order: while browsing through dishes gallery, customer can pick items to add to their shopping cart.
-They also can choose item quantity and remove items from cart,... before proceeding to payment.
-* Payment: After confirming their order choice, customer can choose their payment method, either by online payment through third-parties like Momo, Paypal,.. or directly pay at the vendor cashier. (In our project, online payment is not implemented).
-* Manage orders: The vendor staff can view a dynamic queue of waiting order, notify the customer when the order is ready and finish the order when payment is finished.
-* User profile: Every user must access the system through an authentication system, the account types include: Customer, staff, technician, vendor owner and food court manager. Each actor can also view and edit their profile. (In our project, profile page is not implemented)
-* Manipulate data: Include the methods for managing and manipulate data base for each actor. Such as view and modify vendors, vendor menu, staffs,...
-* View Report: Food court manager and vendor manager can view reports and statistics for their respective business.
-* Generate Report: Generate reports for vendors and food court. Depend on types of reports, the ways to generate them are different.
+## Features
 
-## 2. Non-interactive:
+List the ready features here:
 
-* The data for each order of each food court is automatically stored in data base for analysis.
-* Every operating day, at a specific pre-defined time, report of statistics of stalls and the whole food court is auto-generated for future view.
-* When system is put into maintenance, all processes are saved for for when the system comes back online.
+1. View stores, menu, place order
+   |Vendor| Add | Place | Noti Ready |
+   |---|---|---|---|
+    |![Screenshot](./doc/1.0.png)|![Screenshot](./doc/1.1.png)|![Screenshot](./doc/1.2.png)|![Screenshot](./doc/1.3.png)|
+2. Staff management
+    | Show | Add | Edit |
+    |---|---|---|
+    |![Screenshot](./doc/2.0.PNG)|![Screenshot](./doc/2.1.PNG)|![Screenshot](./doc/2.2.PNG)|
+3. View reports
+    | Stall Report | Whole site report |
+   |---|---|
+    |![Screenshot](./doc/3.2.png)|![Screenshot](./doc/3.1.png)|
+4. Search and filter
 
+   ![Screenshot](./doc/4.1.png)
+5. View and finish order
+
+    ![Screenshot](./doc/5.1.png)
+
+## Setup
+
+Requirements and Installations:
+
+1. Have flutter installed
+2. Use android studio or vscode (or any android dev environment)
+3. Install dependencies
+
+    ```[bash]
+
+    # Install dependencies
+    $ flutter pub get
+    ```
+
+## Usage
+
+1. Run
+
+## Future Improvements
+
+- Sync UI design
+- Improve flow and logic of viewing, finishing and order
+- Consider move code to backend
+- Better UI overall
+
+## Acknowledgements
+
+- Many thanks to [The Net Ninja](https://www.youtube.com/c/TheNetNinja) for his basic Flutter tutorial.
+
+## Contact
+
+Created by [@produdez](https://github.com/produdez) - feel free to contact me or follow my blog on medium ❤️!
+
+<!-- [![alt text][1.1]][1] -->
+[![alt text][2.1]][2]
+[![alt text][3.1]][3]
+[![alt text][4.1]][4]
